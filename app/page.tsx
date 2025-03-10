@@ -1,101 +1,76 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div>
+      <div className="flex flex-row w-full bg-black h-screen">
+        <div className="w-1/2 h-full flex items-center justify-center">
+          <div className="p-10 w-1/2 h-1/3 flex-col rounded-[30px] bg-white flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:delay-150">
+            <h1 className="font-serif font-bold text-yellow-300 text-[30px] mb-5">
+              Student
+            </h1>
+            {/* <h2>
+              Whether you're looking for the perfect internship or seeking guidance to level up your skills, we're here to help you every step of the way.
+            </h2> */}
+            <div className="flex flex-row justify-between w-full">
+              <button className="bg-yellow-300 p-4 w-[48%] justify-center flex rounded-[35px] hover:bg-gray-400">
+                <Link className="text-black font-semibold font-sans" href="/UsersAuthentication/StudentAuth/StudentSignUp">
+                  Sign Up
+                </Link>
+              </button>
+              <button className="bg-yellow-300 p-4 w-[48%] justify-center flex rounded-[35px] hover:bg-gray-400">
+                <Link className="text-black font-semibold font-sans" href="/UsersAuthentication/StudentAuth/StudentLogin">
+                  Login
+                </Link>
+              </button>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="w-1/2 h-full flex items-center justify-center">
+          <div className="p-10 w-1/2 h-1/3 flex-col rounded-[30px] bg-yellow-400 flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:delay-300">
+            <h1 className="font-serif text-black font-bold text-[30px] mb-5">
+              Company
+            </h1>
+            <div className="flex flex-row justify-between w-full">
+              <button className="bg-black p-4 w-[48%] justify-center flex rounded-[35px] hover:bg-gray-400">
+                <Link className="text-yellow-300 font-sans" href="/UsersAuthentication/CompanyAuth/CompanySignUp">
+                  Sign Up
+                </Link>
+              </button>
+              <button className="bg-black p-4 w-[48%] justify-center flex rounded-[35px] hover:bg-gray-400">
+                <Link className="text-yellow-300 font-sans" href="/UsersAuthentication/CompanyAuth/CompanyLogin">
+                  Login
+                </Link>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* <h1>
+        HOME
+      </h1>
+      <div className="flex flex-col">
+        <div>
+          <Link className="font-black" href="/UsersAuthentication/StudentAuth/StudentSignUp">
+            Student Sign Up Link
+          </Link>
+        </div>
+        <div>
+          <Link className="font-black" href="/UsersAuthentication/StudentAuth/StudentLogin">
+            Student Login Link
+          </Link>
+        </div>
+        <div>
+          <Link className="font-black" href="/UsersAuthentication/CompanyAuth/CompanyLogin">
+            Company Login Link
+          </Link>
+        </div>
+        <div>
+          <Link className="font-black" href="/UsersAuthentication/CompanyAuth/CompanySignUp">
+            Company Sign Up Link
+          </Link>
+        </div>
+      </div> */}
     </div>
   );
 }
