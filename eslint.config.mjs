@@ -21,6 +21,7 @@ const eslintConfig = [
       "quotes": ["error", "double"], // Use double quotes
       "indent": ["error", 2], // Enforce 2-space indentation
       "react/react-in-jsx-scope": "off", // No need for React import in Next.js
+      "@typescript-eslint/no-unused-expressions": "off", // Allow unused expressions
     },
   },
 ];
