@@ -1,5 +1,6 @@
 ''
 import React from 'react';
+import "../../../app/globals.css"
 
 interface LabelProps {
   text: string;
@@ -7,7 +8,7 @@ interface LabelProps {
 }
 
 const Label: React.FC<LabelProps> = ({ text, className }) => {
-  return <p className={`text-sm text-green-800 font-semibold mb-1 font-sans ${className}`}>{text}</p>;
+  return <p className=" mt-[30px] ${className}">{text}</p>;
 };
 
 export default Label;
