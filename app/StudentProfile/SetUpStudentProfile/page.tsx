@@ -1,4 +1,5 @@
 import Logo from '@/app/Components/Logo'
+import Link from 'next/link'
 import React from 'react'
 
 const SetUpStudentProfilePage = () => {
