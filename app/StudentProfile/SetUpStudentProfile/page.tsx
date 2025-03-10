@@ -17,11 +17,9 @@ const SetUpStudentProfilePage = () => {
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                     </svg>
-                    <Link href={"/UsersAuthentication/StudentAuth/StudentAuthPage"} className="text-center">
                         <h1 className=" text-[21px]/[120%] text-Blue1 font-normal ">
-                            Back to Login
+                            Set up your profile
                         </h1>
-                    </Link>
                 </div>
             </div>
         </div>
