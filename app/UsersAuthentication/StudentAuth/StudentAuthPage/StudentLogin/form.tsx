@@ -1,6 +1,6 @@
-'use client'
-import '../../../../../app/globals.css'
-import Label from '@/app/UsersAuthentication/Components/Label'
+"use client"
+import "../../../../../app/globals.css"
+import Label from "@/app/UsersAuthentication/Components/Label"
 export default function StudentLoginForm() {
   return (
     <form className='mt-[12.96px] flex flex-col justify-start'>

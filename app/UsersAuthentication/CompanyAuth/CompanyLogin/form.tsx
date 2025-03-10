@@ -1,5 +1,5 @@
-'use client'
-import Label from '../../Components/Label'
+"use client"
+import Label from "../../Components/Label"
 
 export default function CompanyLoginForm() {
   // const onSubmit = (e: React.FormEvent) => {

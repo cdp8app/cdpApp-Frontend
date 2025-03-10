@@ -1,4 +1,4 @@
-import CompanySignUpForm from './form'
+import CompanySignUpForm from "./form"
 
 export default function StudentSignUp() {
   return (

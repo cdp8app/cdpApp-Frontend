@@ -1,6 +1,6 @@
-;('')
-import React from 'react'
-import '../../../app/globals.css'
+;("")
+import React from "react"
+import "../../../app/globals.css"
 
 interface Label3Props {
   text: string

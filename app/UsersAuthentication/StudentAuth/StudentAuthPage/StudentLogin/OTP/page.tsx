@@ -1,11 +1,11 @@
-'use client'
-import Logo from '@/app/Components/Logo'
-import Button1 from '@/app/UsersAuthentication/Components/Button1'
-import Link from 'next/link'
-import { useState } from 'react'
+"use client"
+import Logo from "@/app/Components/Logo"
+import Button1 from "@/app/UsersAuthentication/Components/Button1"
+import Link from "next/link"
+import { useState } from "react"
 
 export default function OTPPage() {
-  const [otp, setOtp] = useState<string[]>(new Array(5).fill(''))
+  const [otp, setOtp] = useState<string[]>(new Array(5).fill(""))
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -28,7 +28,7 @@ export default function OTPPage() {
     e: React.KeyboardEvent<HTMLInputElement>,
     index: number
   ) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       document.getElementById(`otp-input-${index - 1}`)?.focus()
     }
   }
@@ -36,11 +36,11 @@ export default function OTPPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const enteredOtp = otp.join('')
+    const enteredOtp = otp.join("")
     if (enteredOtp.length === 5) {
-      alert('OTP Submitted: ' + enteredOtp)
+      alert("OTP Submitted: " + enteredOtp)
     } else {
-      alert('Please enter a 5-digit OTP.')
+      alert("Please enter a 5-digit OTP.")
     }
   }
   return (
@@ -69,7 +69,7 @@ export default function OTPPage() {
                     onChange={e => handleChange(e, index)}
                     onKeyDown={e => handleKeyDown(e, index)}
                     maxLength={1}
-                    className={`h-28 w-24 rounded-md border border-Blue1 text-center text-xl focus:bg-Blue3 focus:outline-none ${digit ? 'bg-Blue3' : 'bg-white'}`}
+                    className={`h-28 w-24 rounded-md border border-Blue1 text-center text-xl focus:bg-Blue3 focus:outline-none ${digit ? "bg-Blue3" : "bg-white"}`}
                     placeholder=''
                     autoFocus={index === 0}
                   />
@@ -89,8 +89,8 @@ export default function OTPPage() {
             <Button1 text='Verify' className='mb-[20px] w-[100%] self-center' />
             <h2 className='text-center font-sans text-[21px]/[120%] font-normal text-Black1'>
               Not your email?
-              <Link className='text-Blue2' href={'#'}>
-                {' '}
+              <Link className='text-Blue2' href={"#"}>
+                {" "}
                 change email
               </Link>
             </h2>
@@ -111,7 +111,7 @@ export default function OTPPage() {
                 />
               </svg>
               <Link
-                href={'/UsersAuthentication/StudentAuth/StudentAuthPage'}
+                href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}
                 className='text-center'
               >
                 <h1 className='text-[21px]/[120%] font-normal text-Blue1'>

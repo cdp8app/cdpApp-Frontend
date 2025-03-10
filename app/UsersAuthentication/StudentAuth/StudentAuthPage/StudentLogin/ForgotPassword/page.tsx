@@ -1,9 +1,9 @@
-;('')
-'use client'
-import Logo from '@/app/Components/Logo'
-import ForgotPasswordForm from './form'
-import Button1 from '@/app/UsersAuthentication/Components/Button1'
-import Link from 'next/link'
+;("")
+;("use client")
+import Logo from "@/app/Components/Logo"
+import ForgotPasswordForm from "./form"
+import Button1 from "@/app/UsersAuthentication/Components/Button1"
+import Link from "next/link"
 
 export default function ForgotPasswordPage() {
   return (
@@ -24,15 +24,15 @@ export default function ForgotPasswordPage() {
           <ForgotPasswordForm />
           <Button1 text='Send OTP' className=' ' />
           <h1 className='mb-[40px] mt-[36px] text-center text-[21px]/[120%] text-Gray1'>
-            Remembered your password?{' '}
+            Remembered your password?{" "}
             <button>
-              <Link href={'/UsersAuthentication/StudentAuth/StudentAuthPage'}>
+              <Link href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}>
                 Login now
               </Link>
             </button>
           </h1>
           <Link
-            href={'/UsersAuthentication/StudentAuth/StudentAuthPage'}
+            href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}
             className='text-center'
           >
             <h1 className='text-[21px]/[120%] font-normal text-Blue1'>

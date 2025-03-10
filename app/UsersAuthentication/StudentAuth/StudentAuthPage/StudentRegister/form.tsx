@@ -1,6 +1,6 @@
-'use client'
-import '../../../../../app/globals.css'
-import Label2 from '@/app/UsersAuthentication/Components/Label2'
+"use client"
+import "../../../../../app/globals.css"
+import Label2 from "@/app/UsersAuthentication/Components/Label2"
 
 export default function StudentRegisterForm() {
   return (

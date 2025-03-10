@@ -1,9 +1,9 @@
-;('')
-'use client'
-import Logo from '@/app/Components/Logo'
-import Button1 from '@/app/UsersAuthentication/Components/Button1'
-import Link from 'next/link'
-import NewPasswordForm from './form'
+;("")
+;("use client")
+import Logo from "@/app/Components/Logo"
+import Button1 from "@/app/UsersAuthentication/Components/Button1"
+import Link from "next/link"
+import NewPasswordForm from "./form"
 
 export default function NewPasswordPage() {
   return (
@@ -35,7 +35,7 @@ export default function NewPasswordPage() {
               />
             </svg>
             <Link
-              href={'/UsersAuthentication/StudentAuth/StudentAuthPage'}
+              href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}
               className='text-center'
             >
               <h1 className='text-[21px]/[120%] font-normal text-Blue1'>

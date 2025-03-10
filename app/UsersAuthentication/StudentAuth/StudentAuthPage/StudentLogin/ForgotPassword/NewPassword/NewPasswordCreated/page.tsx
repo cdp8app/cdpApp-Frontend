@@ -1,7 +1,7 @@
-;('')
-'use client'
-import Logo from '@/app/Components/Logo'
-import Button1 from '@/app/UsersAuthentication/Components/Button1'
+;("")
+;("use client")
+import Logo from "@/app/Components/Logo"
+import Button1 from "@/app/UsersAuthentication/Components/Button1"
 
 export default function NewPasswordCreatedPage() {
   return (

@@ -1,5 +1,5 @@
-'use client'
-import '../../../../../../app/globals.css'
+"use client"
+import "../../../../../../app/globals.css"
 
 export default function ForgotPasswordForm() {
   return (

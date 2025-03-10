@@ -1,11 +1,11 @@
-'use client'
-import Logo from '@/app/Components/Logo'
-import Button1 from '@/app/UsersAuthentication/Components/Button1'
-import Link from 'next/link'
-import { useState } from 'react'
+"use client"
+import Logo from "@/app/Components/Logo"
+import Button1 from "@/app/UsersAuthentication/Components/Button1"
+import Link from "next/link"
+import { useState } from "react"
 
 export default function UnsuccessfulVerficationPage() {
-  const [otp, setOtp] = useState<string[]>(['6', '7', '4', '6', '5'])
+  const [otp, setOtp] = useState<string[]>(["6", "7", "4", "6", "5"])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -28,7 +28,7 @@ export default function UnsuccessfulVerficationPage() {
     e: React.KeyboardEvent<HTMLInputElement>,
     index: number
   ) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       document.getElementById(`otp-input-${index - 1}`)?.focus()
     }
   }
@@ -36,11 +36,11 @@ export default function UnsuccessfulVerficationPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const enteredOtp = otp.join('')
+    const enteredOtp = otp.join("")
     if (enteredOtp.length === 5) {
-      alert('OTP Submitted: ' + enteredOtp)
+      alert("OTP Submitted: " + enteredOtp)
     } else {
-      alert('Please enter a 5-digit OTP.')
+      alert("Please enter a 5-digit OTP.")
     }
   }
 
@@ -75,7 +75,7 @@ export default function UnsuccessfulVerficationPage() {
                     onChange={e => handleChange(e, index)}
                     onKeyDown={e => handleKeyDown(e, index)}
                     maxLength={1}
-                    className={`h-28 w-24 rounded-md border-2 border-Red1 text-center text-[37px] text-Red1 focus:outline-none ${digit ? 'bg-Red2' : 'bg-white'}`}
+                    className={`h-28 w-24 rounded-md border-2 border-Red1 text-center text-[37px] text-Red1 focus:outline-none ${digit ? "bg-Red2" : "bg-white"}`}
                     placeholder=''
                     autoFocus={index === 0}
                   />
@@ -100,8 +100,8 @@ export default function UnsuccessfulVerficationPage() {
             />
             <h2 className='text-center font-sans text-[21px]/[120%] font-normal text-Black1'>
               Not your email?
-              <Link className='text-Blue2' href={'#'}>
-                {' '}
+              <Link className='text-Blue2' href={"#"}>
+                {" "}
                 change email
               </Link>
             </h2>
@@ -122,7 +122,7 @@ export default function UnsuccessfulVerficationPage() {
                 />
               </svg>
               <Link
-                href={'/UsersAuthentication/StudentAuth/StudentAuthPage'}
+                href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}
                 className='text-center'
               >
                 <h1 className='text-[21px]/[120%] font-normal text-Blue1'>

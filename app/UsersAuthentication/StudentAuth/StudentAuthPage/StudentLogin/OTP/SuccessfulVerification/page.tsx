@@ -1,10 +1,10 @@
-'use client'
-import Logo from '@/app/Components/Logo'
-import Link from 'next/link'
-import { useState } from 'react'
+"use client"
+import Logo from "@/app/Components/Logo"
+import Link from "next/link"
+import { useState } from "react"
 
 export default function SuccessfulVerificationPage() {
-  const [otp] = useState<string[]>(['6', '7', '4', '6', '5'])
+  const [otp] = useState<string[]>(["6", "7", "4", "6", "5"])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -25,7 +25,7 @@ export default function SuccessfulVerificationPage() {
     e: React.KeyboardEvent<HTMLInputElement>,
     index: number
   ) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       document.getElementById(`otp-input-${index - 1}`)?.focus()
     }
   }
@@ -33,11 +33,11 @@ export default function SuccessfulVerificationPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const enteredOtp = otp.join('')
+    const enteredOtp = otp.join("")
     if (enteredOtp.length === 5) {
-      alert('OTP Submitted: ' + enteredOtp)
+      alert("OTP Submitted: " + enteredOtp)
     } else {
-      alert('Please enter a 5-digit OTP.')
+      alert("Please enter a 5-digit OTP.")
     }
   }
 
@@ -91,7 +91,7 @@ export default function SuccessfulVerificationPage() {
                     onChange={e => handleChange(e, index)}
                     onKeyDown={e => handleKeyDown(e, index)}
                     maxLength={1}
-                    className={`h-28 w-24 rounded-md border border-Blue1 text-center text-[47px] text-xl focus:bg-Blue3 focus:outline-none ${digit ? 'bg-Blue3' : 'bg-white'}`}
+                    className={`h-28 w-24 rounded-md border border-Blue1 text-center text-[47px] text-xl focus:bg-Blue3 focus:outline-none ${digit ? "bg-Blue3" : "bg-white"}`}
                     placeholder='5'
                     autoFocus={index === 0}
                     readOnly
@@ -117,7 +117,7 @@ export default function SuccessfulVerificationPage() {
                 />
               </svg>
               <Link
-                href={'/UsersAuthentication/StudentAuth/StudentAuthPage'}
+                href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}
                 className='text-center'
               >
                 <h1 className='text-[21px]/[120%] font-normal text-Blue1'>

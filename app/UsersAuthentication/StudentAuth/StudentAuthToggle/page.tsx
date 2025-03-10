@@ -1,12 +1,12 @@
-'use client'
-import { useState } from 'react'
-import '../../../../app/globals.css'
-import StudentLoginForm from '../StudentAuthPage/StudentLogin/form'
-import StudentRegisterForm from '../StudentAuthPage/StudentRegister/form'
-import Button1 from '../../Components/Button1'
-import Image from 'next/image'
-import appleIcon from '../../../../public/Images/Icons/appleIcon.png'
-import googleIcon from '../../../../public/Images/Icons/googleIcon.png'
+"use client"
+import { useState } from "react"
+import "../../../../app/globals.css"
+import StudentLoginForm from "../StudentAuthPage/StudentLogin/form"
+import StudentRegisterForm from "../StudentAuthPage/StudentRegister/form"
+import Button1 from "../../Components/Button1"
+import Image from "next/image"
+import appleIcon from "../../../../public/Images/Icons/appleIcon.png"
+import googleIcon from "../../../../public/Images/Icons/googleIcon.png"
 
 const StudentAuthTogglePage = () => {
   const [activeContent, setActiveContent] = useState<1 | 2>(1)
@@ -20,7 +20,7 @@ const StudentAuthTogglePage = () => {
         <button
           onClick={() => handleToggle(1)}
           className={`rounded-[30px] px-[50px] py-[9.5px] font-sans text-[16px] transition-colors ${
-            activeContent === 1 ? 'bg-Blue2 text-White' : 'text-Blue2'
+            activeContent === 1 ? "bg-Blue2 text-White" : "text-Blue2"
           } hover:bg-blue-600`}
         >
           Login
@@ -29,7 +29,7 @@ const StudentAuthTogglePage = () => {
         <button
           onClick={() => handleToggle(2)}
           className={`rounded-[30px] px-[50px] py-[9.5px] font-sans text-[16px] transition-colors ${
-            activeContent === 2 ? 'bg-Blue2 text-White' : 'text-Blue2'
+            activeContent === 2 ? "bg-Blue2 text-White" : "text-Blue2"
           } hover:bg-blue-600`}
         >
           Register

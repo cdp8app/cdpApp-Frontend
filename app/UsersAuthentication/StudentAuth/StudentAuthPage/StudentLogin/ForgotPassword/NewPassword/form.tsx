@@ -1,11 +1,11 @@
-'use client'
-import { useState } from 'react'
-import Label3 from '@/app/UsersAuthentication/Components/Label3'
-import '../../../../../../../app/globals.css'
+"use client"
+import { useState } from "react"
+import Label3 from "@/app/UsersAuthentication/Components/Label3"
+import "../../../../../../../app/globals.css"
 
 export default function NewPasswordForm() {
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [errors, setErrors] = useState({
     length: false,
     lowercase: false,
@@ -37,7 +37,7 @@ export default function NewPasswordForm() {
   const handleSubmit = e => {
     e.preventDefault()
     if (Object.values(errors).every(value => value === true)) {
-      console.log('Form submitted successfully')
+      console.log("Form submitted successfully")
     }
   }
 

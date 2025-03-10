@@ -1,9 +1,9 @@
-import Logo from '@/app/Components/Logo'
-import StudentAuthTogglePage from '../StudentAuthToggle/page'
-import '../../../../app/globals.css'
-import Image from 'next/image'
-import phoneIcon from '../../../../public/Images/Icons/phoneIcon.png'
-import StudentOnbording1 from '../../../../public/Images/StudentOnbording1.png'
+import Logo from "@/app/Components/Logo"
+import StudentAuthTogglePage from "../StudentAuthToggle/page"
+import "../../../../app/globals.css"
+import Image from "next/image"
+import phoneIcon from "../../../../public/Images/Icons/phoneIcon.png"
+import StudentOnbording1 from "../../../../public/Images/StudentOnbording1.png"
 
 export default function StudentAuthPage() {
   return (
