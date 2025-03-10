@@ -25,7 +25,7 @@ export default function NewPasswordCreatedPage() {
                     <p className="w-[60%] flex flex-col text-center mt-[16px] text-Gray1 text-[21px]/[120%] font-sans font-normal">
                         That's it! You are done setting up a new password. You'll be
                     </p>
-                    <div className="flex flex-row mb-[132px]">
+                    <div className="flex flex-row mb-[100px]">
                         <p className="text-Gray1 text-[21px]/[120%] font-sans font-normal mr-1">
                             redirected to login in
                         </p>

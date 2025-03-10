@@ -20,7 +20,9 @@ export default {
         BlueWhite: '#EAECFF',
         White: '#FFFFFF',
         Gray1: '#B5B5B5',
-        Green1: '#34A853'
+        Green1: '#34A853',
+        Red1: '#FF3B30',
+        Red2: '#FFEBEB',
       },
       fontFamily: {
         sans: ['Poppins', 'sans-serif'],

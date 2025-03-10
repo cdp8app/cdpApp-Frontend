@@ -1,12 +1,11 @@
-""
 'use client'
 import Logo from "@/app/Components/Logo"
 import Button1 from "@/app/UsersAuthentication/Components/Button1";
 import Link from "next/link";
 import { useState } from "react"
 
-export default function OTPPage() {
-    const [otp, setOtp] = useState<string[]>(new Array(5).fill(""));
+export default function UnsuccessfulVerficationPage() {
+    const [otp, setOtp] = useState<string[]>(["6", "7", "4", "6", "5"]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const value = e.target.value;
@@ -38,10 +37,11 @@ export default function OTPPage() {
             alert("Please enter a 5-digit OTP.");
         }
     };
+
     return (
         <div className="p-[1%] h-screen">
             <Logo />
-            <div className="flex flex-col justify-center h-[90%] py-8 my-auto items-center w-[100%]">
+            <div className="flex flex-col justify-center h-[95%] py-8 my-auto items-center w-[100%]">
                 <div className=" flex flex-col justify-between h-[100%] my-auto items-center w-[80%]">
                     <div className=" flex flex-col items-center justify-center w-[100%]">
                         <h2 className="text-center text-Blue4 text-[36px]/[120%] mb-[16px] font-sans font-normal">
@@ -53,7 +53,12 @@ export default function OTPPage() {
                         </p>
                     </div>
                     <div className="flex flex-col justify-center">
-                        <form onSubmit={handleSubmit} className="mb-8">
+                        <div className="flex flex-row items-center justify-center mt-[30px] mb-[20px]">
+                            <p className=" flex text-center text-Red1 text-[21px]/[120%] font-sans font-normal">
+                                Oops! That was not right. Enter the correct code
+                            </p>
+                        </div>
+                        <form onSubmit={handleSubmit} className="">
                             <div className="flex justify-center gap-5">
                                 {otp.map((digit, index) => (
                                     <input
@@ -64,15 +69,17 @@ export default function OTPPage() {
                                         onChange={(e) => handleChange(e, index)}
                                         onKeyDown={(e) => handleKeyDown(e, index)}
                                         maxLength={1}
-                                        className={`w-24 h-28 text-center text-xl border border-Blue1 rounded-md focus:outline-none focus:bg-Blue3
-                                    ${digit ? "bg-Blue3" : "bg-white"}`}
+                                        className={`w-24 h-28 text-center text-[37px] text-Red1 border-2 border-Red1 rounded-md focus:outline-none
+                                    ${digit ? "bg-Red2" : "bg-white"}`}
                                         placeholder=""
                                         autoFocus={index === 0}
                                     />
                                 ))}
                             </div>
                         </form>
-                        <h2 className="text-center text-Black1 text-[21px]/[120%] font-sans font-normal">
+                    </div>
+                    <div className="text-center">
+                        <h2 className="text-center text-Black1 text-[21px]/[120%] mt-[20px] font-sans font-normal">
                             You've not yet received your code?
                         </h2>
                         <button>
@@ -81,8 +88,8 @@ export default function OTPPage() {
                             </h2>
                         </button>
                     </div>
-                    <div className="justify-center">
-                        <Button1 text="Verify" className=" self-center mb-[20px] w-[100%] " />
+                    <div className="justify-center w-[45%]">
+                        <Button1 text="Verify" className=" self-center mb-[20px] mt-[60px] w-[100%] " />
                         <h2 className="text-center text-Black1 text-[21px]/[120%] font-sans font-normal">
                             Not your email?
                             <Link className="text-Blue2" href={"#"}> change email</Link>
