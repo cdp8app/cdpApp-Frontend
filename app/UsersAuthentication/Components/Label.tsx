@@ -1,13 +1,13 @@
-import React from "react"
-import "../../../app/globals.css"
+import React from "react";
+import "../../../app/globals.css";
 
 interface LabelProps {
-  text: string
-  className?: string
+  text: string;
+  className?: string;
 }
 
 const Label: React.FC<LabelProps> = ({ text }) => {
-  return <p className='${className} mt-[30px]'>{text}</p>
-}
+  return <p className="${className} mt-[30px]">{text}</p>;
+};
 
-export default Label
+export default Label;

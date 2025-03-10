@@ -1,10 +1,10 @@
-"use client"
-import React from "react"
-import "../../../app/globals.css"
+"use client";
+import React from "react";
+import "../../../app/globals.css";
 
 interface Button1Props {
-  text: string
-  className?: string
+  text: string;
+  className?: string;
 }
 
 const Button1: React.FC<Button1Props> = ({ text, className }) => {
@@ -14,7 +14,7 @@ const Button1: React.FC<Button1Props> = ({ text, className }) => {
     >
       {text}
     </button>
-  )
-}
+  );
+};
 
-export default Button1
+export default Button1;
