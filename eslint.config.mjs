@@ -11,6 +11,19 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    rules: {
+      "no-unused-vars": ["error"], // Warn on unused variables
+      "no-console": "warn", // Warn when console.log() is used
+      "eqeqeq": ["error", "always"], // Enforce strict equality ===
+      "curly": ["error", "multi-line"], // Require curly braces for multiline control structures
+      "semi": ["error", "always"], // Always require semicolons
+      "quotes": ["error", "double"], // Use double quotes
+      "indent": ["error", 2], // Enforce 2-space indentation
+      "react/react-in-jsx-scope": "off", // No need for React import in Next.js
+      "@typescript-eslint/no-unused-expressions": "off", // Allow unused expressions
+    },
+  },
 ];
 
 export default eslintConfig;
