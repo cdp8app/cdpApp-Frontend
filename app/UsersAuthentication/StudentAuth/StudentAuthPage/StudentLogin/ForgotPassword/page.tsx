@@ -1,5 +1,4 @@
-("");
-("use client");
+"use client";
 import Logo from "@/app/Components/Logo";
 import ForgotPasswordForm from "./form";
 import Button1 from "@/app/UsersAuthentication/Components/Button1";
