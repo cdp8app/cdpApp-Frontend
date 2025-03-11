@@ -14,17 +14,19 @@ export default function NewPasswordForm() {
     match: false
   });
 
-  const handlePasswordChange = e => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     validatePasswords(e.target.value, confirmPassword);
   };
 
-  const handleConfirmPasswordChange = e => {
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setConfirmPassword(e.target.value);
     validatePasswords(password, e.target.value);
   };
 
-  const validatePasswords = (password, confirmPassword) => {
+  const validatePasswords = (password: string, confirmPassword: string) => {
     setErrors({
       length: password.length >= 8,
       lowercase: /[a-z]/.test(password),
@@ -34,7 +36,7 @@ export default function NewPasswordForm() {
     });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (Object.values(errors).every(value => value === true)) {
       console.log("Form submitted successfully");
