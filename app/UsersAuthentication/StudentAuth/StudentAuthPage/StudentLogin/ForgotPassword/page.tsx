@@ -14,18 +14,18 @@ export default function ForgotPasswordPage() {
           <br />
           Let&apos;s help you set up a new one ASAP!
         </h2>
-        <h6 className="mt-[14px] text-center text-[21px]/[120%] text-Gray1">
+        <h6 className="mt-[14px] font-sans text-center text-[16px]/[120%] text-Gray1">
           Enter the email address linked to your account and we&apos;d send a
           <br />
           5-digit OTP that you&apos;d enter in the next screen
         </h6>
         <div className="flex w-[45%] flex-col justify-center self-center">
           <ForgotPasswordForm />
-          <Button1 text="Send OTP" className=" " />
-          <h1 className="mb-[40px] mt-[36px] text-center text-[21px]/[120%] text-Gray1">
+          <Button1 text="Send OTP" className=" text-[16px]  " />
+          <h1 className="mb-[40px] mt-[36px] font-sans text-center text-[16px]/[120%] text-Gray1">
             Remembered your password?{" "}
             <button>
-              <Link href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}>
+              <Link className="text-Blue2" href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}>
                 Login now
               </Link>
             </button>
@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
             href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}
             className="text-center"
           >
-            <h1 className="text-[21px]/[120%] font-normal text-Blue1">
+            <h1 className="text-[16px]/[120%] font-sans font-normal text-Blue1">
               Register instead
             </h1>
           </Link>

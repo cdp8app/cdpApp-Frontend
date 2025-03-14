@@ -22,21 +22,21 @@ export default function NewPasswordCreatedPage() {
               d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
             />
           </svg>
-          <h2 className="text-center font-sans text-[36px]/[120%] font-medium text-Blue4">
+          <h2 className="text-center font-sans text-[27px]/[120%] font-medium text-Blue4">
             New password created!
           </h2>
-          <p className="mt-[16px] flex w-[60%] flex-col text-center font-sans text-[21px]/[120%] font-normal text-Gray1">
+          <p className="mt-[16px] flex w-[60%] flex-col text-center font-sans text-[16px]/[120%] font-normal text-Gray1">
             That&apos;s it! You are done setting up a new password. You&apos;ll
             be
           </p>
           <div className="mb-[100px] flex flex-row">
-            <p className="mr-1 font-sans text-[21px]/[120%] font-normal text-Gray1">
+            <p className="mr-1 font-sans text-[16px]/[120%] font-normal text-Gray1">
               redirected to login in
             </p>
-            <p className="mr-1 font-sans text-[21px]/[120%] font-normal text-Blue2">
+            <p className="mr-1 font-sans text-[16px]/[120%] font-normal text-Blue2">
               3 seconds
             </p>
-            <p className="font-sans text-[21px]/[120%] font-normal text-Gray1">
+            <p className="font-sans text-[16px]/[120%] font-normal text-Gray1">
               or login below.
             </p>
           </div>

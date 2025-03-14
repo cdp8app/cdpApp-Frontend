@@ -12,7 +12,7 @@ export default function NewPasswordPage() {
         <h2 className="text-center font-sans text-[36px]/[120%] font-medium text-Blue4">
           Set a new password
         </h2>
-        <h6 className="mt-[14px] text-center text-[21px]/[120%] text-Gray1">
+        <h6 className="mt-[14px] text-center font-sans text-[21px]/[120%] text-Gray1">
           Set up a new password with at least 8 characters
         </h6>
         <div className="flex w-[45%] flex-col justify-center self-center">

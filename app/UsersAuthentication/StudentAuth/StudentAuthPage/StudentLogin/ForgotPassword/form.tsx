@@ -22,7 +22,7 @@ export default function ForgotPasswordForm() {
         </svg>
         <input
           placeholder="Enter your email address"
-          className="font-sans text-[21px] placeholder-Gray1 outline-none"
+          className="font-sans text-[16px] w-[95%] placeholder-Gray1 outline-none"
         />
       </div>
     </form>
