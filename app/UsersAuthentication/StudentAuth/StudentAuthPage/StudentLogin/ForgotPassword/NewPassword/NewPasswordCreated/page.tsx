@@ -1,6 +1,4 @@
 "use client";
-import Logo from "@/app/Components/Logo";
-import Button1 from "@/app/UsersAuthentication/Components/Button1";
 import Button2 from "@/app/UsersAuthentication/Components/Button2";
 
 export default function NewPasswordCreatedPage() {

@@ -38,9 +38,9 @@ export default function NewPasswordForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (Object.values(errors).every(value => value === true)) {
-      console.log("Form submitted successfully");
-    }
+    // if (Object.values(errors).every(value => value === true)) {
+    //   console.log("Form submitted successfully");
+    // }
   };
 
   return (

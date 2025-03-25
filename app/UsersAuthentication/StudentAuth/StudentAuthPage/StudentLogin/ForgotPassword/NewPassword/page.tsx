@@ -1,6 +1,5 @@
 "use client";
 import Logo from "@/app/Components/Logo";
-import Button1 from "@/app/UsersAuthentication/Components/Button1";
 import Link from "next/link";
 import NewPasswordForm from "./form";
 import Button2 from "@/app/UsersAuthentication/Components/Button2";

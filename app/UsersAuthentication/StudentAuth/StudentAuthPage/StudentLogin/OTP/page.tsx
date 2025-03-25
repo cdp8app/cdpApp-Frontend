@@ -46,7 +46,7 @@ export default function OTPPage() {
   return (
     <div className="h-screen p-[1%]">
       {/* <div className="w-[100%] mb-0 flex justify-center"> */}
-        <Logo />
+      <Logo />
       {/* </div> */}
       <div className="my-auto flex h-[90%] w-[100%] flex-col items-center justify-center py-4">
         <div className="my-auto flex h-[100%] w-[80%] flex-col items-center justify-between">
