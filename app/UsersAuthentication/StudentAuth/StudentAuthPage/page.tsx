@@ -12,12 +12,12 @@ export default function StudentAuthPage() {
         <div className="h-[100%] w-[50%] p-[10px]">
           <Logo />
           <div className="mt-[29px] flex flex-col items-center">
-            <h1 className="font-sans text-3xl">Welcome!</h1>
+            <h1 className="font-sans text-[21px]/[120%]">Welcome!</h1>
             <StudentAuthTogglePage />
           </div>
         </div>
-        <div className="h-[100%] w-[50%] rounded-[15px] bg-Blue4 p-[2%]">
-          <div className="flex flex-row items-center justify-end">
+        <div className="h-screen w-[50%] rounded-[15px] bg-Gold0 p-[2%]">
+          {/* <div className="flex flex-row items-center justify-end">
             <Image
               src={phoneIcon}
               alt="Phone"
@@ -26,19 +26,19 @@ export default function StudentAuthPage() {
             <p className="font-sans text-[15px] text-BlueWhite">
               +94 0116 789 754
             </p>
-          </div>
+          </div> */}
           <div className="flex w-[100%] flex-col px-[10%]">
-            <Image
+            {/* <Image
               src={StudentOnbording1}
               alt="Student Onboaarding"
               className="mx-auto mb-10 justify-around"
-            />
-            <h1 className="mb-[4px] font-sans text-[40px] font-semibold text-BlueWhite">
+            /> */}
+            {/* <h1 className="mb-[4px] font-sans text-[40px] font-semibold text-BlueWhite">
               Log in to Career X Hub
             </h1>
             <p className="font-sans text-[20px] font-light text-BlueWhite">
               Lorem Ipsum is simply
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

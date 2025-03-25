@@ -50,17 +50,17 @@ export default function UnsuccessfulVerficationPage() {
       <div className="my-auto flex h-[95%] w-[100%] flex-col items-center justify-center py-8">
         <div className="my-auto flex h-[100%] w-[80%] flex-col items-center justify-between">
           <div className="flex w-[100%] flex-col items-center justify-center">
-            <h2 className="mb-[16px] text-center font-sans text-[36px]/[120%] font-normal text-Blue4">
+            <h2 className="mb-[16px] text-center font-sans text-[27px]/[120%] font-normal text-Gold0">
               Verify your email address
             </h2>
-            <p className="flex w-[60%] flex-col text-center font-sans text-[21px]/[120%] font-normal text-Gray1">
+            <p className="flex w-[60%] flex-col text-center font-sans text-[16px]/[120%] font-normal text-Gray1">
               Enter the 5-digit code sent to <br />
-              <span className="text-Blue2">johndoe@gmail.com</span>
+              <span className="text-PriGold">johndoe@gmail.com</span>
             </p>
           </div>
           <div className="flex flex-col justify-center">
             <div className="mb-[20px] mt-[30px] flex flex-row items-center justify-center">
-              <p className="flex text-center font-sans text-[21px]/[120%] font-normal text-Red1">
+              <p className="flex text-center font-sans text-[16px]/[120%] font-normal text-Red1">
                 Oops! That was not right. Enter the correct code
               </p>
             </div>
@@ -84,11 +84,11 @@ export default function UnsuccessfulVerficationPage() {
             </form>
           </div>
           <div className="text-center">
-            <h2 className="mt-[20px] text-center font-sans text-[21px]/[120%] font-normal text-Black1">
+            <h2 className="mt-[20px] text-center font-sans text-[16px]/[120%] font-normal text-Black1">
               You&apos;ve not yet received your code?
             </h2>
             <button>
-              <h2 className="mt-[20px] text-center font-sans text-[21px]/[120%] font-normal text-Blue2">
+              <h2 className="mt-[20px] text-center font-sans text-[16px]/[120%] font-normal text-PriGold">
                 Resend code
               </h2>
             </button>
@@ -98,9 +98,9 @@ export default function UnsuccessfulVerficationPage() {
               text="Verify"
               className="mb-[20px] mt-[60px] w-[100%] self-center"
             />
-            <h2 className="text-center font-sans text-[21px]/[120%] font-normal text-Black1">
+            <h2 className="text-center font-sans text-[16px]/[120%] font-normal text-Black1">
               Not your email?
-              <Link className="text-Blue2" href={"#"}>
+              <Link className="text-PriGold" href={"#"}>
                 {" "}
                 change email
               </Link>
@@ -125,7 +125,7 @@ export default function UnsuccessfulVerficationPage() {
                 href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}
                 className="text-center"
               >
-                <h1 className="text-[21px]/[120%] font-normal text-Blue1">
+                <h1 className="text-[16px]/[120%] font-normal text-Gold1">
                   Back to Login
                 </h1>
               </Link>

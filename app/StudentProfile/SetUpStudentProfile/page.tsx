@@ -1,24 +1,15 @@
-import Logo from '@/app/Components/Logo'
 import Link from 'next/link'
 import React from 'react'
 import SetUpStudentProfileForm from './form'
+import LogoComponent from '@/app/Components/Logo2'
 
 const SetUpStudentProfilePage = () => {
     return (
-        <div className="p-[1%] h-[100%] bg-BlueWhite" >
-            <Logo />
-            <div className='px-[20%]'>
-                <div className="flex flex-row justify-start items-center mt-[36px] mb-[22.5px] ">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none" viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-10 mr-[4px] text-Gray1"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                    </svg>
-                    <h1 className=" font-sans text-[36px]/[120%] text-Blue2 font-normal ">
+        <div className="p-[1%] h-[100%] bg-White" >
+            <LogoComponent />
+            <div className='flex flex-col px-[20%] text-center'>
+                <div className="mt-[36px] mb-[22.5px] ">
+                    <h1 className=" text-[36px]/[120%] text-Gold1 font-sans font-normal ">
                         Set up your profile
                     </h1>
                 </div>
