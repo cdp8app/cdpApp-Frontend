@@ -21,7 +21,7 @@ export default function Footer1() {
           alt="Logo3"
           className="h-[40px] w-[277px] object-contain"
         />
-        <div className="space-x-2">
+        <div className="space-x-5">
           <Link
             className="font-sans text-[16px]/[120%] font-normal text-White"
             href={"#"}

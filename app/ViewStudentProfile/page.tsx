@@ -1,33 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import EditAboutModal from "../Components/Modals/EditAboutModal";
-import Button5 from "../UsersAuthentication/Components/Button5";
-import ResumeUploadButton2 from "../Components/ResumeUpload2";
 import Image from "next/image";
 import Portfolio from "../../public/Images/Portfolio.png";
 import Footer1 from "../Components/Footer1";
 import Header1 from "../Components/Header1";
+import ResumeUploadButton3 from "../Components/ResumeUpload3";
 
-export default function StudentProfilePage() {
-  const [aboutText, setAboutText] = useState<string>(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-  );
-  const [isAboutModalOpen, setIsAboutModalOpen] = useState<boolean>(false);
-
-  const openAboutModal = () => setIsAboutModalOpen(true);
-  const closeAboutModal = () => setIsAboutModalOpen(false);
-
-  const changeAboutText = (newText: string) => {
-    setAboutText(newText);
-    closeAboutModal();
-  };
+export default function ViewStudentProfilePage() {
   return (
     <div className="flex flex-col">
       <div className="p-[1%]">
-        <Header1/>
+        <Header1 />
         <div className="px-[6%]">
-          <div className="mb-[18px] flex flex-row justify-between border-b-[1px] border-Gold2">
+          <div className="mb-[18px] border-b-[1px] border-Gold2">
             <Link
               className="flex flex-row items-center py-[12px] font-sans text-[27px]/[120%] font-normal text-Gold1"
               href={"#"}
@@ -46,27 +32,7 @@ export default function StudentProfilePage() {
                   d="M15.75 19.5 8.25 12l7.5-7.5"
                 />
               </svg>
-              Your Profile
-            </Link>
-            <Link
-              className="flex flex-row items-center py-[12px] font-sans text-[12px]/[120%] font-normal text-Red1"
-              href={"#"}
-            >
-              Log out
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="ml-2 size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-                />
-              </svg>
+              Mary&apos;s Profile
             </Link>
           </div>
           <div className="mb-[18px] flex w-[100%] flex-row items-center justify-between rounded-[16px] border-[1px] border-PriGold bg-gradient-to-r p-[30px]">
@@ -96,8 +62,22 @@ export default function StudentProfilePage() {
               </div>
             </div>
             <div>
-              <button className="rounded-[999px] border-2 border-Black2 px-[80px] py-[18px] font-sans text-[16px]/[120%] text-Black2">
-                Go to settings
+              <button className=" flex flex-row items-center rounded-[999px] border-2 border-Black2 px-[80px] py-[18px] font-sans text-[16px]/[120%] text-Black2">
+                Send Message
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="size-6 ml-[12px]"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                  />
+                </svg>
               </button>
             </div>
           </div>
@@ -108,29 +88,11 @@ export default function StudentProfilePage() {
                   Job Availability
                 </h1>
               </div>
-              <div className="flex flex-row items-center">
-                <div className="mr-[7px] flex flex-row items-center rounded-[6px] border-[0.5px] border-Red1 bg-Red2 px-[15px] py-[6px]">
-                  <div className="h-[8px] w-[8px] rounded-[4px] bg-Red1"></div>
-                  <h1 className="ml-[5px] font-sans text-[12px]/[120%] font-medium text-Red1">
-                    Not available to work
-                  </h1>
-                </div>
-                <div className="flex h-[20px] w-[20px] items-center justify-center rounded-[10px] border-[2px] border-Gray2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    className="size-3 text-Gray2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                    />
-                  </svg>
-                </div>
+              <div className="mr-[7px] flex flex-row items-center rounded-[6px] border-[0.5px] border-Red1 bg-Red2 px-[15px] py-[6px]">
+                <div className="h-[8px] w-[8px] rounded-[4px] bg-Red1"></div>
+                <h1 className="ml-[5px] font-sans text-[12px]/[120%] font-medium text-Red1">
+                  Not available to work
+                </h1>
               </div>
             </div>
             <div className="flex w-[50%] flex-row items-center justify-between rounded-r-[16px] border-[1px] border-PriGold px-[25px] py-[32px]">
@@ -139,29 +101,11 @@ export default function StudentProfilePage() {
                   Work in another state
                 </h1>
               </div>
-              <div className="flex flex-row items-center">
-                <div className="mr-[7px] flex flex-row items-center rounded-[6px] border-[0.5px] border-Green1 bg-Green2 px-[15px] py-[6px]">
-                  <div className="h-[8px] w-[8px] rounded-[4px] bg-Green1"></div>
-                  <h1 className="ml-[5px] font-sans text-[12px]/[120%] font-medium text-Green1">
-                    Available to work
-                  </h1>
-                </div>
-                <div className="flex h-[20px] w-[20px] items-center justify-center rounded-[10px] border-[2px] border-Gray2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    className="size-3 text-Gray2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                    />
-                  </svg>
-                </div>
+              <div className="mr-[7px] flex flex-row items-center rounded-[6px] border-[0.5px] border-Green1 bg-Green2 px-[15px] py-[6px]">
+                <div className="h-[8px] w-[8px] rounded-[4px] bg-Green1"></div>
+                <h1 className="ml-[5px] font-sans text-[12px]/[120%] font-medium text-Green1">
+                  Available to work
+                </h1>
               </div>
             </div>
           </div>
@@ -178,64 +122,24 @@ export default function StudentProfilePage() {
               <h1 className="font-sans text-[21px]/[120%] text-Black2">
                 About Text
               </h1>
-              <button
-                onClick={openAboutModal}
-                className="bg-Gold4 flex h-[50px] w-[50px] items-center justify-center rounded-[25px] text-PriGold hover:bg-Gold2"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-                  />
-                </svg>
-              </button>
             </div>
             <p className="mt-[12px] text-justify font-sans text-[16px]/[120%] font-normal text-Gray1">
-              {aboutText}
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>
           </div>
 
-          {isAboutModalOpen && (
-            <EditAboutModal
-              currentText={aboutText}
-              onSave={changeAboutText}
-              onClose={closeAboutModal}
-            />
-          )}
-
           <div className="mt-[18px] flex flex-row">
             <div className="flex w-[50%] flex-col rounded-l-[16px] border-[1px] border-PriGold px-[25px] py-[32px]">
-              <div className="mb-[10px] flex w-[100%] flex-row items-center justify-between">
+              <div className="mb-[20px] flex w-[100%] flex-row items-center justify-between">
                 <h1 className="font-sans text-[21px]/[120%] text-Black2">
                   Education
                 </h1>
-                <button
-                  // onClick={openAboutModal}
-                  className="bg-Gold4 flex h-[50px] w-[50px] items-center justify-center rounded-[25px] text-PriGold hover:bg-Gold2"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    className="size-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-                    />
-                  </svg>
-                </button>
               </div>
               <div>
                 <div className="flex flex-row items-center pb-[10px]">
@@ -297,38 +201,14 @@ export default function StudentProfilePage() {
                     2017-2025
                   </h1>
                 </div>
-                <Button5
-                  // onClick={handleSave}
-                  text="Add Education"
-                  className="mt-[25px] text-[16px] font-normal"
-                />
               </div>
             </div>
             <div className="flex w-[50%] flex-col justify-between rounded-r-[16px] border-[1px] border-PriGold px-[25px] py-[32px]">
               <div>
-                <div className="mb-[10px] flex w-[100%] flex-row items-center justify-between">
+                <div className="mb-[20px] flex w-[100%] flex-row items-center justify-between">
                   <h1 className="font-sans text-[21px]/[120%] text-Black2">
                     Skills
                   </h1>
-                  <button
-                    // onClick={openAboutModal}
-                    className="bg-Gold4 flex h-[50px] w-[50px] items-center justify-center rounded-[25px] text-PriGold hover:bg-Gold2"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                      stroke="currentColor"
-                      className="size-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-                      />
-                    </svg>
-                  </button>
                 </div>
                 <div className="flex flex-row space-x-5">
                   <div className="w-auto rounded-[6px] bg-Gold3 px-[15px] py-[10px]">
@@ -348,23 +228,12 @@ export default function StudentProfilePage() {
                   </div>
                 </div>
               </div>
-              <div>
-                <Button5
-                  // onClick={handleSave}
-                  text="Add a skill"
-                  className="text-[16px] font-normal"
-                />
-              </div>
             </div>
           </div>
-          <ResumeUploadButton2 />
-          <div className="mb-[160px] mt-[18px] flex w-[100%] flex-col rounded-[16px] border-[1px] border-PriGold p-[42px]">
+          <ResumeUploadButton3 />
+          <div className="mb-[100px] mt-[18px] flex w-[100%] flex-col rounded-[16px] border-[1px] border-PriGold p-[42px]">
             <h1 className="mb-[32px] font-sans text-[21px]/[120%] font-normal text-Black2">
-              Portfolio{" "}
-              <span className="text-Gold1">
-                {" "}
-                (This increases your credibility amongst recruiters)
-              </span>
+              Portfolio
             </h1>
             <div className="flex flex-row space-x-3">
               <Image
@@ -372,22 +241,6 @@ export default function StudentProfilePage() {
                 alt="Portfolio"
                 className="h-[200px] w-[200px] rounded-[12px] border-[1px] border-Gold3"
               />
-              <button className="bg-Gold4 flex h-[200px] w-[200px] items-center justify-center rounded-[12px] border-[1px] border-Gold3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="size-6 h-[70px] w-[70px] text-Gray1"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
-                </svg>
-              </button>
             </div>
           </div>
         </div>
