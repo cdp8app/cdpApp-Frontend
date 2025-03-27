@@ -23,7 +23,7 @@ const ResumeUploadButton: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-[100%]">
+    <div className="flex w-[100%] flex-col items-center justify-center">
       <input
         type="file"
         ref={fileInputRef}
@@ -34,26 +34,37 @@ const ResumeUploadButton: React.FC = () => {
       <button
         onClick={triggerFileInput}
         type="button"
-        className="flex flex-col items-center bg-GoldenWhite font-semibold text-[12px]/[120%] text-Gray1 border-[1px] mb-[63px] border-Gold3 font-sans w-[100%] rounded-[12px] bg-white py-[20px] px-[18px] outline-none focus:border-PriGold focus:border-[2px] focus:outline-none"
+        className="mb-[63px] flex w-[100%] flex-col items-center rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite bg-white px-[18px] py-[20px] font-sans text-[12px]/[120%] font-semibold text-Gray1 outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
       >
-        <div className='bg-Gold3 flex rounded-[60px] w-[76px] h-[75.58px] justify-center items-center'>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-5 text-Black1">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+        <div className="flex h-[75.58px] w-[76px] items-center justify-center rounded-[60px] bg-Gold3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="2"
+            stroke="currentColor"
+            className="size-5 text-Black1"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+            />
           </svg>
         </div>
-                Upload your resume
-        <span className='text-PriGold font-normal'>
-                    MAX SIZE: 5MB
-        </span>
+        Upload your resume
+        <span className="font-normal text-PriGold">MAX SIZE: 5MB</span>
         {fileName ? (
           <div className="mt-[10px] text-gray-700">
-            <p>Uploaded File: <span className="font-bold">{fileName}</span></p>
+            <p>
+              Uploaded File: <span className="font-bold">{fileName}</span>
+            </p>
           </div>
         ) : (
           <div className="mt-4 text-gray-500"></div>
         )}
       </button>
-      <Button3 text="Create Profile" className=" text-[16px] font-normal " />
+      <Button3 text="Create Profile" className="text-[16px] font-normal" />
       {/* {fileName ? (
                 <div className="mt-4 text-gray-700">
                     <p>Uploaded File: <span className="font-bold">{fileName}</span></p>
