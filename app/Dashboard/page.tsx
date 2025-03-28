@@ -10,7 +10,7 @@ export default function Dashboard() {
     <div className="flex flex-col">
       <div className="p-[1%]">
         <Header1 />
-        <div className="shadow-custom flex w-[100%] flex-row rounded-[30px] mb-[80px] bg-GoldenWhite p-[1%]">
+        <div className="shadow-custom flex w-[100%] flex-row rounded-[30px] mb-[80px] bg-GoldenWhite p-[2%]">
           <div className="flex py-[5%] space-y-[200px] w-[20%] items-center flex-col">
             <div className="flex flex-col items-center justify-center">
               <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
