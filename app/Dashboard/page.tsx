@@ -10,7 +10,7 @@ export default function Dashboard() {
     <div className="flex flex-col">
       <div className="p-[1%]">
         <Header1 />
-        <div className="shadow-custom flex w-[100%] flex-row rounded-[30px] mb-[80px] bg-GoldenWhite p-[2%]">
+        <div className="shadow-custom flex w-[100%] flex-row justify-between rounded-[30px] mb-[80px] bg-GoldenWhite p-[2%]">
           <div className="flex py-[5%] space-y-[200px] w-[20%] items-center flex-col">
             <div className="flex flex-col items-center justify-center">
               <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
@@ -48,7 +48,7 @@ export default function Dashboard() {
               </Link>
             </div>
           </div>
-          <div className="w-[80%]">
+          <div className="w-[78%]">
             <div className="shadow-custom2 mb-[25px] w-[100%] rounded-[20px] bg-White p-[2%]">
               <div className="mb-[22px] flex w-[100%] flex-row items-center justify-between">
                 <p className="font-sans text-[21px]/[120%] text-Gray2">
