@@ -11,6 +11,10 @@ export default {
       backgroundImage:{
         "gradient-to-r": "linear-gradient(to right, #CC9743, #F9CF5E)",
       },
+      boxShadow: {
+        "custom": "0px 0px 45px -8px rgba(204, 151, 67, 0.3)",
+        "custom2": "0px 0px 8px 0px rgba(204, 151, 67, 0.3)",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -29,6 +33,7 @@ export default {
         Blue3: "#D2D6FA",
         Blue4: "#111847",
         BlueWhite: "#EAECFF",
+        BlueB1: "#007AFF",
         White: "#FFFFFF",
         Gray1: "#B5B5B5",
         Gray2: "#D2C8B7",
@@ -36,6 +41,8 @@ export default {
         Green2: "#E6F4E7",
         Red1: "#FF3B30",
         Red2: "#FFEBEB",
+        Yellow1: "#FFCC00",
+        Yellow2: "#FEF5DA",
       },
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
