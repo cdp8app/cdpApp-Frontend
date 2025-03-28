@@ -37,6 +37,7 @@ export default {
         White: "#FFFFFF",
         Gray1: "#B5B5B5",
         Gray2: "#D2C8B7",
+        Gray3: "#EAEBF0",
         Green1: "#34A853",
         Green2: "#E6F4E7",
         Red1: "#FF3B30",
