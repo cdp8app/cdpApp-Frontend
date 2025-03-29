@@ -38,28 +38,28 @@ export default function NewPasswordForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (Object.values(errors).every(value => value === true)) {
-      console.log("Form submitted successfully");
-    }
+    // if (Object.values(errors).every(value => value === true)) {
+    //   console.log("Form submitted successfully");
+    // }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-[12.96px] flex flex-col justify-start"
+      className=" flex flex-col justify-start"
     >
       <Label3
         text="Password"
-        className="text-start font-sans text-[16px] font-medium text-Blue4"
+        className="text-start text-[12px] font-medium text-Gold0"
       />
-      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Blue3 px-[4.91px] py-[4.91px]">
+      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          className="mr-[8px] h-[24px] w-[24px] text-Blue4"
+          className="mr-[8px] h-[24px] w-[24px] text-Gold0"
         >
           <path
             strokeLinecap="round"
@@ -72,22 +72,22 @@ export default function NewPasswordForm() {
           placeholder="Enter your password"
           value={password}
           onChange={handlePasswordChange}
-          className="w-[95%] font-sans text-[21px] placeholder-Gray1 outline-none"
+          className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
         />
       </div>
 
       <Label3
         text="Confirm password"
-        className="text-start font-sans text-[16px] font-medium text-Blue4"
+        className="text-start text-[12px] font-medium text-Gold0"
       />
-      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Blue3 px-[4.91px] py-[4.91px]">
+      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          className="mr-[8px] h-[24px] w-[24px] text-Blue4"
+          className="mr-[8px] h-[24px] w-[24px] text-Gold0"
         >
           <path
             strokeLinecap="round"
@@ -100,7 +100,7 @@ export default function NewPasswordForm() {
           placeholder="Confirm your password"
           value={confirmPassword}
           onChange={handleConfirmPasswordChange}
-          className="w-[95%] font-sans text-[21px] placeholder-Gray1 outline-none"
+          className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
         />
       </div>
 
@@ -137,7 +137,7 @@ export default function NewPasswordForm() {
               />
             </svg>
           )}
-          <span className="font-sans text-[21px]/[120%] text-Gray1">
+          <span className="font-sans text-[16px]/[120%] text-Gray1">
             8 characters
           </span>
         </div>
@@ -174,7 +174,7 @@ export default function NewPasswordForm() {
               />
             </svg>
           )}
-          <span className="font-sans text-[21px]/[120%] text-Gray1">
+          <span className="font-sans text-[16px]/[120%] text-Gray1">
             At least 1 lowercase letter
           </span>
         </div>
@@ -211,7 +211,7 @@ export default function NewPasswordForm() {
               />
             </svg>
           )}
-          <span className="font-sans text-[21px]/[120%] text-Gray1">
+          <span className="font-sans text-[16px]/[120%] text-Gray1">
             At least 1 uppercase letter
           </span>
         </div>
@@ -247,7 +247,7 @@ export default function NewPasswordForm() {
               />
             </svg>
           )}
-          <span className="font-sans text-[21px]/[120%] text-Gray1">
+          <span className="font-sans text-[16px]/[120%] text-Gray1">
             At least 1 special character (!&.-*$)
           </span>
         </div>
@@ -284,19 +284,12 @@ export default function NewPasswordForm() {
               />
             </svg>
           )}
-          <span className="font-sans text-[21px]/[120%] text-Gray1">
+          <span className="font-sans text-[16px]/[120%] text-Gray1">
             Passwords must match
           </span>
         </div>
       </div>
 
-      {/* <button
-                type="submit"
-                className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-                disabled={!Object.values(errors).every((value) => value === true)}
-            >
-                Submit
-            </button> */}
     </form>
   );
 }

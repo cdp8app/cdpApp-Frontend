@@ -16,12 +16,12 @@ const StudentAuthTogglePage = () => {
 
   return (
     <div className="flex w-[75%] flex-col items-center p-6">
-      <div className="mb-[20px] space-x-[10px] rounded-[30px] bg-Blue3 pb-[12px] pl-[18px] pr-[18px] pt-[12px]">
+      <div className="mb-[20px] space-x-[10px] rounded-[30px] bg-Gold3 pb-[12px] pl-[18px] pr-[18px] pt-[12px]">
         <button
           onClick={() => handleToggle(1)}
           className={`rounded-[30px] px-[50px] py-[9.5px] font-sans text-[16px] transition-colors ${
-            activeContent === 1 ? "bg-Blue2 text-White" : "text-Blue2"
-          } hover:bg-blue-600`}
+            activeContent === 1 ? "bg-PriGold text-White" : "text-Gold1"
+          } hover:bg-black`}
         >
           Login
         </button>
@@ -29,8 +29,8 @@ const StudentAuthTogglePage = () => {
         <button
           onClick={() => handleToggle(2)}
           className={`rounded-[30px] px-[50px] py-[9.5px] font-sans text-[16px] transition-colors ${
-            activeContent === 2 ? "bg-Blue2 text-White" : "text-Blue2"
-          } hover:bg-blue-600`}
+            activeContent === 2 ? "bg-PriGold text-White" : "text-Gold1"
+          } hover:bg-black`}
         >
           Register
         </button>
@@ -49,7 +49,7 @@ const StudentAuthTogglePage = () => {
                 <span>
                   <button
                     onClick={() => handleToggle(2)}
-                    className="font-sans text-[16px] font-semibold text-Blue1"
+                    className="font-sans text-[16px] font-semibold text-Gold1"
                   >
                     Register here!
                   </button>
@@ -57,9 +57,9 @@ const StudentAuthTogglePage = () => {
               </p>
             </div>
             <StudentLoginForm />
-            <div className="mb-[48.96px] w-[100%] items-end justify-end text-end">
+            <div className="mb-[30px] w-[100%] items-end justify-end text-end">
               <button className="mx-[11px] my-[10px]">
-                <h6 className="justify-end font-sans text-[16px] text-Blue1">
+                <h6 className="justify-end font-sans text-[12px] text-Gold1">
                   Forgot password?
                 </h6>
               </button>
@@ -94,7 +94,7 @@ const StudentAuthTogglePage = () => {
                 <span>
                   <button
                     onClick={() => handleToggle(1)}
-                    className="font-sans text-[16px] font-semibold text-Blue1"
+                    className="font-sans text-[16px] font-semibold text-Gold1"
                   >
                     Login here!
                   </button>

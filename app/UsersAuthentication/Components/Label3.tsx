@@ -7,7 +7,7 @@ interface Label3Props {
 }
 
 const Label3: React.FC<Label3Props> = ({ text }) => {
-  return <p className="${className} mt-[40px]">{text}</p>;
+  return <p className="${className} text-Gold0 font-sans mt-[40px]">{text}</p>;
 };
 
 export default Label3;

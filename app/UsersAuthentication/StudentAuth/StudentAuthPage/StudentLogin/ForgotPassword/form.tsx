@@ -4,7 +4,8 @@ import "../../../../../../app/globals.css";
 export default function ForgotPasswordForm() {
   return (
     <form className="flex justify-center">
-      <div className="mb-[121px] mt-[96px] flex w-[100%] flex-row items-center border-b-[2px] border-Blue3 px-[4.91px] py-[4.91px]">
+      <div className=" flex w-[100%] flex-row items-center border-b-[2px] border-Blue3 px-[4.91px] py-[4.91px]">
+        {/* <div className="mb-[121px] mt-[96px] flex w-[100%] flex-row items-center border-b-[2px] border-Blue3 px-[4.91px] py-[4.91px]"> */}
         {/* <Image src={emailIcon} alt="Phone" className="mr-[8px] w-[22.18px] h-[17.31px]" /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +23,7 @@ export default function ForgotPasswordForm() {
         </svg>
         <input
           placeholder="Enter your email address"
-          className="font-sans text-[21px] placeholder-Gray1 outline-none"
+          className="font-sans text-[16px] w-[95%] placeholder-Gray1 outline-none"
         />
       </div>
     </form>

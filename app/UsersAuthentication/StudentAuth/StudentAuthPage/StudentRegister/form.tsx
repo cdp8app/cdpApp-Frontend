@@ -7,9 +7,9 @@ export default function StudentRegisterForm() {
     <form className="flex flex-col justify-start">
       <Label2
         text="Email"
-        className="text-start font-sans text-[13px] font-medium text-Blue4"
+        className="text-start font-sans text-[13px] font-medium text-Gold0"
       />
-      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Blue3 px-[4.91px] py-[4.91px]">
+      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
         {/* <Image src={emailIcon} alt="Phone" className="mr-[8px] w-[22.18px] h-[17.31px]" /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -17,7 +17,7 @@ export default function StudentRegisterForm() {
           viewBox="0 0 24 24"
           stroke="currentColor"
           strokeWidth={2}
-          className="mr-[8px] h-[24px] w-[24px] text-Blue4"
+          className="mr-[8px] h-[24px] w-[24px] text-Gold0"
         >
           <path
             strokeLinecap="round"
@@ -27,14 +27,14 @@ export default function StudentRegisterForm() {
         </svg>
         <input
           placeholder="Enter your email address"
-          className="font-sans text-[21px] placeholder-Gray1 outline-none"
+          className="font-sans text-[16px] placeholder-Gray1 outline-none"
         />
       </div>
       <Label2
         text="Password"
         className="text-start font-sans text-[13px] font-medium text-Blue4"
       />
-      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Blue3 px-[4.91px] py-[4.91px]">
+      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
         {/* <Image src={passwordIcon} alt="password" className="mr-[8px] w-[16px] h-[20px]" /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@ export default function StudentRegisterForm() {
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          className="mr-[8px] h-[24px] w-[24px] text-Blue4"
+          className="mr-[8px] h-[24px] w-[24px] text-Gold0"
         >
           <path
             strokeLinecap="round"
@@ -52,15 +52,15 @@ export default function StudentRegisterForm() {
         </svg>
         <input
           type="password"
-          placeholder="Enter your password"
-          className="w-[95%] font-sans text-[21px] placeholder-Gray1 outline-none"
+          placeholder="Create password"
+          className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
         />
       </div>
       <Label2
-        text="Password"
+        text="Confirm Password"
         className="text-start font-sans text-[13px] font-medium text-Blue4"
       />
-      <div className="width-[100%] mb-[36px] mt-[8px] flex flex-row items-center border-b-[2px] border-Blue3 px-[4.91px] py-[4.91px]">
+      <div className="width-[100%] mb-[36px] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
         {/* <Image src={passwordIcon} alt="password" className="mr-[8px] w-[16px] h-[20px]" /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +68,7 @@ export default function StudentRegisterForm() {
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          className="mr-[8px] h-[24px] w-[24px] text-Blue4"
+          className="mr-[8px] h-[24px] w-[24px] text-Gold0"
         >
           <path
             strokeLinecap="round"
@@ -78,8 +78,8 @@ export default function StudentRegisterForm() {
         </svg>
         <input
           type="password"
-          placeholder="Enter your password"
-          className="w-[95%] font-sans text-[21px] placeholder-Gray1 outline-none"
+          placeholder="Re-enter password"
+          className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
         />
       </div>
     </form>

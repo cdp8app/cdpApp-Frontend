@@ -42,20 +42,20 @@ export default function SuccessfulVerificationPage() {
   };
 
   return (
-    <div className="h-screen p-[1%]">
+    <div className="h-screen p-[2%]">
       <Logo />
       <div className="my-auto flex h-[85%] w-[100%] flex-col items-center justify-center py-8">
         <div className="my-auto flex h-[100%] w-[80%] flex-col items-center justify-between">
           <div className="flex w-[100%] flex-col items-center justify-center">
-            <h2 className="mb-[16px] text-center font-sans text-[36px]/[120%] font-normal text-Blue4">
+            <h2 className="mb-[16px] text-center font-sans text-[27px]/[120%] font-normal text-Gold0">
               Verify your email address
             </h2>
-            <p className="flex w-[60%] flex-col text-center font-sans text-[21px]/[120%] font-normal text-Gray1">
+            <p className="flex w-[60%] flex-col text-center font-sans text-[16px]/[120%] font-normal text-Gray2">
               If you are not automatically redirected in 5 seconds
             </p>
             <Link
               href="#"
-              className="flex w-[60%] flex-col text-center font-sans text-[21px]/[120%] font-normal text-Blue2"
+              className="flex w-[60%] flex-col text-center font-sans text-[16px]/[120%] font-normal text-PriGold"
             >
               Click here to proceed
             </Link>
@@ -68,7 +68,7 @@ export default function SuccessfulVerificationPage() {
                 viewBox="0 0 24 24"
                 strokeWidth="1"
                 stroke="currentColor"
-                className="mr-[10px] size-6 text-Green1"
+                className="mr-[10px] size-8 text-Green1"
               >
                 <path
                   strokeLinecap="round"
@@ -76,7 +76,7 @@ export default function SuccessfulVerificationPage() {
                   d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                 />
               </svg>
-              <p className="flex flex-col text-center font-sans text-[27px]/[120%] font-normal text-Green1">
+              <p className="flex flex-col text-center font-sans text-[21px]/[120%] font-normal text-Green1">
                 Verification successful
               </p>
             </div>
@@ -91,8 +91,8 @@ export default function SuccessfulVerificationPage() {
                     onChange={e => handleChange(e, index)}
                     onKeyDown={e => handleKeyDown(e, index)}
                     maxLength={1}
-                    className={`h-28 w-24 rounded-md border border-Blue1 text-center text-[47px] text-xl focus:bg-Blue3 focus:outline-none ${digit ? "bg-Blue3" : "bg-white"}`}
-                    placeholder="5"
+                    className={`h-28 w-24 rounded-md border border-Green1 text-center text-[47px] font-sans font-medium text-xl focus:bg-Green2 focus:outline-none ${digit ? "bg-Green2" : "bg-white"}`}
+                    placeholder=" "
                     autoFocus={index === 0}
                     readOnly
                   />
@@ -120,7 +120,7 @@ export default function SuccessfulVerificationPage() {
                 href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}
                 className="text-center"
               >
-                <h1 className="text-[21px]/[120%] font-normal text-Blue1">
+                <h1 className="text-[16px]/[120%] font-normal text-Gold1 font-sans">
                   Back to Login
                 </h1>
               </Link>

@@ -7,7 +7,7 @@ interface LabelProps {
 }
 
 const Label: React.FC<LabelProps> = ({ text }) => {
-  return <p className="${className} mt-[30px]">{text}</p>;
+  return <p className="${className} mt-[30px] font-sans">{text}</p>;
 };
 
 export default Label;
