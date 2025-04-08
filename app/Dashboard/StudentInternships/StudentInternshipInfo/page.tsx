@@ -5,7 +5,7 @@ import Button7 from "@/app/UsersAuthentication/Components/Button7";
 import Link from "next/link";
 import Footer1 from "@/app/Components/Footer1";
 
-export default function StudentApplicationInfo() {
+export default function StudentInternshipInfo() {
   return (
     <div className="flex flex-col">
       <div className="p-[2%]">
@@ -14,11 +14,11 @@ export default function StudentApplicationInfo() {
           <div className="flex w-[20%] flex-col items-center space-y-[200px] py-[1%]">
             <div className="flex flex-col items-center justify-center">
               <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
-              <h1 className="mb-[6px] font-sans text-[27px]/[120%] font-bold">
-                John Doe
+              <h1 className="mb-[6px] text-center font-sans text-[27px]/[120%] font-bold">
+                Big Star Technologies
               </h1>
               <h1 className="mb-[21px] font-sans text-[12px]/[120%] font-normal text-Gray2">
-                Med/surgery
+                INFORMATION TECHNOLOGY
               </h1>
               <Button7
                 text="View Profile"
@@ -124,6 +124,14 @@ export default function StudentApplicationInfo() {
             <div className="mt-[21px] flex flex-row">
               <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
                 End internship
+              </button>
+              <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
+                Rate company
+              </button>
+            </div>
+            <div className="mt-[21px] flex flex-row">
+              <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
+                Write report
               </button>
               <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
                 Rate company
