@@ -1,10 +1,25 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Footer1 from "../Components/Footer1";
 import Header1 from "../Components/Header1";
 import Link from "next/link";
+import NotificationSettingsModal from "./NotificationsSettings/modal";
+import ToggleSwitch from "./NotificationsSettings/toggleSwitch";
+import Button4 from "../UsersAuthentication/Components/Button4";
+import ProfileVisibilityModal from "./ProfileVisibility/modal";
+import ManageDataSharingModal from "./ManageData/modal";
+import RecommendationsModal from "./Recommendations/modal";
 
 export default function Settings() {
+  const [isNotificationSettingsModalOpen, setIsNotificationSettingsModalOpen] =
+    useState(false);
+  const [isProfileVisibilityModalOpen, setIsProfileVisibilityModalOpen] =
+    useState(false);
+  const [isManageDataSharingModalOpen, setIsManageDataSharingModalOpen] =
+    useState(false);
+  const [isRecommendationsModalOpen, setIsRecommendationsModalOpen] =
+    useState(false);
+
   return (
     <div className="flex flex-col">
       <div className="p-[1%]">
@@ -71,15 +86,209 @@ export default function Settings() {
             </h1>
           </div>
           <div className="flex flex-col">
-            <Link className="p-[10px] font-sans text-[16px]/[120%]" href={"#"}>
+            <button
+              onClick={() => setIsProfileVisibilityModalOpen(true)}
+              className="flex justify-self-start p-[10px] font-sans text-[16px]/[120%]"
+            >
               Profile visibilty
-            </Link>
-            <Link className="p-[10px] font-sans text-[16px]/[120%]" href={"#"}>
+            </button>
+            <ProfileVisibilityModal
+              isProfileVisibilityModalOpen={isProfileVisibilityModalOpen}
+              onProfileVisibilityModalClose={() =>
+                setIsProfileVisibilityModalOpen(false)
+              }
+            >
+              <div className="mb-6 flex flex-row items-center border-b-[1px] border-Gold3 p-[10px]">
+                <button onClick={() => setIsProfileVisibilityModalOpen(false)}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="mr-[5px] size-8 text-PriGold"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 19.5 8.25 12l7.5-7.5"
+                    />
+                  </svg>
+                </button>
+                <h1 className="font-sans text-[36px]/[120%] text-PriGold">
+                  Profile visibility
+                </h1>
+              </div>
+              <div className="mb-6 border-b-[1px] border-Gold3 p-[10px]">
+                <h5 className="font-sans text-[21px]/[120%] text-Gray2">
+                  Who can view your profile details?
+                </h5>
+              </div>
+              <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+                <div>
+                  <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                    Not visible
+                  </h1>
+                  <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                    Your profile is Invisible to everyone and will not appear in
+                    search results
+                  </h2>
+                </div>
+                <div>
+                  <ToggleSwitch />
+                </div>
+              </div>
+              <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+                <div>
+                  <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                    Recruiters only
+                  </h1>
+                  <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                    Your profile is only visible to recruiters and will appear
+                    in their search results
+                  </h2>
+                </div>
+                <div>
+                  <ToggleSwitch />
+                </div>
+              </div>
+              <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+                <div>
+                  <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                    Everyone
+                  </h1>
+                  <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                    Your profile is visible to everyone and will appear in
+                    search results
+                  </h2>
+                </div>
+                <div>
+                  <ToggleSwitch />
+                </div>
+              </div>
+              <Button4
+                // onClick={handleSave}
+                text="Save"
+                className="mt-10 text-[16px] font-normal"
+              />
+            </ProfileVisibilityModal>
+            <button
+              onClick={() => setIsManageDataSharingModalOpen(true)}
+              className="flex justify-self-start p-[10px] font-sans text-[16px]/[120%]"
+            >
               Manage data sharing
-            </Link>
-            <Link className="p-[10px] font-sans text-[16px]/[120%]" href={"#"}>
+            </button>
+            <ManageDataSharingModal
+              isManageDataSharingModalOpen={isManageDataSharingModalOpen}
+              onManageDataSharingModalClose={() =>
+                setIsManageDataSharingModalOpen(false)
+              }
+            >
+              <div className="mb-6 flex flex-row items-center border-b-[1px] border-Gold3 p-[10px]">
+                <button onClick={() => setIsManageDataSharingModalOpen(false)}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="mr-[5px] size-8 text-PriGold"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 19.5 8.25 12l7.5-7.5"
+                    />
+                  </svg>
+                </button>
+                <h1 className="font-sans text-[36px]/[120%] text-PriGold">
+                  Manage data sharing
+                </h1>
+              </div>
+              <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+                <div>
+                  <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                    Partners
+                  </h1>
+                  <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                    Permit sharing your data with our partners
+                  </h2>
+                </div>
+                <div>
+                  <ToggleSwitch />
+                </div>
+              </div>
+              <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+                <div>
+                  <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                    Third party services
+                  </h1>
+                  <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                    Permit sharing your data with third party services
+                  </h2>
+                </div>
+                <div>
+                  <ToggleSwitch />
+                </div>
+              </div>
+              <Button4
+                // onClick={handleSave}
+                text="Save"
+                className="mt-10 text-[16px] font-normal"
+              />
+            </ManageDataSharingModal>
+            <button
+              onClick={() => setIsRecommendationsModalOpen(true)}
+              className="flex justify-self-start p-[10px] font-sans text-[16px]/[120%]"
+            >
               Personalized recommendations
-            </Link>
+            </button>
+            <RecommendationsModal
+              isRecommendationsModalOpen={isRecommendationsModalOpen}
+              onRecommendationsModalClose={() =>
+                setIsRecommendationsModalOpen(false)
+              }
+            >
+              <div className="mb-6 flex flex-row items-center border-b-[1px] border-Gold3 p-[10px]">
+                <button onClick={() => setIsRecommendationsModalOpen(false)}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="mr-[5px] size-8 text-PriGold"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 19.5 8.25 12l7.5-7.5"
+                    />
+                  </svg>
+                </button>
+                <h1 className="font-sans text-[36px]/[120%] text-PriGold">
+                  Recommendations
+                </h1>
+              </div>
+              <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+                <div>
+                  <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                    Personalized recommendations
+                  </h1>
+                  <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                    Receive internship suggestions based on your activity
+                  </h2>
+                </div>
+                <div>
+                  <ToggleSwitch />
+                </div>
+              </div>
+              <Button4
+                // onClick={handleSave}
+                text="Save"
+                className="mt-10 text-[16px] font-normal"
+              />
+            </RecommendationsModal>
           </div>
           <div className="mt-[21px] border-b-[1px] border-Gray2 p-[10px]">
             <h1 className="font-sans text-[21px]/[120%] text-Gray2">
@@ -87,16 +296,154 @@ export default function Settings() {
             </h1>
           </div>
           <div className="flex flex-col">
-            <Link className="p-[10px] font-sans text-[16px]/[120%]" href={"#"}>
+            <button
+              onClick={() => setIsNotificationSettingsModalOpen(true)}
+              className="flex justify-self-start p-[10px] font-sans text-[16px]/[120%]"
+            >
               Customize notifications
-            </Link>
+            </button>
           </div>
+          <NotificationSettingsModal
+            isNotificationSettingsModalOpen={isNotificationSettingsModalOpen}
+            onNotificationSettingsModalClose={() =>
+              setIsNotificationSettingsModalOpen(false)
+            }
+          >
+            <div className="mb-6 flex flex-row items-center border-b-[1px] border-Gold3 p-[10px]">
+              <button onClick={() => setIsNotificationSettingsModalOpen(false)}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                  className="mr-[5px] size-8 text-PriGold"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 19.5 8.25 12l7.5-7.5"
+                  />
+                </svg>
+              </button>
+              <h1 className="font-sans text-[36px]/[120%] text-PriGold">
+                Notifications
+              </h1>
+            </div>
+            <div className="mb-6 border-b-[1px] border-Gold3 p-[10px]">
+              <h5 className="font-sans text-[21px]/[120%] text-Gray2">
+                Notifications channels
+              </h5>
+            </div>
+            <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+              <div>
+                <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                  Email notifications
+                </h1>
+                <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                  Toggle on/off to receive updates via email
+                </h2>
+              </div>
+              <div>
+                <ToggleSwitch />
+              </div>
+            </div>
+            <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+              <div>
+                <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                  SMS notifications
+                </h1>
+                <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                  Option to receive text messages for urgent alerts
+                </h2>
+              </div>
+              <div>
+                <ToggleSwitch />
+              </div>
+            </div>
+            <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+              <div>
+                <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                  In-app notifications
+                </h1>
+                <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                  Enable notifications that appear while using the website
+                </h2>
+              </div>
+              <div>
+                <ToggleSwitch />
+              </div>
+            </div>
+            <div className="mb-6 border-b-[1px] border-Gold3 p-[10px]">
+              <h5 className="font-sans text-[21px]/[120%] text-Gray2">
+                Notifications types
+              </h5>
+            </div>
+            <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+              <div>
+                <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                  New opportunities
+                </h1>
+                <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                  Alerts for new internship postings that match your interests
+                </h2>
+              </div>
+              <div>
+                <ToggleSwitch />
+              </div>
+            </div>
+            <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+              <div>
+                <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                  Application updates
+                </h1>
+                <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                  Notifications about the status of your internship applications
+                </h2>
+              </div>
+              <div>
+                <ToggleSwitch />
+              </div>
+            </div>
+            <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+              <div>
+                <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                  Messages
+                </h1>
+                <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                  Updates when a company or recruiter sends you a message
+                </h2>
+              </div>
+              <div>
+                <ToggleSwitch />
+              </div>
+            </div>
+            <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
+              <div>
+                <h1 className="mb-[2px] font-sans text-[12px]/[120%] text-Gray2">
+                  Reminders
+                </h1>
+                <h2 className="font-sans text-[12px]/[120%] text-Gold1">
+                  Alerts for schedules, deadlines or events related to your
+                  applications
+                </h2>
+              </div>
+              <div>
+                <ToggleSwitch />
+              </div>
+            </div>
+            <Button4
+              // onClick={handleSave}
+              text="Save"
+              className="mt-10 text-[16px] font-normal"
+            />
+          </NotificationSettingsModal>
           <div className="mt-[21px] border-b-[1px] border-Gray2 p-[10px]">
             <h1 className="font-sans text-[21px]/[120%] text-Gray2">
               Support and feedback
             </h1>
           </div>
-          <div className="flex flex-col mb-[100px]">
+          <div className="mb-[100px] flex flex-col">
             <Link className="p-[10px] font-sans text-[16px]/[120%]" href={"#"}>
               Send feedback
             </Link>
