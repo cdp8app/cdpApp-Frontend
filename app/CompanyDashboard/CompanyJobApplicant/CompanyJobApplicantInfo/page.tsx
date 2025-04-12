@@ -1,11 +1,17 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Header1 from "@/app/Components/Header1";
 import Button7 from "@/app/UsersAuthentication/Components/Button7";
 import Footer1 from "@/app/Components/Footer1";
 import Link from "next/link";
+import ScheduleInterviewModal from "./ScheduleInterviewModal/modal";
+import Button4 from "@/app/UsersAuthentication/Components/Button4";
+import RateStudentsModal from "@/app/RateStudents/modal";
 
 export default function CompanyJobApplicantInfo() {
+  const [isScheduleInterviewModalOpen, setIsScheduleInterviewModalOpen] =
+    useState(false);
+  const [isRateStudentsModalOpen, setIsRateStudentsModalOpen] = useState(false);
   return (
     <div className="flex flex-col">
       <div className="p-[2%]">
@@ -79,7 +85,7 @@ export default function CompanyJobApplicantInfo() {
             <button className="my-[21px] rounded-[999px] border-[2px] border-PriGold px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-PriGold">
               Proceed to interview
             </button>
-            <div className=" flex w-[80%] flex-col">
+            <div className="flex w-[80%] flex-col">
               <div>
                 <h1 className="font-sans text-[16px]/[120%] text-Gold1">
                   COVER LETTER:
@@ -108,9 +114,67 @@ export default function CompanyJobApplicantInfo() {
               <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
                 Reject Internship
               </button>
-              <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
+              <button
+                onClick={() => setIsScheduleInterviewModalOpen(true)}
+                className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite"
+              >
                 Proceed to interview
               </button>
+              <ScheduleInterviewModal
+                isScheduleInterviewModalOpen={isScheduleInterviewModalOpen}
+                onScheduleInterviewModalClose={() =>
+                  setIsScheduleInterviewModalOpen(false)
+                }
+              >
+                <div className="mb-[24px]">
+                  <h1 className="font-sans text-[21px]/[120%] text-PriGold">
+                    Schedule interview
+                  </h1>
+                  <h1 className="font-sans text-[12px]/[120%] text-Gray1">
+                    SELECT A DATE AND TIME FOR THE INTERVIEW
+                  </h1>
+                  {/* <button
+                    onClick={() => setIsScheduleInterviewModalOpen(false)}
+                  >
+                  </button> */}
+                </div>
+                <div className="flex flex-row items-center rounded-[15px] bg-Gold3 px-[20px] py-[16px]">
+                  <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] bg-red-800"></div>
+                  <div className="flex h-[100%] flex-col justify-between">
+                    <h1 className="font-sans text-[16px]/[100%] font-normal text-Black2">
+                      John Doe
+                    </h1>
+                    <h2 className="flex flex-row font-sans text-[16px] text-Gray2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="mr-[6px] size-6 text-Gray2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
+                        />
+                      </svg>
+                      COMPUTER ENGINEERING
+                    </h2>
+                    <Link
+                      href={"#"}
+                      className="max-w-[136px] rounded-[999px] border-[2px] border-PriGold px-[20px] py-[10px] text-center font-sans text-[12px]/[120%] text-PriGold"
+                    >
+                      View details
+                    </Link>
+                  </div>
+                </div>
+                <Button4
+                  // onClick={handleSave}
+                  text="Save"
+                  className="mt-10 text-[16px] font-normal"
+                />
+              </ScheduleInterviewModal>
             </div>
             <div className="mt-[21px] flex flex-row">
               <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
@@ -124,9 +188,53 @@ export default function CompanyJobApplicantInfo() {
               <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
                 End internship
               </button>
-              <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
+              <button
+                onClick={() => setIsRateStudentsModalOpen(true)}
+                className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite"
+              >
                 Rate student
               </button>
+              <RateStudentsModal
+                isRateStudentsModalOpen={isRateStudentsModalOpen}
+                onRateStudentsModalClose={() =>
+                  setIsRateStudentsModalOpen(false)
+                }
+              >
+                <div className="mb-[24px] justify-center text-center">
+                  <h1 className="font-sans text-[21px]/[120%] text-PriGold">
+                    Rate the company
+                  </h1>
+                  <h1 className="mt-[12px] font-sans text-[12px]/[120%] text-Gray1">
+                    LEAVE A REVIEW OF YOUR EXPERIENCE WITH THIS COMPANY
+                  </h1>
+                  <div className="mt-[36px] h-[100px] w-[100px] justify-self-center rounded-[50px] bg-Gray2"></div>
+                  <h1 className="font-sans text-[16px]/[120%] my-[8px]">John Doe</h1>
+                  <div className="flex justify-center items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="size-6 text-Gray2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
+                      />
+                    </svg>
+
+                    <h1 className="font-sans text-[16px]/[120%] ml-[6px] text-Gray2">MED/SURGERY</h1>
+                  </div>
+                  <button className="font-sans text-[16px]/[120%] ">View student</button>
+                </div>
+                <Button4
+                  // onClick={handleSave}
+                  text="Save"
+                  className="mt-10 text-[16px] font-normal"
+                />
+              </RateStudentsModal>
             </div>
           </div>
         </div>

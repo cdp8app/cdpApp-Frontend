@@ -56,7 +56,7 @@ export default function CompanyDashboard() {
                 </p>
                 <Link
                   className="flex flex-row items-center py-[12px] font-sans text-[21px]/[120%] font-normal text-Gray2"
-                  href={"#"}
+                  href={"/CompanyDashboard/CompanyJobsPosted"}
                 >
                   See all
                   <svg
@@ -118,7 +118,7 @@ export default function CompanyDashboard() {
                 </p>
                 <Link
                   className="flex flex-row items-center py-[12px] font-sans text-[21px]/[120%] font-normal text-Gray2"
-                  href={"#"}
+                  href={"/CompanyDashboard/CompanyJobApplicant"}
                 >
                   See all
                   <svg
@@ -191,7 +191,7 @@ export default function CompanyDashboard() {
                 </p>
                 <Link
                   className="flex flex-row items-center py-[12px] font-sans text-[21px]/[120%] font-normal text-Gray2"
-                  href={"#"}
+                  href={"/CompanyDashboard/CompanyOffersExtended"}
                 >
                   See all
                   <svg

@@ -24,7 +24,7 @@ export default function Footer1() {
         <div className="space-x-5">
           <Link
             className="font-sans text-[16px]/[120%] font-normal text-White"
-            href={"#"}
+            href={"@/app/StudentHomePage"}
           >
             Home
           </Link>

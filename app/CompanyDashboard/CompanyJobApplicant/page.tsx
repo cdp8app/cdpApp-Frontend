@@ -11,7 +11,7 @@ export default function CompanyJobApplicant() {
         <Header1 />
         <div className="px-[4%]">
           <Link
-            className="flex flex-row items-center py-[12px] border-b-[1px] border-Gold3 font-sans text-[36px]/[120%] font-normal text-Gold1"
+            className="flex flex-row items-center border-b-[1px] border-Gold3 py-[12px] font-sans text-[36px]/[120%] font-normal text-Gold1"
             href={"#"}
           >
             <svg
@@ -44,7 +44,7 @@ export default function CompanyJobApplicant() {
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
-                    className="size-5 text-Gray1 mr-[5px] "
+                    className="mr-[5px] size-5 text-Gray1"
                   >
                     <path
                       strokeLinecap="round"
@@ -61,9 +61,15 @@ export default function CompanyJobApplicant() {
                   the “Why are you interested in working with us” field, when
                   filling the application.
                 </p>
-                <button className="mr-[10px] w-[132px] rounded-[999px] bg-PriGold px-[30px] py-[12px] font-sans text-[12px]/[120%] text-GoldenWhite">
+
+                <Link
+                  href={
+                    "/CompanyDashboard/CompanyJobApplicant/CompanyJobApplicantInfo"
+                  }
+                  className="mr-[10px] w-[132px] rounded-[999px] bg-PriGold px-[30px] py-[12px] font-sans text-[12px]/[120%] text-GoldenWhite"
+                >
                   View details
-                </button>
+                </Link>
                 <button className="w-[106px] rounded-[999px] border-[2px] border-Red1 px-[30px] py-[12px] font-sans text-[12px]/[120%] text-Red1">
                   Deny
                 </button>
