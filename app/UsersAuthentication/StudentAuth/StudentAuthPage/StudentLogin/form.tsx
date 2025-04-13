@@ -1,15 +1,33 @@
 "use client";
 import "../../../../../app/globals.css";
 import Label from "@/app/UsersAuthentication/Components/Label";
+import { useState } from "react";
+import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext"; 
+
 export default function StudentLoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login, loading, error } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await login(email, password);
+  };
+
   return (
-    <form className="mt-[12.96px] flex flex-col justify-start">
+    <form onSubmit={handleSubmit} className="mt-[12.96px] flex flex-col justify-start">
+      {error && (
+        <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-800">
+          {error}
+        </div>
+      )}
+      
       <Label
         text="Email"
         className="text-start font-sans text-[12px] font-medium text-Gold0"
       />
       <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
-        {/* <Image src={emailIcon} alt="Phone" className="mr-[8px] w-[22.18px] h-[17.31px]" /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -25,16 +43,20 @@ export default function StudentLoginForm() {
           />
         </svg>
         <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
           placeholder="Enter your email address"
-          className="font-sans text-[16px] placeholder-Gray1 outline-none"
+          className="w-full font-sans text-[16px] placeholder-Gray1 outline-none"
+          required
         />
       </div>
+      
       <Label
         text="Password"
-        className="text-start font-sans text-[12px] font-medium text-Gold0"
+        className="mt-4 text-start font-sans text-[12px] font-medium text-Gold0"
       />
       <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
-        {/* <Image src={passwordIcon} alt="password" className="mr-[8px] w-[16px] h-[20px]" /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -50,10 +72,34 @@ export default function StudentLoginForm() {
           />
         </svg>
         <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           type="password"
           placeholder="Enter your password"
-          className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
+          className="w-full font-sans text-[16px] placeholder-Gray1 outline-none"
+          required
         />
+      </div>
+      
+      <div className="mt-2 flex justify-end">
+        <Link href="/forgot-password" className="text-sm text-Gold0 hover:underline">
+          Forgot Password?
+        </Link>
+      </div>
+      
+      <button
+        type="submit"
+        disabled={loading}
+        className="mt-6 rounded-md bg-Gold0 px-4 py-2 font-sans font-medium text-white transition duration-200 hover:bg-Gold1 focus:outline-none disabled:bg-Gold3"
+      >
+        {loading ? "Logging in..." : "Login"}
+      </button>
+      
+      <div className="mt-4 text-center text-sm">
+        Don&apos;t have an account?{" "}
+        <Link href="/register" className="text-Gold0 hover:underline">
+          Register
+        </Link>
       </div>
     </form>
   );
