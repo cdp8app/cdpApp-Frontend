@@ -1,4 +1,4 @@
-import { clientFetch, getAuthHeader } from '../api';
+import { clientFetch, getAuthHeader } from "../api";
 
 export const jobService = {
   async getJobs(filters = {}) {
@@ -9,7 +9,7 @@ export const jobService = {
       if (value) queryParams.append(key, String(value));
     });
     
-    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
     return clientFetch(`/api/jobs/${queryString}`, {
       headers: getAuthHeader(),
     });

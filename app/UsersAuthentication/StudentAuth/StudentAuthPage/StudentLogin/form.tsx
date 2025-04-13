@@ -96,7 +96,7 @@ export default function StudentLoginForm() {
       </button>
       
       <div className="mt-4 text-center text-sm">
-        Don&apos;t have an account?{' '}
+        Don&apos;t have an account?{" "}
         <Link href="/register" className="text-Gold0 hover:underline">
           Register
         </Link>

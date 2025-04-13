@@ -1,5 +1,5 @@
 // lib/services/internshipService.ts
-import { clientFetch, getAuthHeader } from '../api';
+import { clientFetch, getAuthHeader } from "../api";
 
 export const internshipService = {
   async getInternships(filters = {}) {
@@ -10,7 +10,7 @@ export const internshipService = {
       if (value) queryParams.append(key, String(value));
     });
     
-    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
     return clientFetch(`/api/internships/${queryString}`, {
       headers: getAuthHeader(),
     });

@@ -6,9 +6,9 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function clientFetch(endpoint: string, options: RequestInit = {}) {
   const defaultOptions: RequestInit = {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    credentials: 'include', // For handling cookies if needed
+    credentials: "include", // For handling cookies if needed
   };
 
   // Merge the default headers with any provided headers
@@ -38,9 +38,9 @@ export async function serverFetch(endpoint: string, options: RequestInit = {}) {
   
   const defaultOptions: RequestInit = {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    cache: 'no-store', // Disable caching by default for server components
+    cache: "no-store", // Disable caching by default for server components
   };
 
   // Merge options
@@ -65,8 +65,8 @@ export async function serverFetch(endpoint: string, options: RequestInit = {}) {
 
 // Helper to get auth header with token
 export const getAuthHeader = () => {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('authToken');
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("authToken");
     return token ? { Authorization: `Bearer ${token}` } : {};
   }
   return {};

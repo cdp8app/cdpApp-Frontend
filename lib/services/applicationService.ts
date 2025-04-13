@@ -1,16 +1,16 @@
 // lib/services/applicationService.ts
-import { clientFetch, getAuthHeader } from '../api';
+import { clientFetch, getAuthHeader } from "../api";
 
 export const applicationService = {
   async getMyApplications() {
-    return clientFetch('/api/applications/my-applications/', {
+    return clientFetch("/api/applications/my-applications/", {
       headers: getAuthHeader(),
     });
   },
   
   async applyToJob(jobId: string, applicationData: any) {
-    return clientFetch('/api/applications/job/', {
-      method: 'POST',
+    return clientFetch("/api/applications/job/", {
+      method: "POST",
       headers: getAuthHeader(),
       body: JSON.stringify({
         job_id: jobId,
@@ -20,8 +20,8 @@ export const applicationService = {
   },
   
   async applyToInternship(internshipId: string, applicationData: any) {
-    return clientFetch('/api/applications/internship/', {
-      method: 'POST',
+    return clientFetch("/api/applications/internship/", {
+      method: "POST",
       headers: getAuthHeader(),
       body: JSON.stringify({
         internship_id: internshipId,
