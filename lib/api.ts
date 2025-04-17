@@ -64,7 +64,7 @@ export async function serverFetch(endpoint: string, options: RequestInit = {}) {
 }
 
 // Helper to get auth header with token
-export const getAuthHeader = () => {
+export const getAuthHeader = (): Record<string,string> => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("authToken");
     return token ? { Authorization: `Bearer ${token}` } : {};
