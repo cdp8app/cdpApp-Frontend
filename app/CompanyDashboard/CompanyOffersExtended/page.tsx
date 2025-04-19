@@ -4,7 +4,7 @@ import Header1 from "@/app/Components/Header1";
 import Link from "next/link";
 import React, { useState } from "react";
 
-export default function StudentInternships() {
+export default function CompanyOffersExtended() {
   const [section, setSection] = useState(1);
 
   const handleSectionChange = (sectionNumber: number) => {
@@ -24,9 +24,9 @@ export default function StudentInternships() {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                strokeWidth="1"
+                strokeWidth="2"
                 stroke="currentColor"
-                className="size-8"
+                className="size-8 text-Gold2"
               >
                 <path
                   strokeLinecap="round"
@@ -34,61 +34,35 @@ export default function StudentInternships() {
                   d="M15.75 19.5 8.25 12l7.5-7.5"
                 />
               </svg>
-              Internships
+              Offers Extended
             </Link>
           </div>
           <div className="space-x-[16px]">
             <button
               onClick={() => handleSectionChange(1)}
-              className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 1 ? "bg-PriGold" : "bg-GoldenWhite text-Gray2"}`}
+              className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 1 ? "bg-Gold2" : "bg-GoldenWhite text-Gray2"}`}
             >
               All
             </button>
             <button
               onClick={() => handleSectionChange(2)}
-              className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 2 ? "bg-PriGold" : "bg-GoldenWhite text-Gray2"}`}
+              className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 2 ? "bg-Gold2" : "bg-GoldenWhite text-Gray2"}`}
             >
-              Completed
+              Accepted
             </button>
             <button
               onClick={() => handleSectionChange(3)}
-              className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 3 ? "bg-PriGold" : "bg-GoldenWhite text-Gray2"}`}
+              className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 3 ? "bg-Gold2" : "bg-GoldenWhite text-Gray2"}`}
             >
-              Ongoing
+              Pending
             </button>
             <button
               onClick={() => handleSectionChange(4)}
-              className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 4 ? "bg-PriGold" : "bg-GoldenWhite text-Gray2"}`}
+              className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 4 ? "bg-Gold2" : "bg-GoldenWhite text-Gray2"}`}
             >
-              Not started
+              Denied
             </button>
           </div>
-
-          {/* <div className="flex w-full justify-center">
-            <div className="w-1/2 rounded-lg border p-6 shadow-lg">
-              {section === 1 && (
-                <div className="text-center">Content for Page 1</div>
-              )}
-              {section === 2 && (
-                <div className="text-center">Content for Page 2</div>
-              )}
-              {section === 3 && (
-                <div className="text-center">Content for Page 3</div>
-              )}
-              {section === 4 && (
-                <div className="text-center">Content for Page 4</div>
-              )}
-            </div>
-          </div> */}
-          {/* <div className="space-x-[16px]">
-            <button className="w-[186px] rounded-[30px] bg-PriGold px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2">
-              All
-            </button>
-            <button className="w-[186px] rounded-[30px] bg-GoldenWhite px-[20px] py-[12px] font-sans text-[16px]/[120%] text-Gray2 shadow-custom2">
-              Completed
-            </button>
-
-          </div> */}
           {section === 1 && (
             <div className="mt-[20px]">
               <div className="flex w-[100%] flex-row items-center justify-between rounded-[18px] bg-GoldenWhite py-[16px] pl-[16px] pr-[55px] shadow-custom2">
@@ -96,7 +70,7 @@ export default function StudentInternships() {
                   <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
                   <div className="ml-[12px] flex flex-col">
                     <h1 className="mb-[6px] font-sans text-[16px]/[120%]">
-                      Data analyst intern
+                      John Doe
                     </h1>
                     <div className="flex flex-row items-center">
                       <svg
@@ -110,23 +84,23 @@ export default function StudentInternships() {
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"
+                          d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
                         />
                       </svg>
 
                       <h1 className="font-sans text-[16px]/[120%] text-Gray2">
-                        BIG STAR TECHNOLOGIES
+                        MED/SURGERY
                       </h1>
                     </div>
                     <button className="mt-[18px] flex w-[136px] flex-row items-center justify-center rounded-[999px] border-[2px] border-PriGold px-[20px] py-[10px] font-sans text-[12px]/[100%] font-normal text-PriGold">
-                      Start Internship
+                      View details
                     </button>
                   </div>
                 </div>
                 <div className="flex flex-row items-center rounded-[8px] bg-Red2 px-[16px] py-[8px]">
                   <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Red1"></div>
                   <p className="font-sans text-[12px]/[120%] font-normal text-Red1">
-                    Not started
+                    Denied
                   </p>
                 </div>
               </div>
@@ -135,7 +109,7 @@ export default function StudentInternships() {
                   <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
                   <div className="ml-[12px] flex flex-col">
                     <h1 className="mb-[6px] font-sans text-[16px]/[120%]">
-                      Data analyst intern
+                      John Doe
                     </h1>
                     <div className="flex flex-row items-center">
                       <svg
@@ -149,23 +123,23 @@ export default function StudentInternships() {
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"
+                          d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
                         />
                       </svg>
 
                       <h1 className="font-sans text-[16px]/[120%] text-Gray2">
-                        BIG STAR TECHNOLOGIES
+                        MED/SURGERY
                       </h1>
                     </div>
                     <button className="mt-[18px] flex w-[136px] flex-row items-center justify-center rounded-[999px] border-[2px] border-PriGold px-[20px] py-[10px] font-sans text-[12px]/[100%] font-normal text-PriGold">
-                      View Details
+                      View details
                     </button>
                   </div>
                 </div>
                 <div className="flex flex-row items-center rounded-[8px] bg-Green2 px-[16px] py-[8px]">
                   <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Green1"></div>
                   <p className="font-sans text-[12px]/[120%] font-normal text-Green1">
-                    Completed
+                    Accepted
                   </p>
                 </div>
               </div>
@@ -174,7 +148,7 @@ export default function StudentInternships() {
                   <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
                   <div className="ml-[12px] flex flex-col">
                     <h1 className="mb-[6px] font-sans text-[16px]/[120%]">
-                      Data analyst intern
+                      John Doe
                     </h1>
                     <div className="flex flex-row items-center">
                       <svg
@@ -188,23 +162,23 @@ export default function StudentInternships() {
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"
+                          d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
                         />
                       </svg>
 
                       <h1 className="font-sans text-[16px]/[120%] text-Gray2">
-                        BIG STAR TECHNOLOGIES
+                        MED/SURGERY
                       </h1>
                     </div>
                     <button className="mt-[18px] flex w-[136px] flex-row items-center justify-center rounded-[999px] border-[2px] border-PriGold px-[20px] py-[10px] font-sans text-[12px]/[100%] font-normal text-PriGold">
-                      View Details
+                      View details
                     </button>
                   </div>
                 </div>
                 <div className="flex flex-row items-center rounded-[8px] bg-Yellow2 px-[16px] py-[8px]">
                   <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Yellow1"></div>
                   <p className="font-sans text-[12px]/[120%] font-normal text-Yellow1">
-                    Ongoing
+                    Pending
                   </p>
                 </div>
               </div>
@@ -216,7 +190,7 @@ export default function StudentInternships() {
                 <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
                 <div className="ml-[12px] flex flex-col">
                   <h1 className="mb-[6px] font-sans text-[16px]/[120%]">
-                    Data analyst intern
+                    John Doe
                   </h1>
                   <div className="flex flex-row items-center">
                     <svg
@@ -230,23 +204,23 @@ export default function StudentInternships() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"
+                        d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
                       />
                     </svg>
 
                     <h1 className="font-sans text-[16px]/[120%] text-Gray2">
-                      BIG STAR TECHNOLOGIES
+                      MED/SURGERY
                     </h1>
                   </div>
                   <button className="mt-[18px] flex w-[136px] flex-row items-center justify-center rounded-[999px] border-[2px] border-PriGold px-[20px] py-[10px] font-sans text-[12px]/[100%] font-normal text-PriGold">
-                    View Details
+                    View details
                   </button>
                 </div>
               </div>
               <div className="flex flex-row items-center rounded-[8px] bg-Green2 px-[16px] py-[8px]">
                 <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Green1"></div>
                 <p className="font-sans text-[12px]/[120%] font-normal text-Green1">
-                  Completed
+                  Accepted
                 </p>
               </div>
             </div>
@@ -257,7 +231,7 @@ export default function StudentInternships() {
                 <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
                 <div className="ml-[12px] flex flex-col">
                   <h1 className="mb-[6px] font-sans text-[16px]/[120%]">
-                    Data analyst intern
+                    John Doe
                   </h1>
                   <div className="flex flex-row items-center">
                     <svg
@@ -271,23 +245,23 @@ export default function StudentInternships() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"
+                        d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
                       />
                     </svg>
 
                     <h1 className="font-sans text-[16px]/[120%] text-Gray2">
-                      BIG STAR TECHNOLOGIES
+                      MED/SURGERY
                     </h1>
                   </div>
                   <button className="mt-[18px] flex w-[136px] flex-row items-center justify-center rounded-[999px] border-[2px] border-PriGold px-[20px] py-[10px] font-sans text-[12px]/[100%] font-normal text-PriGold">
-                    View Details
+                    View details
                   </button>
                 </div>
               </div>
               <div className="flex flex-row items-center rounded-[8px] bg-Yellow2 px-[16px] py-[8px]">
                 <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Yellow1"></div>
                 <p className="font-sans text-[12px]/[120%] font-normal text-Yellow1">
-                  Ongoing
+                  Pending
                 </p>
               </div>
             </div>
@@ -299,7 +273,7 @@ export default function StudentInternships() {
                   <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
                   <div className="ml-[12px] flex flex-col">
                     <h1 className="mb-[6px] font-sans text-[16px]/[120%]">
-                      Data analyst intern
+                      John Doe
                     </h1>
                     <div className="flex flex-row items-center">
                       <svg
@@ -313,23 +287,23 @@ export default function StudentInternships() {
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"
+                          d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
                         />
                       </svg>
 
                       <h1 className="font-sans text-[16px]/[120%] text-Gray2">
-                        BIG STAR TECHNOLOGIES
+                        MED/SURGERY
                       </h1>
                     </div>
                     <button className="mt-[18px] flex w-[136px] flex-row items-center justify-center rounded-[999px] border-[2px] border-PriGold px-[20px] py-[10px] font-sans text-[12px]/[100%] font-normal text-PriGold">
-                      Start Internship
+                      View details
                     </button>
                   </div>
                 </div>
                 <div className="flex flex-row items-center rounded-[8px] bg-Red2 px-[16px] py-[8px]">
                   <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Red1"></div>
                   <p className="font-sans text-[12px]/[120%] font-normal text-Red1">
-                    Not started
+                    Denied
                   </p>
                 </div>
               </div>
