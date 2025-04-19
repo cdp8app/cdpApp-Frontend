@@ -1,41 +1,89 @@
-// lib/services/userService.ts
+import api from "../api"
 
-import { clientFetch, getAuthHeader } from "../api";
+export interface LoginCredentials {
+  email: string
+  password: string
+}
 
-export const userService = {
-  // Auth
-  async login(email: string, password: string) {
-    return clientFetch("/api/user/login/", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
+export interface RegisterData {
+  email: string
+  password: string
+  firstName?: string
+  lastName?: string
+  // Add other fields as needed
+}
+
+export interface UserProfile {
+  id: string
+  email: string
+  firstName?: string
+  lastName?: string
+  // Add other fields as needed
+}
+
+const userService = {
+  // Student authentication
+  loginStudent: async (credentials: LoginCredentials) => {
+    const response = await api.post("/api/user/student/login/", credentials)
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token)
+      localStorage.setItem("userType", "student")
+    }
+    return response.data
   },
-  
-  async register(userData: any) {
-    return clientFetch("/api/user/register/", {
-      method: "POST",
-      body: JSON.stringify(userData),
-    });
+
+  registerStudent: async (data: RegisterData) => {
+    const response = await api.post("/api/user/student/register/", data)
+    return response.data
   },
-  
-  async getCurrentUser() {
-    return clientFetch("/api/user/me/", {
-      headers: getAuthHeader(),
-    });
+
+  // Company authentication
+  loginCompany: async (credentials: LoginCredentials) => {
+    const response = await api.post("/api/user/company/login/", credentials)
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token)
+      localStorage.setItem("userType", "company")
+    }
+    return response.data
   },
-  
-  async updateProfile(profileData: any) {
-    return clientFetch("/api/user/profile/update/", {
-      method: "PATCH",
-      headers: getAuthHeader(),
-      body: JSON.stringify(profileData),
-    });
+
+  registerCompany: async (data: RegisterData) => {
+    const response = await api.post("/api/user/company/register/", data)
+    return response.data
   },
-  
-  async logout() {
-    return clientFetch("/api/user/logout/", {
-      method: "POST",
-      headers: getAuthHeader(),
-    });
+
+  // Profile management
+  getStudentProfile: async () => {
+    const response = await api.get("/api/user/student/profile/")
+    return response.data
   },
-};
+
+  updateStudentProfile: async (data: Partial<UserProfile>) => {
+    const response = await api.put("/api/user/student/profile/", data)
+    return response.data
+  },
+
+  // Password reset
+  requestPasswordReset: async (email: string) => {
+    const response = await api.post("/api/user/password-reset/", { email })
+    return response.data
+  },
+
+  verifyResetToken: async (token: string) => {
+    const response = await api.post("/api/user/password-reset/verify/", { token })
+    return response.data
+  },
+
+  resetPassword: async (token: string, password: string) => {
+    const response = await api.post("/api/user/password-reset/confirm/", { token, password })
+    return response.data
+  },
+
+  // Logout
+  logout: () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("userType")
+  },
+}
+
+export default userService
