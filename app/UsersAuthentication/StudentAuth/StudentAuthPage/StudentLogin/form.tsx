@@ -4,6 +4,7 @@ import Label from "@/app/UsersAuthentication/Components/Label";
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext"; 
+import Button1 from "../../../Components/Button1";
 
 export default function StudentLoginForm() {
   const [email, setEmail] = useState("");
@@ -87,13 +88,12 @@ export default function StudentLoginForm() {
         </Link>
       </div>
       
-      <button
-        type="submit"
+      <Button1
+        text="Login"
+        loading={loading}
         disabled={loading}
-        className="mt-6 rounded-md bg-Gold0 px-4 py-2 font-sans font-medium text-white transition duration-200 hover:bg-Gold1 focus:outline-none disabled:bg-Gold3"
-      >
-        {loading ? "Logging in..." : "Login"}
-      </button>
+        type="submit"
+      />
       
       <div className="mt-4 text-center text-sm">
         Don&apos;t have an account?{" "}

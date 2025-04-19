@@ -64,8 +64,6 @@ const StudentAuthTogglePage = () => {
                 </h6>
               </button>
             </div>
-
-            <Button1 text="Login" className=" " />
             <h1 className="my-6 w-[100%] text-center font-sans text-[16px] font-medium text-Gray1">
               or continue with
             </h1>
