@@ -4,7 +4,7 @@ import Header1 from "@/app/Components/Header1";
 import Link from "next/link";
 import React, { useState } from "react";
 
-export default function StudentInternships() {
+export default function StudentOffers() {
   const [section, setSection] = useState(1);
 
   const handleSectionChange = (sectionNumber: number) => {
@@ -34,7 +34,7 @@ export default function StudentInternships() {
                   d="M15.75 19.5 8.25 12l7.5-7.5"
                 />
               </svg>
-              Internships
+              Offers
             </Link>
           </div>
           <div className="space-x-[16px]">
@@ -48,47 +48,21 @@ export default function StudentInternships() {
               onClick={() => handleSectionChange(2)}
               className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 2 ? "bg-PriGold" : "bg-GoldenWhite text-Gray2"}`}
             >
-              Completed
+              Accepted
             </button>
             <button
               onClick={() => handleSectionChange(3)}
               className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 3 ? "bg-PriGold" : "bg-GoldenWhite text-Gray2"}`}
             >
-              Ongoing
+              Pending
             </button>
             <button
               onClick={() => handleSectionChange(4)}
               className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 4 ? "bg-PriGold" : "bg-GoldenWhite text-Gray2"}`}
             >
-              Not started
+              Rejection
             </button>
           </div>
-
-          {/* <div className="flex w-full justify-center">
-            <div className="w-1/2 rounded-lg border p-6 shadow-lg">
-              {section === 1 && (
-                <div className="text-center">Content for Page 1</div>
-              )}
-              {section === 2 && (
-                <div className="text-center">Content for Page 2</div>
-              )}
-              {section === 3 && (
-                <div className="text-center">Content for Page 3</div>
-              )}
-              {section === 4 && (
-                <div className="text-center">Content for Page 4</div>
-              )}
-            </div>
-          </div> */}
-          {/* <div className="space-x-[16px]">
-            <button className="w-[186px] rounded-[30px] bg-PriGold px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2">
-              All
-            </button>
-            <button className="w-[186px] rounded-[30px] bg-GoldenWhite px-[20px] py-[12px] font-sans text-[16px]/[120%] text-Gray2 shadow-custom2">
-              Completed
-            </button>
-
-          </div> */}
           {section === 1 && (
             <div className="mt-[20px]">
               <div className="flex w-[100%] flex-row items-center justify-between rounded-[18px] bg-GoldenWhite py-[16px] pl-[16px] pr-[55px] shadow-custom2">
@@ -126,7 +100,7 @@ export default function StudentInternships() {
                 <div className="flex flex-row items-center rounded-[8px] bg-Red2 px-[16px] py-[8px]">
                   <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Red1"></div>
                   <p className="font-sans text-[12px]/[120%] font-normal text-Red1">
-                    Not started
+                    Rejected
                   </p>
                 </div>
               </div>
@@ -165,7 +139,7 @@ export default function StudentInternships() {
                 <div className="flex flex-row items-center rounded-[8px] bg-Green2 px-[16px] py-[8px]">
                   <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Green1"></div>
                   <p className="font-sans text-[12px]/[120%] font-normal text-Green1">
-                    Completed
+                    Accepted
                   </p>
                 </div>
               </div>
@@ -204,7 +178,7 @@ export default function StudentInternships() {
                 <div className="flex flex-row items-center rounded-[8px] bg-Yellow2 px-[16px] py-[8px]">
                   <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Yellow1"></div>
                   <p className="font-sans text-[12px]/[120%] font-normal text-Yellow1">
-                    Ongoing
+                    Pending
                   </p>
                 </div>
               </div>
@@ -246,7 +220,7 @@ export default function StudentInternships() {
               <div className="flex flex-row items-center rounded-[8px] bg-Green2 px-[16px] py-[8px]">
                 <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Green1"></div>
                 <p className="font-sans text-[12px]/[120%] font-normal text-Green1">
-                  Completed
+                  Accepted
                 </p>
               </div>
             </div>
@@ -287,7 +261,7 @@ export default function StudentInternships() {
               <div className="flex flex-row items-center rounded-[8px] bg-Yellow2 px-[16px] py-[8px]">
                 <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Yellow1"></div>
                 <p className="font-sans text-[12px]/[120%] font-normal text-Yellow1">
-                  Ongoing
+                  Pending
                 </p>
               </div>
             </div>
@@ -329,7 +303,7 @@ export default function StudentInternships() {
                 <div className="flex flex-row items-center rounded-[8px] bg-Red2 px-[16px] py-[8px]">
                   <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Red1"></div>
                   <p className="font-sans text-[12px]/[120%] font-normal text-Red1">
-                    Not started
+                    Rejected
                   </p>
                 </div>
               </div>
