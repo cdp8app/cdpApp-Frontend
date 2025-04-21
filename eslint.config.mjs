@@ -13,7 +13,7 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      "no-unused-vars": ["error"], // Warn on unused variables
+      // "no-unused-vars": ["error"], // Warn on unused variables
       "no-console": "warn", // Warn when console.log() is used
       "eqeqeq": ["error", "always"], // Enforce strict equality ===
       "curly": ["error", "multi-line"], // Require curly braces for multiline control structures

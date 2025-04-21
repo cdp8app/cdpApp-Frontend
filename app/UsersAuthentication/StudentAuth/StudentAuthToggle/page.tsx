@@ -3,7 +3,6 @@ import { useState } from "react";
 import "../../../../app/globals.css";
 import StudentLoginForm from "../StudentAuthPage/StudentLogin/form";
 import StudentRegisterForm from "../StudentAuthPage/StudentRegister/form";
-import Button1 from "../../Components/Button1";
 import Image from "next/image";
 import appleIcon from "../../../../public/Images/Icons/appleIcon.png";
 import googleIcon from "../../../../public/Images/Icons/googleIcon.png";
@@ -100,7 +99,6 @@ const StudentAuthTogglePage = () => {
               </p>
             </div>
             <StudentRegisterForm />
-            <Button1 text="Register" className=" " />
             <h1 className="mb-[15px] mt-6 w-[100%] text-center font-sans text-[16px] font-medium text-Gray1">
               or continue with
             </h1>

@@ -1,10 +1,33 @@
 "use client";
 import "../../../../../app/globals.css";
 import Label2 from "@/app/UsersAuthentication/Components/Label2";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext"; 
+import Button1 from "../../../Components/Button1";
 
 export default function StudentRegisterForm() {
+  const [userData, setUserData] = useState<{ email: string; password: string; confirm_password: string; role: string; username: string }>({
+    email: "",
+    password: "",
+    confirm_password: "",
+    role: "Student",
+    username: "ben_ben",
+  });
+  const { register, loading, error } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await register(userData);
+  };
+
   return (
-    <form className="flex flex-col justify-start">
+    <form onSubmit={handleSubmit} className="flex flex-col justify-start">
+      {error && (
+        <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-800">
+          {error}
+        </div>
+      )}
+
       <Label2
         text="Email"
         className="text-start font-sans text-[13px] font-medium text-Gold0"
@@ -26,6 +49,8 @@ export default function StudentRegisterForm() {
           />
         </svg>
         <input
+          value={userData.email}
+          onChange={(e) => setUserData({ ...userData, email: e.target.value })}
           placeholder="Enter your email address"
           className="font-sans text-[16px] placeholder-Gray1 outline-none"
         />
@@ -51,6 +76,8 @@ export default function StudentRegisterForm() {
           />
         </svg>
         <input
+          value={userData.password}
+          onChange={(e) => setUserData({ ...userData, password: e.target.value })}
           type="password"
           placeholder="Create password"
           className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
@@ -77,11 +104,20 @@ export default function StudentRegisterForm() {
           />
         </svg>
         <input
+          value={userData.confirm_password}
+          onChange={(e) => setUserData({ ...userData, confirm_password: e.target.value })}
           type="password"
           placeholder="Re-enter password"
           className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
         />
       </div>
+
+      <Button1
+        text="Register"
+        loading={loading}
+        disabled={loading}
+        type="submit"
+      />
     </form>
   );
 }

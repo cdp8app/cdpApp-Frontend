@@ -3,23 +3,17 @@ import "../../../../../app/globals.css";
 import Label from "@/app/UsersAuthentication/Components/Label";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext"; 
 import Button1 from "../../../Components/Button1";
 
 export default function StudentLoginForm() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, loading, error } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success: any = await login(email, password);
-
-    if (success === true) {
-      router.push("/dashboard");
-    }
+    await login(email, password);
   };
 
   return (
