@@ -55,7 +55,7 @@ const StudentAuthTogglePage = () => {
                 </span>
               </p>
             </div>
-            <StudentLoginForm />
+            <StudentLoginForm userType="student" />
             <div className="mb-[30px] w-[100%] items-end justify-end text-end">
               <button className="mx-[11px] my-[10px]">
                 <h6 className="justify-end font-sans text-[12px] text-Gold1">
