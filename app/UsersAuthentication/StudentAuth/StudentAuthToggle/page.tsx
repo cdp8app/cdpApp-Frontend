@@ -16,7 +16,7 @@ const StudentAuthTogglePage = () => {
 
   return (
     <div className="flex w-[75%] flex-col items-center p-6">
-      <div className="mb-[20px] space-x-[10px] rounded-[30px] bg-Gold3 pb-[12px] pl-[18px] pr-[18px] pt-[12px]">
+      <div className="hidden lg:block mb-[20px] flex-row space-x-[10px] rounded-[30px] pl-[10px] pr-[10px] bg-Gold3 pb-[12px] pt-[12px]">
         <button
           onClick={() => handleToggle(1)}
           className={`rounded-[30px] px-[50px] py-[9.5px] font-sans text-[16px] transition-colors ${
@@ -36,7 +36,7 @@ const StudentAuthTogglePage = () => {
         </button>
       </div>
 
-      <div className="mt-[6px] w-[100%]">
+      <div className="mt-[6px] w-full">
         {activeContent === 1 ? (
           <div className="items-center" id="login-section">
             <p className="text-center font-sans text-[16px]">
