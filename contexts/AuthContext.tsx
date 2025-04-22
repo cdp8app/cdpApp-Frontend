@@ -106,7 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     
       localStorage.setItem("token", data.token);
-      localStorage.setItem("userType", type);
+      localStorage.setItem("userType", type as string);
       setUser(data.user);
       setUserType(type);
     
