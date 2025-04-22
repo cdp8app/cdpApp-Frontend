@@ -1,82 +1,82 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"
 
 export default function AdvancedApiTest() {
-  const [url, setUrl] = useState("https://careerxhub.onrender.com/api/user/student/")
-  const [method, setMethod] = useState<HttpMethod>("GET")
-  const [requestBody, setRequestBody] = useState("")
-  const [authToken, setAuthToken] = useState("")
-  const [result, setResult] = useState<string>("")
-  const [loading, setLoading] = useState(false)
+  const [url, setUrl] = useState("https://careerxhub.onrender.com/api/user/student/");
+  const [method, setMethod] = useState<HttpMethod>("GET");
+  const [requestBody, setRequestBody] = useState("");
+  const [authToken, setAuthToken] = useState("");
+  const [result, setResult] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const testApi = async () => {
-    setLoading(true)
-    setResult("")
+    setLoading(true);
+    setResult("");
 
     try {
       const headers: HeadersInit = {
         Accept: "application/json",
-      }
+      };
 
       if (method !== "GET") {
-        headers["Content-Type"] = "application/json"
+        headers["Content-Type"] = "application/json";
       }
 
       if (authToken) {
-        headers["Authorization"] = `Bearer ${authToken}`
+        headers["Authorization"] = `Bearer ${authToken}`;
       }
 
       const options: RequestInit = {
         method,
         headers,
         mode: "cors",
-      }
+      };
 
       if (method !== "GET" && requestBody) {
         try {
-          options.body = JSON.stringify(JSON.parse(requestBody))
+          options.body = JSON.stringify(JSON.parse(requestBody));
         } catch (e) {
-          setResult(`Error parsing JSON request body: ${e instanceof Error ? e.message : String(e)}`)
-          setLoading(false)
-          return
+          setResult(`Error parsing JSON request body: ${e instanceof Error ? e.message : String(e)}`);
+          setLoading(false);
+          return;
         }
       }
 
-      const response = await fetch(url, options)
-      const text = await response.text()
+      const response = await fetch(url, options);
+      const text = await response.text();
 
-      let formattedResponse = ""
+      let formattedResponse = "";
       try {
         // Try to parse and format JSON response
-        const json = JSON.parse(text)
-        formattedResponse = JSON.stringify(json, null, 2)
+        const json = JSON.parse(text);
+        formattedResponse = JSON.stringify(json, null, 2);
       } catch {
         // If not JSON, use the raw text
-        formattedResponse = text
+        formattedResponse = text;
       }
 
       setResult(
         `Status: ${response.status} ${response.statusText}\n\nHeaders:\n${formatHeaders(
           response.headers,
         )}\n\nResponse:\n${formattedResponse}`,
-      )
+      );
     } catch (error) {
-      setResult(`Error: ${error instanceof Error ? error.message : String(error)}`)
+      setResult(`Error: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const formatHeaders = (headers: Headers): string => {
-    const result: string[] = []
+    const result: string[] = [];
     headers.forEach((value, key) => {
-      result.push(`${key}: ${value}`)
-    })
-    return result.join("\n")
-  }
+      result.push(`${key}: ${value}`);
+    });
+    return result.join("\n");
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -181,5 +181,5 @@ export default function AdvancedApiTest() {
         </div>
       </div>
     </div>
-  )
+  );
 }

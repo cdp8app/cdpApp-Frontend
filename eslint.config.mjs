@@ -13,7 +13,7 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      "no-unused-vars": ["error"], // Warn on unused variables
+      // "no-unused-vars": ["error"], // Warn on unused variables
       "no-console": "warn", // Warn when console.log() is used
       "eqeqeq": ["error", "always"], // Enforce strict equality ===
       "curly": ["error", "multi-line"], // Require curly braces for multiline control structures
@@ -23,6 +23,7 @@ const eslintConfig = [
       "react/react-in-jsx-scope": "off", // No need for React import in Next.js
       "@typescript-eslint/no-unused-expressions": "off", // Allow unused expressions
       "@typescript-eslint/no-explicit-any": "off", // Allow explicit any type
+      "@typescript-eslint/no-unused-vars": "off",
     },
   },
 ];

@@ -1,30 +1,30 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 export default function SwaggerViewer() {
-  const [swaggerData, setSwaggerData] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [swaggerData, setSwaggerData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchSwaggerData() {
       try {
-        const response = await fetch("https://careerxhub.onrender.com/swagger/?format=json")
+        const response = await fetch("https://careerxhub.onrender.com/swagger/?format=json");
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`)
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const data = await response.json()
-        setSwaggerData(data)
+        const data = await response.json();
+        setSwaggerData(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An unknown error occurred")
+        setError(err instanceof Error ? err.message : "An unknown error occurred");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    fetchSwaggerData()
-  }, [])
+    fetchSwaggerData();
+  }, []);
 
   if (loading) {
     return (
@@ -33,7 +33,7 @@ export default function SwaggerViewer() {
           <h1 className="text-2xl font-bold mb-4">Loading Swagger Documentation...</h1>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -44,16 +44,16 @@ export default function SwaggerViewer() {
           <p className="text-red-600">{error}</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Extract all available endpoints from the Swagger data
   const endpoints = swaggerData
     ? Object.keys(swaggerData.paths).map((path) => ({
-        path,
-        methods: Object.keys(swaggerData.paths[path]).filter((key) => key !== "parameters"),
-      }))
-    : []
+      path,
+      methods: Object.keys(swaggerData.paths[path]).filter((key) => key !== "parameters"),
+    }))
+    : [];
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -125,5 +125,5 @@ export default function SwaggerViewer() {
         </div>
       </div>
     </div>
-  )
+  );
 }

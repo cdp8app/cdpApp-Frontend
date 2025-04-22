@@ -1,13 +1,14 @@
 // app/UsersAuthentication/CompanyAuth/CompanyLogin/page.tsx
-"use client"
+"use client";
 
-import LoginForm from '../../Components/LoginForm';
+import LoginForm from "../../StudentAuth/StudentAuthPage/StudentLogin/form";
+import Image from "next/image";
 
 export default function CompanyLoginPage() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <img
+        <Image
           className="mx-auto h-12 w-auto"
           src="/Images/Logo3.png"
           alt="CDP Logo"

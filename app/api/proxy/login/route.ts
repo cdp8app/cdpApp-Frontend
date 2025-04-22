@@ -1,6 +1,6 @@
 // app/api/proxy/login/route.ts
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,16 +10,16 @@ export async function POST(req: NextRequest) {
     // Validate input
     if (!email || !password || !userType) {
       return NextResponse.json(
-        { message: 'Email, password, and user type are required' },
+        { message: "Email, password, and user type are required" },
         { status: 400 }
       );
     }
 
     // Call the actual API
-    const response = await fetch('https://careerxhub.onrender.com/api/user/login/', {
-      method: 'POST',
+    const response = await fetch("https://careerxhub.onrender.com/api/user/login/", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     // If the response was not OK, return the error
     if (!response.ok) {
       return NextResponse.json(
-        { message: data.detail || 'Login failed' },
+        { message: data.detail || "Login failed" },
         { status: response.status }
       );
     }
@@ -38,9 +38,9 @@ export async function POST(req: NextRequest) {
     // Return the successful response
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Login proxy error:', error);
+    console.error("Login proxy error:", error);
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }

@@ -1,66 +1,69 @@
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { useAuth } from '../../../../../contexts/AuthContext';
-import Button1 from '../../../Components/Button1';
-import Label2 from '../../../Components/Label2';
+"use client";
+
+import { useState } from "react";
+// import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useAuth } from "../../../../../contexts/AuthContext";
+import Button1 from "../../../Components/Button1";
+import Label2 from "../../../Components/Label2";
+import Image from "next/image";
 
 export default function StudentRegisterForm() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState(''); // Added username field
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState(""); // Added username field
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formError, setFormError] = useState('');
-  const [debugInfo, setDebugInfo] = useState('');
+  const [formError, setFormError] = useState("");
+  const [debugInfo, setDebugInfo] = useState("");
   
   const { register, error, loading, clearError } = useAuth();
-  const router = useRouter();
+  // const router = useRouter();
 
   const validateForm = () => {
     if (!firstName || !lastName) {
-      setFormError('First name and last name are required');
+      setFormError("First name and last name are required");
       return false;
     }
     
     if (!username) {
-      setFormError('Username is required');
+      setFormError("Username is required");
       return false;
     }
 
     if (!email) {
-      setFormError('Email is required');
+      setFormError("Email is required");
       return false;
     }
 
-    if (!email.includes('@')) {
-      setFormError('Please enter a valid email address');
+    if (!email.includes("@")) {
+      setFormError("Please enter a valid email address");
       return false;
     }
     
     if (password !== confirmPassword) {
-      setFormError('Passwords do not match');
+      setFormError("Passwords do not match");
       return false;
     }
     
     if (password.length < 8) {
-      setFormError('Password must be at least 8 characters long');
+      setFormError("Password must be at least 8 characters long");
       return false;
     }
     
-    setFormError('');
+    setFormError("");
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setDebugInfo('Form submitted');
+    setDebugInfo("Form submitted");
     
     if (!validateForm()) {
-      setDebugInfo('Form validation failed: ' + formError);
+      setDebugInfo("Form validation failed: " + formError);
       return;
     }
     
@@ -71,31 +74,31 @@ export default function StudentRegisterForm() {
       email,
       password,
       confirm_password: confirmPassword, // Send confirm_password as required by API
-      role: 'Student' // Try uppercase as indicated by error message
+      role: "Student" // Try uppercase as indicated by error message
     };
     
-    setDebugInfo('Attempting to register with data: ' + JSON.stringify({
+    setDebugInfo("Attempting to register with data: " + JSON.stringify({
       ...userData,
-      password: '********', // Don't log actual password
-      confirm_password: '********'
+      password: "********", // Don"t log actual password
+      confirm_password: "********"
     }));
     
     try {
-      setDebugInfo('Calling register function...');
-      const result = await register(userData, 'Student');
-      setDebugInfo('Register function completed. Result: ' + JSON.stringify(result));
+      setDebugInfo("Calling register function...");
+      const result = await register(userData, "student");
+      setDebugInfo("Register function completed. Result: " + JSON.stringify(result));
     } catch (err: any) {
-      setDebugInfo('Error in registration: ' + (err.message || JSON.stringify(err)));
-      // Error should be handled in the auth context, but we'll also show it here
-      setFormError(err.message || 'Registration failed');
+      setDebugInfo("Error in registration: " + (err.message || JSON.stringify(err)));
+      // Error should be handled in the auth context, but we"ll also show it here
+      setFormError(err.message || "Registration failed");
     }
   };
 
   const handleTestConnection = () => {
-    if (typeof register !== 'function') {
-      setDebugInfo('Register function is not available: ' + typeof register);
+    if (typeof register !== "function") {
+      setDebugInfo("Register function is not available: " + typeof register);
     } else {
-      setDebugInfo('Register function is available');
+      setDebugInfo("Register function is available");
     }
   };
 
@@ -103,7 +106,7 @@ export default function StudentRegisterForm() {
     <form className="w-full max-w-md" onSubmit={handleSubmit}>
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
-          <Label2 htmlFor="firstName">First Name</Label2>
+          <Label2 text="First Name"></Label2>
           <input
             id="firstName"
             type="text"
@@ -115,7 +118,7 @@ export default function StudentRegisterForm() {
           />
         </div>
         <div>
-          <Label2 htmlFor="lastName">Last Name</Label2>
+          <Label2 text="Last Name"></Label2>
           <input
             id="lastName"
             type="text"
@@ -130,16 +133,18 @@ export default function StudentRegisterForm() {
 
       {/* New Username field */}
       <div className="mb-6">
-        <Label2 htmlFor="username">Username</Label2>
+        <Label2 text="Username"></Label2>
         <div className="relative">
-          <img 
+          <Image
             src="/Images/Icons/userIcon.png" 
             alt="Username"
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
             onError={(e) => {
-              // Fallback if icon doesn't exist
-              (e.target as HTMLImageElement).style.display = 'none';
+              // Fallback if icon doesn"t exist
+              (e.target as HTMLImageElement).style.display = "none";
             }}
+            width={20}
+            height={20}
           />
           <input
             id="username"
@@ -154,12 +159,14 @@ export default function StudentRegisterForm() {
       </div>
 
       <div className="mb-6">
-        <Label2 htmlFor="email">Email</Label2>
+        <Label2 text="Email"></Label2>
         <div className="relative">
-          <img 
+          <Image
             src="/Images/Icons/emailIcon.png" 
             alt="Email" 
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
+            width={20}
+            height={20}
           />
           <input
             id="email"
@@ -174,12 +181,14 @@ export default function StudentRegisterForm() {
       </div>
 
       <div className="mb-6">
-        <Label2 htmlFor="password">Password</Label2>
+        <Label2 text="Password"></Label2>
         <div className="relative">
-          <img 
+          <Image
             src="/Images/Icons/passwordIcon.png" 
             alt="Password" 
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
+            width={20}
+            height={20}
           />
           <input
             id="password"
@@ -195,18 +204,20 @@ export default function StudentRegisterForm() {
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500"
           >
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword ? "Hide" : "Show"}
           </button>
         </div>
       </div>
 
       <div className="mb-6">
-        <Label2 htmlFor="confirmPassword">Confirm Password</Label2>
+        <Label2 text="Confirm Password"></Label2>
         <div className="relative">
-          <img 
+          <Image
             src="/Images/Icons/passwordIcon.png" 
             alt="Confirm Password" 
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
+            width={20}
+            height={20}
           />
           <input
             id="confirmPassword"
@@ -222,7 +233,7 @@ export default function StudentRegisterForm() {
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500"
           >
-            {showConfirmPassword ? 'Hide' : 'Show'}
+            {showConfirmPassword ? "Hide" : "Show"}
           </button>
         </div>
       </div>
@@ -232,7 +243,7 @@ export default function StudentRegisterForm() {
           {formError || error}
           <button 
             type="button"
-            onClick={() => {formError ? setFormError('') : clearError()}} 
+            onClick={() => {formError ? setFormError("") : clearError();}} 
             className="float-right text-red-700"
           >
             ×
@@ -246,13 +257,19 @@ export default function StudentRegisterForm() {
         </div>
       )}
 
-      <Button1 
+      {/* <Button1 
         type="submit" 
         disabled={loading}
         className="w-full"
       >
-        {loading ? 'Registering...' : 'Register'}
-      </Button1>
+        {loading ? "Registering..." : "Register"}
+      </Button1> */}
+      <Button1
+        text="Register"
+        loading={loading}
+        disabled={loading}
+        type="submit"
+      />
       
       <button
         type="button"
@@ -264,7 +281,7 @@ export default function StudentRegisterForm() {
 
       <div className="mt-4 text-center">
         <p className="text-gray-600">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link 
             href="/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin"
             className="text-blue-600 hover:underline"
@@ -273,6 +290,13 @@ export default function StudentRegisterForm() {
           </Link>
         </p>
       </div>
+
+      <Button1
+        text="Register"
+        loading={loading}
+        disabled={loading}
+        type="submit"
+      />
     </form>
   );
 }

@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
 export default function SimpleApiTest() {
-  const [result, setResult] = useState<string>("")
-  const [loading, setLoading] = useState(false)
-  const [url, setUrl] = useState("https://careerxhub.onrender.com/swagger/")
+  const [result, setResult] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [url, setUrl] = useState("https://careerxhub.onrender.com/swagger/");
 
   const testApi = async () => {
-    setLoading(true)
-    setResult("")
+    setLoading(true);
+    setResult("");
 
     try {
       // Using the browser's native fetch API
@@ -19,16 +19,16 @@ export default function SimpleApiTest() {
         headers: {
           Accept: "application/json",
         },
-      })
+      });
 
-      const text = await response.text()
-      setResult(`Status: ${response.status}\n\nResponse:\n${text.substring(0, 1000)}${text.length > 1000 ? "..." : ""}`)
+      const text = await response.text();
+      setResult(`Status: ${response.status}\n\nResponse:\n${text.substring(0, 1000)}${text.length > 1000 ? "..." : ""}`);
     } catch (error) {
-      setResult(`Error: ${error instanceof Error ? error.message : String(error)}`)
+      setResult(`Error: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -99,5 +99,5 @@ export default function SimpleApiTest() {
         </div>
       </div>
     </div>
-  )
+  );
 }

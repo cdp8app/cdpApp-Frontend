@@ -1,4 +1,4 @@
-import StudentRegisterForm from './form';
+import StudentRegisterForm from "./form";
 
 export default function StudentRegisterPage() {
   return (

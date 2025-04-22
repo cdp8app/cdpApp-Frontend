@@ -5,7 +5,7 @@ import { useState } from "react";
 
 interface EditAboutModalProps {
   currentText: string;
-  /* eslint-disable-next-line no-unused-vars */
+   
   onSave: (newText: string) => void;
   onClose: () => void;
 }

@@ -1,11 +1,11 @@
-"use client"
-
 // contexts/AuthContext.tsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
+
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // Define types
-type UserType = 'student' | 'company' | null;
+type UserType = "student" | "company" | null;
 
 interface User {
   id: string;
@@ -24,6 +24,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string, userType: UserType) => Promise<void>;
   register: (userData: any, userType: UserType) => Promise<void>;
+  activateAccount: (code: string) => Promise<void>;
   logout: () => void;
   resetPassword: (email: string) => Promise<void>;
   verifyOTP: (email: string, otp: string) => Promise<void>;
@@ -45,13 +46,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Check if user is logged in on mount
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('token');
-      const storedUserType = localStorage.getItem('userType') as UserType;
+      const token = localStorage.getItem("token");
+      const storedUserType = localStorage.getItem("userType") as UserType;
       
       if (token) {
         try {
           setLoading(true);
-          const response = await fetch('https://careerxhub.onrender.com/api/user/profile/', {
+          const response = await fetch("https://careerxhub.onrender.com/api/user/profile/", {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -63,14 +64,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUserType(storedUserType);
           } else {
             // Token invalid, clear storage
-            localStorage.removeItem('token');
-            localStorage.removeItem('userType');
+            localStorage.removeItem("token");
+            localStorage.removeItem("userType");
             setUser(null);
             setUserType(null);
           }
         } catch (err) {
-          console.error('Auth check failed:', err);
-          setError('Authentication verification failed');
+          console.error("Auth check failed:", err);
+          setError("Authentication verification failed");
         } finally {
           setLoading(false);
         }
@@ -84,57 +85,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Update this function in your AuthContext.tsx
 
-const login = async (email: string, password: string, type: UserType) => {
-  try {
-    setLoading(true);
-    setError(null);
+  const login = async (email: string, password: string, type: UserType) => {
+    try {
+      setLoading(true);
+      setError(null);
     
-    // Use our proxy endpoint instead of direct API call
-    const response = await fetch('/api/proxy/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password, userType: type }),
-    });
+      // Use our proxy endpoint instead of direct API call
+      const response = await fetch("/api/proxy/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, userType: type }),
+      });
   
-    const data = await response.json();
+      const data = await response.json();
     
-    if (!response.ok) {
-      throw new Error(data.message || 'Login failed');
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+    
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userType", type as string);
+      setUser(data.user);
+      setUserType(type);
+    
+      // Redirect based on user type
+      if (type === "student") {
+        router.push("/Dashboard");
+      } else {
+        router.push("/company/dashboard");
+      }
+    } catch (err: any) {
+      console.error("Login error:", err);
+      setError(err.message || "Login failed");
+      throw err; // Re-throw to let the form component handle it
+    } finally {
+      setLoading(false);
     }
-    
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('userType', type);
-    setUser(data.user);
-    setUserType(type);
-    
-    // Redirect based on user type
-    if (type === 'student') {
-      router.push('/Dashboard');
-    } else {
-      router.push('/company/dashboard');
-    }
-  } catch (err: any) {
-    console.error('Login error:', err);
-    setError(err.message || 'Login failed');
-    throw err; // Re-throw to let the form component handle it
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   // Update the register function to use the UserData interface
-  const register = async (userData: UserData, role: UserType) => {
+  const register = async (userData: User, role: UserType) => {
     setLoading(true);
     clearError();
     
     try {
       // Use our proxy endpoint instead of direct API call
-      const response = await fetch('/api/proxy/register', {
-        method: 'POST',
+      const response = await fetch("/api/proxy/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(userData), // Send role if needed as part of userData
       });
@@ -142,28 +143,57 @@ const login = async (email: string, password: string, type: UserType) => {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || data.error || 'Registration failed');
+        throw new Error(data.message || data.error || "Registration failed");
       }
       
       // Handle successful registration
       // You might want to automatically log the user in or redirect them
-      router.push('/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin');
+      router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin");
       return data;
-    } catch (err) {
-      console.error('Registration error:', err);
-      setError(err.message || 'Failed to register');
+    } catch (err: any) {
+      console.error("Registration error:", err);
+      setError(err.message || "Failed to register");
       return null;
     } finally {
       setLoading(false);
     }
   };
 
+  const activateAccount = async (code: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/proxy/activate", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(code)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || "Registration failed");
+      }
+
+      router.push("/Dashboard");
+      return data;
+    } catch (err: any) {
+      setError(err.message || "Activation failed");
+      return null;
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userType');
+    localStorage.removeItem("token");
+    localStorage.removeItem("userType");
     setUser(null);
     setUserType(null);
-    router.push('/');
+    router.push("/");
   };
 
   const resetPassword = async (email: string) => {
@@ -171,23 +201,23 @@ const login = async (email: string, password: string, type: UserType) => {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('https://careerxhub.onrender.com/api/user/reset-password/', {
-        method: 'POST',
+      const response = await fetch("https://careerxhub.onrender.com/api/user/reset-password/", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ email })
       });
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Password reset request failed');
+        throw new Error(errorData.detail || "Password reset request failed");
       }
       
       // Success - should redirect to OTP verification page
-      router.push('/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/OTP');
+      router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/OTP");
     } catch (err: any) {
-      setError(err.message || 'Password reset failed');
+      setError(err.message || "Password reset failed");
     } finally {
       setLoading(false);
     }
@@ -198,31 +228,31 @@ const login = async (email: string, password: string, type: UserType) => {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('https://careerxhub.onrender.com/api/user/verify-otp/', {
-        method: 'POST',
+      const response = await fetch("https://careerxhub.onrender.com/api/user/verify-otp/", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ email, otp })
       });
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'OTP verification failed');
+        throw new Error(errorData.detail || "OTP verification failed");
         
         // Redirect to unsuccessful verification page
-        router.push('/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/OTP/UnsuccessfulVerfication');
+        router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/OTP/UnsuccessfulVerfication");
       }
       
       const data = await response.json();
       
       // Store the reset token for the next step
-      localStorage.setItem('resetToken', data.token);
+      localStorage.setItem("resetToken", data.token);
       
       // Redirect to new password page
-      router.push('/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/ForgotPassword/NewPassword');
+      router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/ForgotPassword/NewPassword");
     } catch (err: any) {
-      setError(err.message || 'OTP verification failed');
+      setError(err.message || "OTP verification failed");
     } finally {
       setLoading(false);
     }
@@ -233,26 +263,26 @@ const login = async (email: string, password: string, type: UserType) => {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('https://careerxhub.onrender.com/api/user/set-new-password/', {
-        method: 'POST',
+      const response = await fetch("https://careerxhub.onrender.com/api/user/set-new-password/", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ token, new_password: newPassword })
       });
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Setting new password failed');
+        throw new Error(errorData.detail || "Setting new password failed");
       }
       
       // Clear the reset token
-      localStorage.removeItem('resetToken');
+      localStorage.removeItem("resetToken");
       
       // Redirect to password created successfully page
-      router.push('/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/ForgotPassword/NewPassword/NewPasswordCreated');
+      router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/ForgotPassword/NewPassword/NewPasswordCreated");
     } catch (err: any) {
-      setError(err.message || 'Setting new password failed');
+      setError(err.message || "Setting new password failed");
     } finally {
       setLoading(false);
     }
@@ -272,6 +302,7 @@ const login = async (email: string, password: string, type: UserType) => {
         isAuthenticated: !!user,
         login, 
         register, 
+        activateAccount,
         logout,
         resetPassword,
         verifyOTP,
@@ -288,7 +319,7 @@ const login = async (email: string, password: string, type: UserType) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

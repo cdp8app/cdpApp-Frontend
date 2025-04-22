@@ -1,36 +1,40 @@
 // app/UsersAuthentication/Components/LoginForm.tsx
-"use client"
-
-import { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+"use client";
+import "../../../../../app/globals.css";
+// import Label from "@/app/UsersAuthentication/Components/Label";
+import { useState } from "react";
+// import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext"; 
+import Button1 from "../../../Components/Button1";
+// import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface LoginFormProps {
-  userType: 'student' | 'company';
+  userType: "student" | "company";
 }
 
 export default function LoginForm({ userType }: LoginFormProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [formError, setFormError] = useState('');
+  const [formError, setFormError] = useState("");
   
-  const { login, error, clearError } = useAuth();
-  const router = useRouter();
+  const { login, loading, error, clearError } = useAuth();
+  // const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormError('');
+    setFormError("");
     clearError();
     
     // Basic validation
     if (!email.trim()) {
-      setFormError('Email is required');
+      setFormError("Email is required");
       return;
     }
     
     if (!password.trim()) {
-      setFormError('Password is required');
+      setFormError("Password is required");
       return;
     }
     
@@ -38,9 +42,9 @@ export default function LoginForm({ userType }: LoginFormProps) {
       await login(email, password, userType);
       // Note: The redirect is handled inside the login function in AuthContext
     } catch (err: any) {
-      console.error('Login error:', err);
+      console.error("Login error:", err);
       // Form-specific errors are set here
-      setFormError(err.message || 'Login failed. Please check your credentials and try again.');
+      setFormError(err.message || "Login failed. Please check your credentials and try again.");
     }
   };
 
@@ -48,7 +52,7 @@ export default function LoginForm({ userType }: LoginFormProps) {
     <div className="w-full max-w-md mx-auto">
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md px-8 pt-6 pb-8 mb-4">
         <h2 className="text-2xl font-bold mb-6 text-center">
-          {userType === 'student' ? 'Student Login' : 'Company Login'}
+          {userType === "student" ? "Student Login" : "Company Login"}
         </h2>
         
         {(formError || error) && (
@@ -62,10 +66,12 @@ export default function LoginForm({ userType }: LoginFormProps) {
             Email
           </label>
           <div className="flex items-center border border-gray-300 rounded">
-            <img 
+            <Image 
               src="/Images/Icons/emailIcon.png" 
               alt="Email" 
               className="h-5 w-5 ml-3"
+              width={20}
+              height={20}
             />
             <input
               className="appearance-none border-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
@@ -84,10 +90,12 @@ export default function LoginForm({ userType }: LoginFormProps) {
             Password
           </label>
           <div className="flex items-center border border-gray-300 rounded">
-            <img 
+            <Image
               src="/Images/Icons/passwordIcon.png" 
               alt="Password" 
               className="h-5 w-5 ml-3"
+              width={20}
+              height={20}
             />
             <input
               className="appearance-none border-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
@@ -115,7 +123,7 @@ export default function LoginForm({ userType }: LoginFormProps) {
             </label>
           </div>
           <a 
-            href={userType === 'student' ? "/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/ForgotPassword" : "/UsersAuthentication/CompanyAuth/CompanyLogin/ForgotPassword"} 
+            href={userType === "student" ? "/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/ForgotPassword" : "/UsersAuthentication/CompanyAuth/CompanyLogin/ForgotPassword"} 
             className="text-blue-500 hover:text-blue-700 text-sm font-semibold"
           >
             Forgot Password?
@@ -127,15 +135,21 @@ export default function LoginForm({ userType }: LoginFormProps) {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            {userType === 'student' ? 'Student Login' : 'Company Login'}
+            {userType === "student" ? "Student Login" : "Company Login"}
           </button>
+          <Button1
+            text={userType === "student" ? "Student Login" : "Company Login"}
+            loading={loading}
+            disabled={loading}
+            type="submit"
+          />
         </div>
         
         <div className="text-center">
           <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
+            Don&quot;t have an account?{" "}
             <a 
-              href={userType === 'student' ? "/UsersAuthentication/StudentAuth/StudentAuthPage/StudentRegister" : "/UsersAuthentication/CompanyAuth/CompanySignUp"} 
+              href={userType === "student" ? "/UsersAuthentication/StudentAuth/StudentAuthPage/StudentRegister" : "/UsersAuthentication/CompanyAuth/CompanySignUp"} 
               className="text-blue-500 hover:text-blue-700 font-semibold"
             >
               Sign up
