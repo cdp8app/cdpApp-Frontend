@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAuth } from "../../../../../contexts/AuthContext";
 import Button1 from "../../../Components/Button1";
 import Label2 from "../../../Components/Label2";
+import Image from "next/image";
 
 export default function StudentRegisterForm() {
   const [firstName, setFirstName] = useState("");
@@ -132,7 +133,7 @@ export default function StudentRegisterForm() {
       <div className="mb-6">
         <Label2 text="Username"></Label2>
         <div className="relative">
-          <img 
+          <Image
             src="/Images/Icons/userIcon.png" 
             alt="Username"
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
@@ -156,7 +157,7 @@ export default function StudentRegisterForm() {
       <div className="mb-6">
         <Label2 text="Email"></Label2>
         <div className="relative">
-          <img 
+          <Image
             src="/Images/Icons/emailIcon.png" 
             alt="Email" 
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
@@ -176,7 +177,7 @@ export default function StudentRegisterForm() {
       <div className="mb-6">
         <Label2 text="Password"></Label2>
         <div className="relative">
-          <img 
+          <Image
             src="/Images/Icons/passwordIcon.png" 
             alt="Password" 
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
@@ -203,7 +204,7 @@ export default function StudentRegisterForm() {
       <div className="mb-6">
         <Label2 text="Confirm Password"></Label2>
         <div className="relative">
-          <img 
+          <Image
             src="/Images/Icons/passwordIcon.png" 
             alt="Confirm Password" 
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 

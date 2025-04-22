@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext"; 
 import Button1 from "../../../Components/Button1";
 // import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface LoginFormProps {
   userType: "student" | "company";
@@ -65,7 +66,7 @@ export default function LoginForm({ userType }: LoginFormProps) {
             Email
           </label>
           <div className="flex items-center border border-gray-300 rounded">
-            <img 
+            <Image 
               src="/Images/Icons/emailIcon.png" 
               alt="Email" 
               className="h-5 w-5 ml-3"
@@ -87,7 +88,7 @@ export default function LoginForm({ userType }: LoginFormProps) {
             Password
           </label>
           <div className="flex items-center border border-gray-300 rounded">
-            <img 
+            <Image
               src="/Images/Icons/passwordIcon.png" 
               alt="Password" 
               className="h-5 w-5 ml-3"
