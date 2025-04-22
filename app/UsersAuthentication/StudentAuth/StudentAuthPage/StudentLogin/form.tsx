@@ -70,6 +70,8 @@ export default function LoginForm({ userType }: LoginFormProps) {
               src="/Images/Icons/emailIcon.png" 
               alt="Email" 
               className="h-5 w-5 ml-3"
+              width={20}
+              height={20}
             />
             <input
               className="appearance-none border-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
@@ -92,6 +94,8 @@ export default function LoginForm({ userType }: LoginFormProps) {
               src="/Images/Icons/passwordIcon.png" 
               alt="Password" 
               className="h-5 w-5 ml-3"
+              width={20}
+              height={20}
             />
             <input
               className="appearance-none border-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"

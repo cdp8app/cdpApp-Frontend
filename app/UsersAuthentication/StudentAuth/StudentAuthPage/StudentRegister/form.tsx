@@ -141,6 +141,8 @@ export default function StudentRegisterForm() {
               // Fallback if icon doesn"t exist
               (e.target as HTMLImageElement).style.display = "none";
             }}
+            width={20}
+            height={20}
           />
           <input
             id="username"
@@ -161,6 +163,8 @@ export default function StudentRegisterForm() {
             src="/Images/Icons/emailIcon.png" 
             alt="Email" 
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
+            width={20}
+            height={20}
           />
           <input
             id="email"
@@ -181,6 +185,8 @@ export default function StudentRegisterForm() {
             src="/Images/Icons/passwordIcon.png" 
             alt="Password" 
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
+            width={20}
+            height={20}
           />
           <input
             id="password"
@@ -208,6 +214,8 @@ export default function StudentRegisterForm() {
             src="/Images/Icons/passwordIcon.png" 
             alt="Confirm Password" 
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
+            width={20}
+            height={20}
           />
           <input
             id="confirmPassword"
