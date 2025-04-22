@@ -1,7 +1,7 @@
 // app/UsersAuthentication/CompanyAuth/CompanyLogin/page.tsx
 "use client";
 
-import LoginForm from "../../Components/LoginForm";
+import LoginForm from "../../StudentAuth/StudentAuthPage/StudentLogin/form";
 import Image from "next/image";
 
 export default function CompanyLoginPage() {

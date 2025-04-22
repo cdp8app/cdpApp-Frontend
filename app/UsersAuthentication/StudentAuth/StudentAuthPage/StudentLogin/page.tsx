@@ -1,7 +1,7 @@
 // app/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/page.tsx
 "use client";
 
-import LoginForm from "../../../Components/LoginForm";
+import LoginForm from "../StudentLogin/form";
 import Image from "next/image";
 
 export default function StudentLoginPage() {
