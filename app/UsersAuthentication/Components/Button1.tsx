@@ -26,7 +26,7 @@ const Button1: React.FC<Button1Props> = ({
       type={type}
       disabled={loading || disabled}
       onClick={onClick}
-      className={`mt-6 rounded-[30px] bg-PriGold py-[14px] px-[193px] font-sans font-medium text-GoldenWhite text-[17px] w-[100%] flex items-center justify-center gap-2 transition duration-200 hover:bg-Gold1 focus:outline-none disabled:bg-Gold3 ${className}`}
+      className={`${className} bg-PriGold py-[14px] px-6 font-sans font-medium text-GoldenWhite text-lg rounded-[30px] w-[100%]`}
     >
       {loading ? (
         <>
@@ -38,5 +38,5 @@ const Button1: React.FC<Button1Props> = ({
     </button>
   );
 };
-
+  
 export default Button1;
