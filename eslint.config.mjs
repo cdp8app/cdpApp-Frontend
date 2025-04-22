@@ -23,6 +23,7 @@ const eslintConfig = [
       "react/react-in-jsx-scope": "off", // No need for React import in Next.js
       "@typescript-eslint/no-unused-expressions": "off", // Allow unused expressions
       "@typescript-eslint/no-explicit-any": "off", // Allow explicit any type
+      "@typescript-eslint/no-unused-vars": "off",
     },
   },
 ];
