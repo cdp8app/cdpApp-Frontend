@@ -22,6 +22,12 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/Dashboard/StudentOffers/StudentOfferInformation"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/Old/Dashboard/StudentOffers/StudentOfferInformation"
+  ],
   "exclude": ["node_modules"]
 }

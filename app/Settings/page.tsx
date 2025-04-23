@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import Footer1 from "../Components/Footer1";
 import Header1 from "../Components/Header1";
 import Link from "next/link";
-import NotificationSettingsModal from "./NotificationsSettings/modal";
-import ToggleSwitch from "./NotificationsSettings/toggleSwitch";
+import NotificationSettingsModal from "./notifications/modal";
+import ToggleSwitch from "./notifications/toggleSwitch";
 import Button4 from "../UsersAuthentication/Components/Button4";
-import ProfileVisibilityModal from "./ProfileVisibility/modal";
-import ManageDataSharingModal from "./ManageData/modal";
-import RecommendationsModal from "./Recommendations/modal";
+import ProfileVisibilityModal from "./profile-visibility/modal";
+import ManageDataSharingModal from "./manage-data/modal";
+import RecommendationsModal from "./recommendations/modal";
 
 export default function Settings() {
   const [isNotificationSettingsModalOpen, setIsNotificationSettingsModalOpen] =
