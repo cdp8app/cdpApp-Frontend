@@ -15,7 +15,7 @@ const StudentAuthTogglePage = () => {
 
   return (
     <div className="flex w-[75%] flex-col items-center p-6">
-      <div className="hidden lg:block mb-[20px] flex-row space-x-[10px] rounded-[30px] pl-[10px] pr-[10px] bg-Gold3 pb-[12px] pt-[12px]">
+      <div className="hidden lg:block mb-[20px] flex-row space-x-[5px] rounded-[30px] pl-[10px] pr-[10px] bg-Gold3 pb-[12px] pt-[12px]">
         <button
           onClick={() => handleToggle(1)}
           className={`rounded-[30px] px-[50px] py-[9.5px] font-sans text-[16px] transition-colors ${
@@ -56,13 +56,13 @@ const StudentAuthTogglePage = () => {
               </p>
             </div>
             <StudentLoginForm userType="student" />
-            <div className="mb-[30px] w-[100%] items-end justify-end text-end">
+            {/* <div className="mb-[30px] w-[100%] items-end justify-end text-end">
               <button className="mx-[11px] my-[10px]">
                 <h6 className="justify-end font-sans text-[12px] text-Gold1">
                   Forgot password?
                 </h6>
               </button>
-            </div>
+            </div> */}
             <h1 className="my-6 w-[100%] text-center font-sans text-[16px] font-medium text-Gray1">
               or continue with
             </h1>

@@ -15,12 +15,12 @@ export default function StudentAuthPage() {
         </div>
         <div className="hidden lg:block h-screen w-[50%] rounded-[15px] bg-Gold0 p-[2%]">
           <div className="flex w-[100%] flex-col px-[10%]">
-            {/* <h1 className="mb-[4px] font-sans text-[40px] font-semibold text-BlueWhite">
+            <h1 className="mb-[4px] font-sans text-[40px] font-semibold text-BlueWhite">
               Log in to Career X Hub
             </h1>
             <p className="font-sans text-[20px] font-light text-BlueWhite">
               Lorem Ipsum is simply
-            </p> */}
+            </p>
           </div>
         </div>
       </div>

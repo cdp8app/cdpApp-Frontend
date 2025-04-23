@@ -104,35 +104,67 @@ export default function StudentRegisterForm() {
 
   return (
     <form className="w-full max-w-md" onSubmit={handleSubmit}>
+
+      {(formError || error) && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md  text-center">
+          {formError || error}
+          <button 
+            type="button"
+            onClick={() => {formError ? setFormError("") : clearError();}} 
+            className="float-right text-red-700"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      {/* {debugInfo && (
+        <div className="mb-4 p-3 bg-gray-100 text-gray-700 rounded-md">
+          <strong>Debug Info:</strong> {debugInfo}
+        </div>
+      )} */}
+
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
-          <Label2 text="First Name"></Label2>
-          <input
-            id="firstName"
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="w-full bg-white py-3 px-4 border border-gray-300 rounded-lg"
-            placeholder="First Name"
-            required
+          <Label2
+            text="First Name"
+            className="text-start font-sans text-[13px] font-medium text-Gold0"
           />
+          <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
+          
+            <input
+              id="firstName"
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="font-sans text-[16px] placeholder-Gray1 outline-none"
+              placeholder="Enter your First Name"
+              required
+            />
+          </div>
         </div>
         <div>
-          <Label2 text="Last Name"></Label2>
-          <input
-            id="lastName"
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="w-full bg-white py-3 px-4 border border-gray-300 rounded-lg"
-            placeholder="Last Name"
-            required
+          <Label2
+            text="Last Name"
+            className="text-start font-sans text-[13px] font-medium text-Gold0"
           />
+          <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
+          
+            <input
+              id="lastName"
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="font-sans text-[16px] placeholder-Gray1 outline-none"
+              placeholder="Enter your Last Name"
+              required
+            />
+          </div>
         </div>
       </div>
 
       {/* New Username field */}
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <Label2 text="Username"></Label2>
         <div className="relative">
           <Image
@@ -156,9 +188,25 @@ export default function StudentRegisterForm() {
             required
           />
         </div>
+      </div> */}
+      <Label2
+        text="Username"
+        className="text-start font-sans text-[13px] font-medium text-Gold0"
+      />
+      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
+        {/* <Image src={emailIcon} alt="Phone" className="mr-[8px] w-[22.18px] h-[17.31px]" /> */}
+        <input
+          placeholder="Enter your username address"
+          className="font-sans text-[16px] placeholder-Gray1 outline-none"
+          id="username"
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
       </div>
 
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <Label2 text="Email"></Label2>
         <div className="relative">
           <Image
@@ -178,9 +226,39 @@ export default function StudentRegisterForm() {
             required
           />
         </div>
+      </div> */}
+      <Label2
+        text="Email"
+        className="text-start font-sans text-[13px] font-medium text-Gold0"
+      />
+      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
+        {/* <Image src={emailIcon} alt="Phone" className="mr-[8px] w-[22.18px] h-[17.31px]" /> */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+          className="mr-[8px] h-[24px] w-[24px] text-Gold0"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+          />
+        </svg>
+        <input
+          placeholder="Enter your email address"
+          className="font-sans text-[16px] placeholder-Gray1 outline-none"
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
       </div>
 
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <Label2 text="Password"></Label2>
         <div className="relative">
           <Image
@@ -207,9 +285,47 @@ export default function StudentRegisterForm() {
             {showPassword ? "Hide" : "Show"}
           </button>
         </div>
+      </div> */}
+
+      <Label2
+        text="Password"
+        className="text-start font-sans text-[13px] font-medium text-Blue4"
+      />
+      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
+        {/* <Image src={passwordIcon} alt="password" className="mr-[8px] w-[16px] h-[20px]" /> */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="mr-[8px] h-[24px] w-[24px] text-Gold0"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+          />
+        </svg>
+        <input
+          placeholder="Create password"
+          className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
+          id="password"
+          type={showPassword ? "text" : "password"}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        {/* <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500"
+        >
+          {showPassword ? "Hide" : "Show"}
+        </button> */}
       </div>
 
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <Label2 text="Confirm Password"></Label2>
         <div className="relative">
           <Image
@@ -236,26 +352,45 @@ export default function StudentRegisterForm() {
             {showConfirmPassword ? "Hide" : "Show"}
           </button>
         </div>
+      </div> */}
+
+      <Label2
+        text="Confirm Password"
+        className="text-start font-sans text-[13px] font-medium text-Blue4"
+      />
+      <div className="width-[100%] mb-[36px] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
+        {/* <Image src={passwordIcon} alt="password" className="mr-[8px] w-[16px] h-[20px]" /> */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="mr-[8px] h-[24px] w-[24px] text-Gold0"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+          />
+        </svg>
+        <input
+          id="confirmPassword"
+          type={showConfirmPassword ? "text" : "password"}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
+          placeholder="Confirm your password"
+          required
+        />
+        {/* <button
+          type="button"
+          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500"
+        >
+          {showConfirmPassword ? "Hide" : "Show"}
+        </button> */}
       </div>
-
-      {(formError || error) && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
-          {formError || error}
-          <button 
-            type="button"
-            onClick={() => {formError ? setFormError("") : clearError();}} 
-            className="float-right text-red-700"
-          >
-            ×
-          </button>
-        </div>
-      )}
-
-      {debugInfo && (
-        <div className="mb-4 p-3 bg-gray-100 text-gray-700 rounded-md">
-          <strong>Debug Info:</strong> {debugInfo}
-        </div>
-      )}
 
       {/* <Button1 
         type="submit" 
@@ -271,15 +406,15 @@ export default function StudentRegisterForm() {
         type="submit"
       />
       
-      <button
+      {/* <button
         type="button"
         onClick={handleTestConnection}
         className="mt-2 w-full py-2 bg-gray-200 text-gray-700 rounded"
       >
         Test Auth Context
-      </button>
+      </button> */}
 
-      <div className="mt-4 text-center">
+      {/* <div className="mt-4 text-center">
         <p className="text-gray-600">
           Already have an account?{" "}
           <Link 
@@ -289,14 +424,14 @@ export default function StudentRegisterForm() {
             Login
           </Link>
         </p>
-      </div>
+      </div> */}
 
-      <Button1
+      {/* <Button1
         text="Register"
         loading={loading}
         disabled={loading}
         type="submit"
-      />
+      /> */}
     </form>
   );
 }

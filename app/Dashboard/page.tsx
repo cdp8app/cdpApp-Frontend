@@ -4,8 +4,13 @@ import Header1 from "../Components/Header1";
 import Button7 from "../UsersAuthentication/Components/Button7";
 import Link from "next/link";
 import Footer1 from "../Components/Footer1";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext"; 
 
 export default function Dashboard() {
+  const { login, loading, error, clearError } = useAuth();
+
+
   return (
     <div className="flex flex-col">
       <div className="p-[1%]">
