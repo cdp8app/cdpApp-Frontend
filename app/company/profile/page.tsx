@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import EditAboutModal from "../../Components/Modals/EditAboutModal";
-import Button5 from "../../UsersAuthentication/Components/Button5";
+import Button5 from "../../user/Components/Button5";
 import Footer1 from "../../Components/Footer1";
 import Header1 from "../../Components/Header1";
 

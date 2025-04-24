@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import EditAboutModal from "../../Components/Modals/EditAboutModal";
-import Button5 from "../../UsersAuthentication/Components/Button5";
+import Button5 from "../../user/Components/Button5";
 import ResumeUploadButton2 from "../../Components/ResumeUpload2";
 import Image from "next/image";
-import Portfolio from "../../public/Images/Portfolio.png";
+import Portfolio from "../../../public/Images/Portfolio.png";
 import Footer1 from "../../Components/Footer1";
 import Header1 from "../../Components/Header1";
 import EditEducationModal from "../../Components/Modals/editEducationModal";

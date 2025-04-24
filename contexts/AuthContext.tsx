@@ -131,7 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       // Use our proxy endpoint instead of direct API call
-      const response = await fetch("/api/proxy/register", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -144,11 +144,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!response.ok) {
         throw new Error(data.message || data.error || "Registration failed");
       }
+
+      localStorage.setItem("verifyOtpEmail", userData.email);
+      localStorage.setItem("userType", role as string);
       
       // Handle successful registration
       // You might want to automatically log the user in or redirect them
-      router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin");
-      return data;
+      router.push("/user/auth/register/otp");
     } catch (err: any) {
       setError(err.message || "Failed to register");
       throw err;
@@ -161,12 +163,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/proxy/activate", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/activate/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(code)
+        body: JSON.stringify({code})
       });
 
       const data = await response.json();
@@ -175,7 +177,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error(data.message || data.error || "Registration failed");
       }
 
-      router.push("/Dashboard");
+      router.push("/user/auth/register/successful");
       return data;
     } catch (err: any) {
       setError(err.message || "Activation failed");
