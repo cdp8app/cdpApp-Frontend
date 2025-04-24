@@ -1,11 +1,24 @@
 // app/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/page.tsx
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import LoginForm from "../login/form";
 import Image from "next/image";
 
 
 export default function StudentLoginPage() {
+  const router = useRouter();
+  const [userType, setUserType] = useState<"student" | "company" | null>(null);
+  useEffect(() => {
+    const storedUserType = localStorage.getItem("userType");
+    if (storedUserType === "student" || storedUserType === "company") {
+      setUserType(storedUserType);
+    }
+  }, []);
+
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -20,7 +33,9 @@ export default function StudentLoginPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <LoginForm userType="student" />
+        {userType && (
+          <LoginForm userType={userType === "student" ? "student" : "company"} />
+        )}
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ const SetUpStudentProfilePage = () => {
           </h2>
         </div>
         <div className='border-b-2 border-Gray1 mb-[12px]'>
-          <h1 className='p-[10px] text-Gray1 font-sans text-[21px]/[120%] '>
+          <h1 className='p-[10px] text-Gray1 font-sans text-[21px]/[120%] text-start'>
             Personal Information
           </h1>
         </div>

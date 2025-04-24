@@ -27,6 +27,7 @@ export default function Dashboard() {
                 Med/surgery
               </h1>
               <Button7
+                onClick={() => { window.location.href = "/student/profile"; }}
                 text="View Profile"
                 className="text-[12px]/[120%] font-normal"
               />

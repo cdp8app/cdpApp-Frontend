@@ -1,25 +1,33 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Button2 from "./Components/Button2";
+import Button2 from "@/app/user/Components/Button2";
 import Logo from "@/app/Components/Logo";
 
 const BestDescribes = () => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const router = useRouter();
+  // const [userType, setUserType] = useState<"student" | "company" | null>(null);
+  
+  // useEffect(() => {
+  //   const storedUserType = localStorage.getItem("userType");
+  //   if (storedUserType === "student" || storedUserType === "company") {
+  //     setUserType(storedUserType);
+  //   }
+  // }, []);
 
   const handleOptionSelect = (option: string) => {
-    setSelectedOption(option);
-    // console.log("Selected option:", option);
+    const lower = option.toLowerCase();
+    setSelectedOption(lower);
+    localStorage.setItem("userType", lower);
   };
+  
 
   const handleProceed = () => {
-    if (selectedOption === "Student") {
-      router.push("/user/auth");
-    } else if (selectedOption === "Company") {
-      router.push("/user/auth");
-    } else {
-      alert("Please select an option before proceeding.");
+    if (selectedOption === "student") {
+      router.push("/student/profile/onboarding");
+    } else if (selectedOption === "company") {
+      router.push("/company/profile/onboarding");
     }
   };
 
@@ -39,7 +47,7 @@ const BestDescribes = () => {
         </div>
         <div className="flex flex-row">
           <button
-            className={`flex items-center justify-center ${selectedOption === "Student" ? "bg-Gold3" : "bg-Gray1 bg-opacity-30"} mr-[24px] text-Black2 py-[30px] px-[20px] w-[375px] h-[105px] flex items-center rounded-[18px]`}
+            className={`flex items-center justify-center ${selectedOption === "student" ? "bg-Gold3" : "bg-Gray1 bg-opacity-30"} mr-[24px] text-Black2 py-[30px] px-[20px] w-[375px] h-[105px] flex items-center rounded-[18px]`}
             onClick={() => handleOptionSelect("Student")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-8">
@@ -49,7 +57,7 @@ const BestDescribes = () => {
             <span className='ml-[12px] font-sans text-[21px]/[120%] text-Black2'>Student</span>
           </button>
           <button
-            className={`flex items-center justify-center ${selectedOption === "Company" ? "bg-Gold3" : "bg-Gray1 bg-opacity-30"} mr-[24px] h-[105px] flex items-center text-Black2 py-[30px] px-[20px] w-[375px] rounded-[18px]`}
+            className={`flex items-center justify-center ${selectedOption === "company" ? "bg-Gold3" : "bg-Gray1 bg-opacity-30"} mr-[24px] h-[105px] flex items-center text-Black2 py-[30px] px-[20px] w-[375px] rounded-[18px]`}
             onClick={() => handleOptionSelect("Company")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-8">

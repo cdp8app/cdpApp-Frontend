@@ -9,9 +9,7 @@ import Label2 from "../../Components/Label2";
 import Image from "next/image";
 
 export default function StudentRegisterForm() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState(""); // Added username field
+  const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -23,14 +21,9 @@ export default function StudentRegisterForm() {
   const { register, error, loading, clearError } = useAuth();
   // const router = useRouter();
 
-  const validateForm = () => {
-    if (!firstName || !lastName) {
-      setFormError("First name and last name are required");
-      return false;
-    }
-    
-    if (!username) {
-      setFormError("Username is required");
+  const validateForm = () => {    
+    if (!role) {
+      setFormError("Role is required");
       return false;
     }
 
@@ -68,13 +61,10 @@ export default function StudentRegisterForm() {
     }
     
     const userData = {
-      first_name: firstName,
-      last_name: lastName,
-      username: username, // Send username as separate field
       email,
       password,
-      confirm_password: confirmPassword, // Send confirm_password as required by API
-      role: "Student" // Try uppercase as indicated by error message
+      confirm_password: confirmPassword,
+      role: role
     };
     
     setDebugInfo("Attempting to register with data: " + JSON.stringify({
@@ -124,7 +114,7 @@ export default function StudentRegisterForm() {
         </div>
       )} */}
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      {/* <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
           <Label2
             text="First Name"
@@ -161,7 +151,7 @@ export default function StudentRegisterForm() {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* New Username field */}
       {/* <div className="mb-6">
@@ -190,18 +180,18 @@ export default function StudentRegisterForm() {
         </div>
       </div> */}
       <Label2
-        text="Username"
+        text="Role"
         className="text-start font-sans text-[13px] font-medium text-Gold0"
       />
       <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
         {/* <Image src={emailIcon} alt="Phone" className="mr-[8px] w-[22.18px] h-[17.31px]" /> */}
         <input
-          placeholder="Enter your username address"
+          placeholder="Are you a student or company?"
           className="font-sans text-[16px] placeholder-Gray1 outline-none"
-          id="username"
+          id="role"
           type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
           required
         />
       </div>

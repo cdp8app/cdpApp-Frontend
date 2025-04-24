@@ -5,6 +5,7 @@ import { AuthProvider } from "../contexts/AuthContext"; // Import your AuthProvi
 import { ApplicationProvider } from "@/contexts/applicationContext";
 import { InternshipProvider } from "@/contexts/internshipContext";
 import { JobProvider } from "@/contexts/jobContext";
+import { StorageProvider } from "@/contexts/storageContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +36,9 @@ export default function RootLayout({
           <ApplicationProvider>
             <InternshipProvider>
               <JobProvider>
-                {children}
+                <StorageProvider>
+                  {children}
+                </StorageProvider>
               </JobProvider>
             </InternshipProvider>
           </ApplicationProvider>

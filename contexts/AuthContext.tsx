@@ -5,15 +5,38 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // Define types
-type UserType = "student" | "company" | null;
+export type UserType = "student" | "company" | null;
 
 interface User {
   id: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
   userType: UserType;
-  // Add other user properties as needed
+  profile_picture?: string;
+  full_name?: string;
+  phone_number?: string;
+  bio?: string;
+  intuition?: string;
+  course?: string;
+  reg_num?: string;
+  start_data?: string;
+  end_data?: string;
+  skills?: string;
+  resume?: string;
+  portfolio?: string;
+  company_name?: string;
+  company_reg_num?: string;
+  company_industry?: string;
+  company_description?: string;
+  company_address1?: string;
+  company_address2?: string;
+  company_city?: string;
+  company_state?: string;
+  company_website?: string;
+  company_size?: string;
+  company_linkedin?: string;
+  company_facebook?: string;
+  company_twitter?: string;
+  company_instagram?: string;
 }
 
 interface AuthContextType {
@@ -22,6 +45,7 @@ interface AuthContextType {
   error: string | null;
   userType: UserType;
   isAuthenticated: boolean;
+  token: string | null;
   login: (email: string, password: string, userType: UserType) => Promise<void>;
   register: (userData: any, userType: UserType) => Promise<void>;
   activateAccount: (code: string) => Promise<void>;
@@ -29,6 +53,7 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>;
   verifyOTP: (otp: string) => Promise<void>;
   setNewPassword: (userId: string, newPassword: string, confirm_password: string) => Promise<void>;
+  updateProfile: (userData: User) => Promise<void>;
   clearError: () => void;
 }
 
@@ -41,37 +66,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userType, setUserType] = useState<UserType>(null);
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
   // Check if user is logged in on mount
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem("token");
+    const checkAuthOnLoad = async () => {
+      const storedToken = localStorage.getItem("token");
       const storedUserType = localStorage.getItem("userType") as UserType;
-      
-      if (token) {
+
+      if (storedToken) {
+        setLoading(true);
         try {
-          setLoading(true);
-          const response = await fetch("https://careerxhub.onrender.com/api/user/profile/", {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/get_student_profile/`, {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              Authorization: `Bearer ${storedToken}`,
+            },
           });
-          
+
           if (response.ok) {
             const userData = await response.json();
             setUser(userData);
             setUserType(storedUserType);
+            setToken(storedToken); // Set the token in the context
           } else {
-            // Token invalid, clear storage
+            // Token invalid, clear storage and context
             localStorage.removeItem("token");
             localStorage.removeItem("userType");
             setUser(null);
             setUserType(null);
+            setToken(null);
           }
         } catch (err) {
           setError("Authentication verification failed");
-          
+          setUser(null);
+          setUserType(null);
+          setToken(null);
         } finally {
           setLoading(false);
         }
@@ -79,8 +109,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setLoading(false);
       }
     };
-    
-    checkAuth();
+
+    checkAuthOnLoad(); // Run this check on every initial load/refresh
   }, []);
 
   // Update this function in your AuthContext.tsx
@@ -105,10 +135,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error(data.message || "Login failed");
       }
     
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.access);
+      localStorage.setItem("refreshToken", data.refresh);
       localStorage.setItem("userType", type as string);
       setUser(data.user);
       setUserType(type);
+      setToken(data.access);
     
       // Redirect based on user type
       if (type === "student") {
@@ -136,7 +168,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userData), // Send role if needed as part of userData
+        body: JSON.stringify({ ...userData, userType: role }), // Include role as part of userData
       });
       
       const data = await response.json();
@@ -151,6 +183,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Handle successful registration
       // You might want to automatically log the user in or redirect them
       router.push("/user/auth/register/otp");
+      return data;
     } catch (err: any) {
       setError(err.message || "Failed to register");
       throw err;
@@ -309,6 +342,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };  
 
+  const updateProfile = async (userData: User) => {
+    try {
+      setLoading(true);
+      setError(null);
+  
+      const token = localStorage.getItem("token");
+      localStorage.getItem("token");
+  
+      if (!token) {
+        throw new Error("User not authenticated");
+      }
+  
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/update_profile/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(userData)
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || data.error || "Profile update failed");
+      }
+  
+      setUser(data.user);
+      router.push("/student/profile/onboarding/resume");
+    }
+    catch (err: any) {
+      setError(err.message || "Profile update failed");
+      throw err;
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
   const clearError = () => {
     setError(null);
   };
@@ -321,6 +393,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         error,
         userType,
         isAuthenticated: !!user,
+        token,
         login, 
         register, 
         activateAccount,
@@ -328,6 +401,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         resetPassword,
         verifyOTP,
         setNewPassword,
+        updateProfile,
         clearError
       }}
     >

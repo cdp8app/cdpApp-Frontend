@@ -8,28 +8,19 @@ import Button2 from "@/app/user/Components/Button2";
 
 export default function SuccessfulRegistrationPage() {
   const router = useRouter();
-  const [userType, setUserType] = useState<"student" | "company" | null>(null);
 
   useEffect(() => {
-    const storedUserType = localStorage.getItem("userType");
-    if (storedUserType === "student" || storedUserType === "company") {
-      setUserType(storedUserType);
+    if (typeof window !== "undefined") {
+      const timer = setTimeout(() => {
+        router.push("/user/auth/register/successful/onboarding/");
+      }, 3000);
+      return () => clearTimeout(timer);
     }
-  }, []);
+  }, [router]);
 
-  useEffect(() => {
-    if (!userType) return;
-
-    const timer = setTimeout(() => {
-      if (userType === "student") {
-        router.push("/student/profile/");
-      } else if (userType === "company") {
-        router.push("/company/profile/");
-      }
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [router, userType]);
+  const handSubmit = () => {
+    router.push("/user/auth/register/successful/onboarding/");
+  };
 
   return (
     <div className="p-[1%] max-h-[screen]">
@@ -66,7 +57,7 @@ export default function SuccessfulRegistrationPage() {
               or click the button below.
             </p>
           </div>
-          <Button2 text="Set up profile" className=" w-[40%] " />
+          <Button2 text="Set up profile" className=" w-[40%] " onClick={() => handSubmit()} />
         </div>
 
       </div>
