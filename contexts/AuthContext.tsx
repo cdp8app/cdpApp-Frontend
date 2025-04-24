@@ -27,8 +27,8 @@ interface AuthContextType {
   activateAccount: (code: string) => Promise<void>;
   logout: () => void;
   resetPassword: (email: string) => Promise<void>;
-  verifyOTP: (email: string, otp: string) => Promise<void>;
-  setNewPassword: (token: string, newPassword: string) => Promise<void>;
+  verifyOTP: (otp: string) => Promise<void>;
+  setNewPassword: (userId: string, newPassword: string, confirm_password: string) => Promise<void>;
   clearError: () => void;
 }
 
@@ -70,8 +70,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUserType(null);
           }
         } catch (err) {
-          console.error("Auth check failed:", err);
           setError("Authentication verification failed");
+          
         } finally {
           setLoading(false);
         }
@@ -91,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setError(null);
     
       // Use our proxy endpoint instead of direct API call
-      const response = await fetch("/api/proxy/login", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,12 +112,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
       // Redirect based on user type
       if (type === "student") {
-        router.push("/Dashboard");
+        router.push("/student/dashboard");
       } else {
         router.push("/company/dashboard");
       }
     } catch (err: any) {
-      console.error("Login error:", err);
       setError(err.message || "Login failed");
       throw err; // Re-throw to let the form component handle it
     } finally {
@@ -151,9 +150,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin");
       return data;
     } catch (err: any) {
-      console.error("Registration error:", err);
       setError(err.message || "Failed to register");
-      return null;
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -181,7 +179,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return data;
     } catch (err: any) {
       setError(err.message || "Activation failed");
-      return null;
+      throw err;
     }
     finally {
       setLoading(false);
@@ -201,92 +199,113 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(true);
       setError(null);
       
-      const response = await fetch("https://careerxhub.onrender.com/api/user/reset-password/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/password_reset/generate/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ email })
       });
-      
+
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Password reset request failed");
+        throw new Error(data.message || data.error || "Password reset request failed");
       }
       
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+
+      //   throw new Error(errorData.message || "");
+      // }
+
+      localStorage.setItem("otpEmail", email);
+      
       // Success - should redirect to OTP verification page
-      router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/OTP");
+      router.push("/user/auth/login/forget-password/otp");
+      return data;
     } catch (err: any) {
       setError(err.message || "Password reset failed");
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  const verifyOTP = async (email: string, otp: string) => {
+  const verifyOTP = async (otp: string) => {
     try {
       setLoading(true);
       setError(null);
       
-      const response = await fetch("https://careerxhub.onrender.com/api/user/verify-otp/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/password_reset/retrieve_user/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, otp })
+        body: JSON.stringify({ token: otp })
       });
-      
+
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "OTP verification failed");
-        
-        // Redirect to unsuccessful verification page
-        router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/OTP/UnsuccessfulVerfication");
+        throw new Error(data.message || data.error || "OTP verification failed");
       }
       
-      const data = await response.json();
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(errorData.message || "");
+      // }
+      
+      // const data = await response.json();
       
       // Store the reset token for the next step
       localStorage.setItem("resetToken", data.token);
+      localStorage.setItem("userId", data.id);
       
       // Redirect to new password page
-      router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/ForgotPassword/NewPassword");
+      router.push("/user/auth/login/forget-password/new-password");
+      return data;
     } catch (err: any) {
       setError(err.message || "OTP verification failed");
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  const setNewPassword = async (token: string, newPassword: string) => {
+  const setNewPassword = async (userId: string, newPassword: string, confirm_password: string) => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await fetch("https://careerxhub.onrender.com/api/user/set-new-password/", {
+  
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/password_reset/reset/${userId}/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ token, new_password: newPassword })
+        body: JSON.stringify({ new_password: newPassword, confirm_password: confirm_password })
       });
-      
+
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Setting new password failed");
+        throw new Error(data.message || data.error || "Setting new password failed");
       }
-      
-      // Clear the reset token
+  
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(errorData.message || "");
+      // }
+  
       localStorage.removeItem("resetToken");
-      
-      // Redirect to password created successfully page
-      router.push("/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin/ForgotPassword/NewPassword/NewPasswordCreated");
+      router.push("/user/auth/login/forget-password/new-password/successful");
     } catch (err: any) {
       setError(err.message || "Setting new password failed");
+      throw err;
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const clearError = () => {
     setError(null);

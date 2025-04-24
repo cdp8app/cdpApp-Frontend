@@ -1,14 +1,26 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Button2 from "./Components/Button2";
 import Logo from "@/app/Components/Logo";
 
 const BestDescribes = () => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
     // console.log("Selected option:", option);
+  };
+
+  const handleProceed = () => {
+    if (selectedOption === "Student") {
+      router.push("/user/auth");
+    } else if (selectedOption === "Organization") {
+      router.push("/setup-profile/organization");
+    } else {
+      alert("Please select an option before proceeding.");
+    }
   };
 
   return (
@@ -46,7 +58,7 @@ const BestDescribes = () => {
             <span className='ml-[12px] font-sans text-[21px]/[120%] text-Black2'>Organization</span>
           </button>
         </div>
-        <Button2 text="Proceed to setup profile" className="mb-[14px] mt-[36px] w-[70%]" />
+        <Button2 text="Proceed to setup profile" className="mb-[14px] mt-[36px] w-[70%]" onClick={handleProceed} />
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 "use client";
 import Logo from "@/app/Components/Logo";
 import ForgotPasswordForm from "./form";
-import Button1 from "@/app/UsersAuthentication/Components/Button1";
 import Link from "next/link";
+
 
 export default function ForgotPasswordPage() {
   return (
@@ -25,21 +25,19 @@ export default function ForgotPasswordPage() {
         </h6>
         <div className="flex w-[45%] mt-16 flex-col justify-center self-center">
           <ForgotPasswordForm />
-          <div className=" flex justify-center item-center w-[100%]">
-            <Button1 text="Send OTP" className=" mt-24 text-[16px] w-[85%] " />
-          </div>
+          
           {/* <h1 className="mb-[40px] mt-[36px] font-sans text-center text-[16px]/[120%] text-Gray1"> */}
           <h1 className=" mt-6 font-sans text-center text-[16px]/[120%] text-Gray1">
             Remembered your password?{" "}
             <button>
-              <Link className="text-PriGold" href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}>
+              <Link className="text-PriGold" href={"/user/auth"}>
                 Login now
               </Link>
             </button>
           </h1>
           <div className="flex w-[100%] justify-center ">
             <Link
-              href={"/UsersAuthentication/StudentAuth/StudentAuthPage"}
+              href={"/user/auth"}
               className="flex text-center justify-center border-Blue0 border-b-2 p-1"
             >
               <h1 className="text-[16px]/[120%] mt-6 font-sans font-normal text-Gold1">

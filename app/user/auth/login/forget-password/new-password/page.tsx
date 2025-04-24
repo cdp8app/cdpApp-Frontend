@@ -2,7 +2,6 @@
 import Logo from "@/app/Components/Logo";
 import Link from "next/link";
 import NewPasswordForm from "./form";
-import Button2 from "@/app/UsersAuthentication/Components/Button2";
 
 export default function NewPasswordPage() {
   return (
@@ -17,7 +16,6 @@ export default function NewPasswordPage() {
         </h6>
         <div className="flex w-[45%] flex-col justify-center self-center">
           <NewPasswordForm />
-          <Button2 text="Set new password" className="mb-[14px] mt-[36px] w-[100%]" />
           <div className="flex flex-row items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"

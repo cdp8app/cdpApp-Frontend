@@ -1,17 +1,29 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../../../app/globals.css";
 import StudentLoginForm from "../../auth/login/form";
 import StudentRegisterForm from "../../auth/register/form";
 import Image from "next/image";
 import appleIcon from "../../../../public/Images/Icons/appleIcon.png";
 import googleIcon from "../../../../public/Images/Icons/googleIcon.png";
+import { useParams } from "next/navigation";
 
 const StudentAuthTogglePage = () => {
   const [activeContent, setActiveContent] = useState<1 | 2>(1);
   const handleToggle = (content: 1 | 2) => {
     setActiveContent(content);
   };
+
+  const params = useParams();
+
+  useEffect(() => {
+    const pageType = params?.userType;
+    if (pageType === "login") {
+      setActiveContent(1);
+    } else if (pageType === "register") {
+      setActiveContent(2);
+    }
+  }, [params]);
 
   return (
     <div className="flex w-[75%] flex-col items-center p-6">

@@ -1,6 +1,6 @@
 import Logo from "@/app/Components/Logo";
 import StudentAuthTogglePage from "../auth/toggle/page";
-import "../../../../app/globals.css";
+import "../../../app/globals.css";
 
 export default function StudentAuthPage() {
   return (

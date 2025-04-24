@@ -1,7 +1,22 @@
 "use client";
-import Button2 from "@/app/UsersAuthentication/Components/Button2";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+import Button2 from "@/app/user/Components/Button2";
 
 export default function NewPasswordCreatedPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const timer = setTimeout(() => {
+        router.push("/user/auth/");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [router]);
+  
   return (
     <div className="max-h-[screen] p-[1%]">
       <div className="flex h-[100%] w-[100%] justify-center">
@@ -38,7 +53,7 @@ export default function NewPasswordCreatedPage() {
               or login below.
             </p>
           </div>
-          <Button2 text="Login now" className="w-[45%]" />
+          <Button2 text="Login now" className="w-[45%]" onClick={() => router.push("/user/auth/")} />
         </div>
       </div>
     </div>

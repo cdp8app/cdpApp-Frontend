@@ -3,9 +3,9 @@
 import { useState } from "react";
 // import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "../../../../../contexts/AuthContext";
-import Button1 from "../../../Components/Button1";
-import Label2 from "../../../Components/Label2";
+import { useAuth } from "@/./contexts/AuthContext";
+import Button1 from "../../Components/Button1";
+import Label2 from "../../Components/Label2";
 import Image from "next/image";
 
 export default function StudentRegisterForm() {
@@ -103,7 +103,7 @@ export default function StudentRegisterForm() {
   };
 
   return (
-    <form className="w-full max-w-md" onSubmit={handleSubmit}>
+    <form className="mt-[12.96px] flex flex-col justify-start" onSubmit={handleSubmit}>
 
       {(formError || error) && (
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md  text-center">

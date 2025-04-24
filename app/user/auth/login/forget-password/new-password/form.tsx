@@ -1,9 +1,17 @@
 "use client";
-import { useState } from "react";
-import Label3 from "@/app/UsersAuthentication/Components/Label3";
-import "../../../../../../../app/globals.css";
+
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/./contexts/AuthContext"; 
+
+import Label3 from "@/app/user/Components/Label3";
+import "../../../../../../app/globals.css";
+import Button2 from "@/app/user/Components/Button2";
 
 export default function NewPasswordForm() {
+  const router = useRouter();
+
+  const { setNewPassword, loading, error, clearError } = useAuth();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({
@@ -13,6 +21,15 @@ export default function NewPasswordForm() {
     special: false,
     match: false
   });
+  const [formError, setFormError] = useState("");
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
+  }, []);
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -31,16 +48,26 @@ export default function NewPasswordForm() {
       length: password.length >= 8,
       lowercase: /[a-z]/.test(password),
       uppercase: /[A-Z]/.test(password),
-      special: /[!&.\-*$/]/.test(password),
+      special: /[!&@#%^()":;<>?+,_'.\-*$/]/.test(password),
       match: password === confirmPassword
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // if (Object.values(errors).every(value => value === true)) {
-    //   console.log("Form submitted successfully");
-    // }
+    setFormError("");
+    clearError();
+
+    try {
+      // Call the setNewPassword function from AuthContext
+      if (!userId) {
+        setFormError("User ID is missing. Please retry the reset process.");
+        return;
+      }
+      await setNewPassword(userId as string, password, confirmPassword);
+    } catch (err: any) {
+      setFormError(err.message || "Failed to set new password.");
+    }
   };
 
   return (
@@ -48,6 +75,11 @@ export default function NewPasswordForm() {
       onSubmit={handleSubmit}
       className=" flex flex-col justify-start"
     >
+      {(formError || error) && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-center">
+          {formError || error}
+        </div>
+      )}
       <Label3
         text="Password"
         className="text-start text-[12px] font-medium text-Gold0"
@@ -289,7 +321,7 @@ export default function NewPasswordForm() {
           </span>
         </div>
       </div>
-
+      <Button2 text="Set new password" className="mb-[14px] mt-[36px] w-[100%]" />
     </form>
   );
 }

@@ -1,14 +1,15 @@
 // app/UsersAuthentication/Components/LoginForm.tsx
 "use client";
-import "../../../../../app/globals.css";
+import "../../../../app/globals.css";
 // import Label from "@/app/UsersAuthentication/Components/Label";
 import { useState } from "react";
 // import Link from "next/link";
-import { useAuth } from "@/contexts/AuthContext"; 
-import Button1 from "../../../Components/Button1";
+import { useAuth } from "@/./contexts/AuthContext"; 
+import Button1 from "../../Components/Button1";
 // import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Label from "@/app/UsersAuthentication/Components/Label";
+import Label from "@/app/user/Components/Label";
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
   userType: "student" | "company";
@@ -19,9 +20,9 @@ export default function LoginForm({ userType }: LoginFormProps) {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [formError, setFormError] = useState("");
+  const router = useRouter();
   
   const { login, loading, error, clearError } = useAuth();
-  // const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,10 +44,13 @@ export default function LoginForm({ userType }: LoginFormProps) {
       await login(email, password, userType);
       // Note: The redirect is handled inside the login function in AuthContext
     } catch (err: any) {
-      console.error("Login error:", err);
       // Form-specific errors are set here
       setFormError(err.message || "Login failed. Please check your credentials and try again.");
     }
+  };
+
+  const handleForgetPassword = () => {
+    router.push("/user/auth/login/forget-password");
   };
 
   return (
@@ -192,7 +196,7 @@ export default function LoginForm({ userType }: LoginFormProps) {
       </div> */}
 
       <div className="mb-[30px] w-[100%] items-end justify-end text-end">
-        <button className="mx-[11px] my-[10px]">
+        <button className="mx-[11px] my-[10px]" onClick={handleForgetPassword}>
           <h6 className="justify-end font-sans text-[12px] text-Gold1">
                   Forgot password?
           </h6>
