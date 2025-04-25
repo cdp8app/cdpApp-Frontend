@@ -7,6 +7,22 @@ import { useRouter } from "next/navigation";
 // Define types
 export type UserType = "student" | "company" | null;
 
+type StudentProfile = {
+  id: number;
+  profile_picture?: string;
+  full_name?: string;
+  phone_number?: string;
+  bio?: string;
+  intuition?: string;
+  course?: string;
+  reg_num?: string;
+  start_data?: string;
+  end_data?: string;
+  skills?: string;
+  resume?: string;
+  portfolio?: string;
+};
+
 interface User {
   id: string;
   email: string;
@@ -55,6 +71,8 @@ interface AuthContextType {
   setNewPassword: (userId: string, newPassword: string, confirm_password: string) => Promise<void>;
   updateProfile: (userData: User) => Promise<void>;
   clearError: () => void;
+  getStudentProfile: () => Promise<StudentProfile | null>;
+  getCompanyProfile: () => Promise<void>;
 }
 
 // Create context
@@ -75,10 +93,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const storedToken = localStorage.getItem("token");
       const storedUserType = localStorage.getItem("userType") as UserType;
 
-      if (storedToken) {
+      if (storedToken && storedUserType) { // Ensure we have both token and userType
         setLoading(true);
+        let profileEndpoint = "";
+
+        if (storedUserType === "student") {
+          profileEndpoint = `${process.env.NEXT_PUBLIC_API_URL}/user/get_student_profile/`;
+        } else if (storedUserType === "company") {
+          profileEndpoint = `${process.env.NEXT_PUBLIC_API_URL}/user/get_company_profile/`;
+        } else {
+          localStorage.removeItem("token");
+          localStorage.removeItem("userType");
+          setUser(null);
+          setUserType(null);
+          setToken(null);
+          setLoading(false);
+          return;
+        }
+
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/get_student_profile/`, {
+          const response = await fetch(profileEndpoint, {
             headers: {
               Authorization: `Bearer ${storedToken}`,
             },
@@ -88,9 +122,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const userData = await response.json();
             setUser(userData);
             setUserType(storedUserType);
-            setToken(storedToken); // Set the token in the context
+            setToken(storedToken);
           } else {
-            // Token invalid, clear storage and context
             localStorage.removeItem("token");
             localStorage.removeItem("userType");
             setUser(null);
@@ -110,7 +143,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-    checkAuthOnLoad(); // Run this check on every initial load/refresh
+    checkAuthOnLoad();
   }, []);
 
   // Update this function in your AuthContext.tsx
@@ -138,7 +171,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem("token", data.access);
       localStorage.setItem("refreshToken", data.refresh);
       localStorage.setItem("userType", type as string);
-      setUser(data.user);
+      setUser(data);
       setUserType(type);
       setToken(data.access);
     
@@ -209,6 +242,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!response.ok) {
         throw new Error(data.message || data.error || "Registration failed");
       }
+
+      localStorage.removeItem("verifyOtpEmail");
 
       router.push("/user/auth/register/successful");
       return data;
@@ -333,6 +368,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // }
   
       localStorage.removeItem("resetToken");
+      localStorage.removeItem("userId");
       router.push("/user/auth/login/forget-password/new-password/successful");
     } catch (err: any) {
       setError(err.message || "Setting new password failed");
@@ -360,7 +396,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(userData)
+        body: JSON.stringify({userData})
       });
   
       const data = await response.json();
@@ -370,13 +406,81 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
   
       setUser(data.user);
-      router.push("/student/profile/onboarding/resume");
+      router.push("/student/profile");
     }
     catch (err: any) {
       setError(err.message || "Profile update failed");
       throw err;
     }
     finally {
+      setLoading(false);
+    }
+  };
+
+  const getStudentProfile = async (): Promise<StudentProfile | null>=> {
+    try {
+      setLoading(true);
+      setError(null);
+  
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        throw new Error("User not authenticated");
+      }
+  
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/get_student_profile/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || data.error || "Profile retrieval failed");
+      }
+  
+      setUser(data.user);
+      return data;
+    } catch (err: any) {
+      setError(err.message || "Profile retrieval failed");
+    } finally {
+      setLoading(false);
+    }
+    return null; // Ensure a return value in all code paths
+  };
+
+  const getCompanyProfile = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+  
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        throw new Error("User not authenticated");
+      }
+  
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/get_company_profile/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || data.error || "Profile retrieval failed");
+      }
+  
+      setUser(data.user);
+    } catch (err: any) {
+      setError(err.message || "Profile retrieval failed");
+    } finally {
       setLoading(false);
     }
   };
@@ -402,6 +506,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         verifyOTP,
         setNewPassword,
         updateProfile,
+        getStudentProfile,
+        getCompanyProfile,
         clearError
       }}
     >

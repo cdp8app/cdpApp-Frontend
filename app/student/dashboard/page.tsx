@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Logout from "@/app/user/auth/logout/page";
 
 export default function Dashboard() {
-  const { login, loading, error, clearError } = useAuth();
+  const { user, loading, error, clearError } = useAuth();
 
 
   return (
@@ -21,10 +21,10 @@ export default function Dashboard() {
             <div className="flex flex-col items-center justify-center">
               <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
               <h1 className="mb-[6px] font-sans text-[27px]/[120%] font-bold">
-                John Doe
+                {user?.full_name}
               </h1>
               <h1 className="mb-[21px] font-sans text-[12px]/[120%] font-normal text-Gray2">
-                Med/surgery
+                {user?.course}
               </h1>
               <Button7
                 onClick={() => { window.location.href = "/student/profile"; }}
@@ -42,7 +42,7 @@ export default function Dashboard() {
                 </p>
                 <Link
                   className="flex flex-row items-center py-[12px] font-sans text-[21px]/[120%] font-normal text-Gray2"
-                  href={"#"}
+                  href={"/student/dashboard/internships"}
                 >
                   See all
                   <svg
@@ -104,7 +104,7 @@ export default function Dashboard() {
                 </p>
                 <Link
                   className="flex flex-row items-center py-[12px] font-sans text-[21px]/[120%] font-normal text-Gray2"
-                  href={"#"}
+                  href={"/student/dashboard/applications"}
                 >
                   See all
                   <svg
@@ -177,7 +177,7 @@ export default function Dashboard() {
                 </p>
                 <Link
                   className="flex flex-row items-center py-[12px] font-sans text-[21px]/[120%] font-normal text-Gray2"
-                  href={"#"}
+                  href={"/student/dashboard/offers"}
                 >
                   See all
                   <svg

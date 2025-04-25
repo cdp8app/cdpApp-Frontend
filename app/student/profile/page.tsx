@@ -1,5 +1,8 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
+import { useAuth } from "@/./contexts/AuthContext";
+
 import Link from "next/link";
 import EditAboutModal from "../../Components/Modals/EditAboutModal";
 import Button5 from "../../user/Components/Button5";
@@ -12,9 +15,14 @@ import EditEducationModal from "../../Components/Modals/editEducationModal";
 import Logout from "@/app/user/auth/logout/page";
 
 export default function StudentProfilePage() {
-  const [aboutText, setAboutText] = useState<string>(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-  );
+  const { getStudentProfile, loading, error, clearError } = useAuth();
+  const [formError, setFormError] = useState("");
+  const [name, setName] = useState("");
+  const [department, setDepartment] = useState("");
+  const [skills, setSkills] = useState<string[]>([]);
+  
+
+  const [aboutText, setAboutText] = useState<string>("");
   const [isAboutModalOpen, setIsAboutModalOpen] = useState<boolean>(false);
 
   const openAboutModal = () => setIsAboutModalOpen(true);
@@ -46,6 +54,40 @@ export default function StudentProfilePage() {
     setEducationData(newData);
     closeEditEducationModal();
   };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await getStudentProfile();
+
+        if (profile && profile.full_name) setName(profile.full_name);
+        if (profile && profile.course) setDepartment(profile.course);
+        if (profile && profile.bio) setAboutText(profile.bio);
+  
+        if (profile && educationData) {
+          setEducationData({
+            university: profile.intuition || "",
+            department: profile.course || "",
+            fromYear: profile.start_data || "",
+            toYear: profile.end_data || "",
+          });
+        }
+
+        console.log("Profile: ", profile);
+
+        const formattedSkills = profile?.skills?.split(",").map((skill: string) => skill.trim()) || [];
+
+        if (profile && profile.skills) setSkills(formattedSkills);
+        
+  
+        // Set other profile data as needed (e.g., name, profile picture)
+      } catch (error) {
+        console.error("Failed to fetch profile", error);
+      }
+    };
+  
+    fetchProfile();
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -80,7 +122,7 @@ export default function StudentProfilePage() {
               <div className="mr-[24px] h-[120px] w-[120px] rounded-[60px] bg-White"></div>
               <div>
                 <h1 className="mb-1 font-sans text-[36px]/[100%] font-semibold text-GoldenWhite">
-                  John Doe
+                  {name}
                 </h1>
                 <h2 className="flex flex-row font-sans text-[16px] text-Gold3">
                   <svg
@@ -97,7 +139,7 @@ export default function StudentProfilePage() {
                       d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
                     />
                   </svg>
-                  Med/surgery
+                  {department}
                 </h2>
               </div>
             </div>
@@ -182,7 +224,7 @@ export default function StudentProfilePage() {
           <div className="mt-[18px] flex w-[100%] flex-col rounded-[16px] border-[1px] border-PriGold px-[51px] py-[30px]">
             <div className="flex flex-row items-center justify-between">
               <h1 className="font-sans text-[21px]/[120%] text-Black2">
-                About Text
+                About
               </h1>
               <button
                 onClick={openAboutModal}
@@ -269,7 +311,7 @@ export default function StudentProfilePage() {
                   </svg>
                   <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
                     {educationData.university ||
-                      "University of Calabar, Calabar"}
+                      ""}
                   </h1>
                 </div>
                 <div className="flex flex-row items-center pb-[10px]">
@@ -288,7 +330,7 @@ export default function StudentProfilePage() {
                     />
                   </svg>
                   <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    {educationData.department || "Computer Science"}
+                    {educationData.department || ""}
                   </h1>
                 </div>
                 <div className="flex flex-row items-center pb-[10px]">
@@ -308,9 +350,9 @@ export default function StudentProfilePage() {
                   </svg>
 
                   <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    {educationData.fromYear || "2017"}
-                    {"-"}
-                    {educationData.toYear || "2019"}
+                    {educationData.fromYear || ""}
+                    {" "} TO {" "}
+                    {educationData.toYear || ""}
                   </h1>
                 </div>
                 <Button5
@@ -412,22 +454,15 @@ export default function StudentProfilePage() {
                     </svg>
                   </button>
                 </div>
-                <div className="flex flex-row space-x-5">
-                  <div className="w-auto rounded-[6px] bg-Gold3 px-[15px] py-[10px]">
-                    <p className="font-sans text-[12px]/[120%] text-Gold1">
-                      Communication
-                    </p>
-                  </div>
-                  <div className="w-auto rounded-[6px] bg-Gold3 px-[15px] py-[10px]">
-                    <p className="font-sans text-[12px]/[120%] text-Gold1">
-                      Communication
-                    </p>
-                  </div>
-                  <div className="w-auto rounded-[6px] bg-Gold3 px-[15px] py-[10px]">
-                    <p className="font-sans text-[12px]/[120%] text-Gold1">
-                      Communication
-                    </p>
-                  </div>
+                <div className="flex flex-row flex-wrap gap-3">
+                  {skills.map((skill, index) => (
+                    <div
+                      key={index}
+                      className="w-auto rounded-[6px] bg-Gold3 px-[15px] py-[10px]"
+                    >
+                      <p className="font-sans text-[12px]/[120%] text-Gold1">{skill}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div>

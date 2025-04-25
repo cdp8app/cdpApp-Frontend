@@ -2,10 +2,10 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Portfolio from "../../public/Images/Portfolio.png";
-import Footer1 from "../../Components/Footer1";
-import Header1 from "../../Components/Header1";
-import ResumeUploadButton3 from "../../Components/ResumeUpload3";
+import Portfolio from "../../../../public/Images/Portfolio.png";
+import Footer1 from "../../../Components/Footer1";
+import Header1 from "../../../Components/Header1";
+import ResumeUploadButton3 from "../../../Components/ResumeUpload3";
 
 export default function ViewStudentProfilePage() {
   return (
