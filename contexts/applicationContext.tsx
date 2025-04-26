@@ -47,7 +47,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -99,7 +99,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application/${applicationId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/${applicationId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -126,7 +126,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application/${applicationId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/${applicationId}/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -153,7 +153,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application/${applicationId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/${applicationId}/`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

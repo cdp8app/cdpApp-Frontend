@@ -98,7 +98,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const response = await fetch("https://careerxhub.onrender.com/api/internship/", {
         method: "POST",
         headers: {
-          "Content-Type": "internship/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(internshipData),
@@ -125,7 +125,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const response = await fetch(`https://careerxhub.onrender.com/api/internship/${internshipId}/`, {
         method: "PUT",
         headers: {
-          "Content-Type": "internship/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(internshipData),

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/./contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 import Link from "next/link";
 import EditAboutModal from "../../Components/Modals/EditAboutModal";
@@ -11,6 +12,9 @@ import Header1 from "../../Components/Header1";
 import Logout from "@/app/user/auth/logout/page";
 
 export default function CompanyProfile() {
+
+  const router = useRouter();
+
   const { getCompanyProfile, loading, error, clearError } = useAuth();
   const [company_name, setCompanyName] = useState<string>("");
   const [company_industry, setCompanyIndustry] = useState<string>("");
@@ -187,7 +191,7 @@ export default function CompanyProfile() {
                 19
               </h1>
             </div>
-            <button onClick={() => router.push("/com")} className="mt-[12px] flex max-w-[280px] justify-center justify-self-start rounded-[999px] bg-PriGold px-[60px] py-[14px] font-sans text-GoldenWhite">
+            <button onClick={() => router.push("/company/job/create")} className="mt-[12px] flex max-w-[280px] justify-center justify-self-start rounded-[999px] bg-PriGold px-[60px] py-[14px] font-sans text-GoldenWhite">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

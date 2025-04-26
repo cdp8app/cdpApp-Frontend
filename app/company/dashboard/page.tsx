@@ -5,8 +5,13 @@ import Button7 from "../../user/Components/Button7";
 import Link from "next/link";
 import Footer1 from "../../Components/Footer1";
 import Logout from "@/app/user/auth/logout/page";
+import { useAuth } from "@/contexts/AuthContext"; 
+import { useRouter } from "next/navigation";
 
 export default function CompanyDashboard() {
+  const router = useRouter();
+  const { user, loading, error, clearError } = useAuth();
+
   return (
     <div className="flex flex-col">
       <div className="p-[1%]">
@@ -16,14 +21,15 @@ export default function CompanyDashboard() {
             <div className="flex flex-col items-center justify-center">
               <div className="mb-[16px] h-[134px] w-[134px] rounded-[18px] bg-Red1"></div>
               <h1 className="mb-[6px] text-center font-sans text-[27px]/[120%] font-bold">
-                Big Star Technology
+                {user?.company_name}
               </h1>
               <h1 className="mb-[21px] font-sans text-[12px]/[120%] font-normal text-Gray2">
-                Internation Technology
+                {user?.company_industry}
               </h1>
               <Button7
                 text="View Profile"
                 className="text-[12px]/[120%] font-normal"
+                onClick={() => router.push("/company/profile")}
               />
             </div>
             <Logout/>

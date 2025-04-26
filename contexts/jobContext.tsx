@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 
 // Define types
-interface Job {
+export interface Job {
   id: string;
   title: string;
     company: string;
@@ -24,10 +24,11 @@ interface Job {
 
 interface JobContextType {
   jobs: Job | null;
+  currentJob: Job | null;
   loading: boolean;
   error: string | null;
   getJobs: () => Promise<void>;
-  getJobsById: (jobId: string) => Promise<void>;
+  getJobsById: (jobId: string) => Promise<Job | null>;
   createJob: (jobData: any) => Promise<void>;
   updateJob: (jobId: string, jobData: any) => Promise<void>;
   deleteJob: (jobId: string) => Promise<void>;
@@ -37,6 +38,7 @@ const JobContext = createContext<JobContextType | undefined>(undefined);
 
 export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [jobs, setJobs] = useState<Job | null>(null);
+  const [currentJob, setCurrentJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,48 +48,51 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch("https://careerxhub.onrender.com/api/job/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
         throw new Error(data.message || "Failed to fetch jobs");
       }
-    
+
       setJobs(data);
-      router.push("/Dashboard");
+      return data;
     } catch (err: any) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
-
-  const getJobsById = async (jobId: string) => {
+  
+  const getJobsById = async (jobId: string): Promise<Job | null> => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://careerxhub.onrender.com/api/job/${jobId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/${jobId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-    
+      
       const data = await response.json();
-    
+
+      console.log("from auth",data);
+      
       if (!response.ok) {
         throw new Error(data.message || "Failed to fetch job");
       }
-    
-      setJobs(data);
+      
+      setCurrentJob(data);
+      return data;
     } catch (err: any) {
       setError(err.message);
-    }
-    finally {
+      return null;
+    } finally {
       setLoading(false);
     }
   };
@@ -96,10 +101,10 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch("https://careerxhub.onrender.com/api/job/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/`, {
         method: "POST",
         headers: {
-          "Content-Type": "job/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(jobData),
@@ -108,10 +113,11 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to create job");
+        throw new Error(data.message || data.detail || "Failed to create job");
       }
 
       setJobs(data);
+      router.push("/company/job");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -123,10 +129,10 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://careerxhub.onrender.com/api/job/${jobId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/${jobId}/`, {
         method: "PUT",
         headers: {
-          "Content-Type": "job/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(jobData),
@@ -150,7 +156,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://careerxhub.onrender.com/api/job/${jobId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/${jobId}/`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -175,6 +181,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     <JobContext.Provider 
       value={{ 
         jobs, 
+        currentJob,
         loading, 
         error, 
         getJobs, 

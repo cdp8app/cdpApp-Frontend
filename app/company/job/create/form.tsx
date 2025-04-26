@@ -3,17 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useApplicationContext } from "@/contexts/applicationContext";
-
-import "../../../../../app/globals.css";
+import "../../../../app/globals.css";
 import Button1 from "@/app/user/Components/Button1";
 import Button3 from "@/app/user/Components/Button3";
+import { useAuth } from "@/contexts/AuthContext";
+import { useJobContext } from "@/contexts/jobContext";
 
 
 export default function SetUpJobForm() {
   const router = useRouter();
+  const { user, clearError } = useAuth();
 
-  const { createApplication, loading, error } = useApplicationContext();
+  const { createJob, loading, error } = useJobContext();
   const [title , setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [requirements, setRequirements] = useState<string>("");
@@ -32,24 +33,18 @@ export default function SetUpJobForm() {
     setFormError("");
 
     try {
-      const applicationData = {
+      const jobData = {
+        company: user?.id,
         title,
         description,
         requirements,
-        address1,
-        address2,
-        state,
-        country,
+        location: address1+" "+state+" "+country,
         salary,
-        duration,
+        deadline: duration,
         jobType,
-        status,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        id: "",
       };
 
-      await createApplication(applicationData);
+      await createJob(jobData);
     } catch (err: any) {
       setFormError(err.message || "Login failed. Please check your credentials and try again.");
     }
@@ -72,11 +67,11 @@ export default function SetUpJobForm() {
         value={title} onChange={(e) => setTitle(e.target.value)}
         className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
       />
-      <input
+      {/* <input
         placeholder="Company"
-        // value={companyName} onChange={(e) => setCompanyName(e.target.value)}
+        value={companyName} onChange={(e) => setCompanyName(e.target.value)}
         className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
-      />
+      /> */}
       <input
         placeholder="Enter job description"
         value={description} onChange={(e) => setDescription(e.target.value)}
@@ -102,20 +97,20 @@ export default function SetUpJobForm() {
           Location
         </h1>
       </div>
-      <input
+      {/* <input
         placeholder="Remote"
         className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
-      />
+      /> */}
       <input
         placeholder="Address line 1"
         value={address1} onChange={(e) => setAddress1(e.target.value)}
         className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
       />
-      <input
+      {/* <input
         placeholder="Address line 2"
         value={address2} onChange={(e) => setAddress2(e.target.value)}
         className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
-      />
+      /> */}
       <input
         placeholder="State"
         value={state} onChange={(e) => setState(e.target.value)}
@@ -147,7 +142,7 @@ export default function SetUpJobForm() {
         className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
       />
 
-      <Button3 text="Create Profile" className="text-[16px] font-normal" type="submit" loading={loading} disabled={loading} />
+      <Button3 text="Create Job" className="text-[16px] font-normal" type="submit" />
       
       <div className="mb-[100px]"></div>
     </form>
