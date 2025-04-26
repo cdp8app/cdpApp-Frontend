@@ -13,6 +13,7 @@ export default function StudentLoginPage() {
   const [userType, setUserType] = useState<"student" | "company" | null>(null);
   useEffect(() => {
     const storedUserType = localStorage.getItem("userType");
+    console.log("Stored user type:", storedUserType);
     if (storedUserType === "student" || storedUserType === "company") {
       setUserType(storedUserType);
     }
@@ -28,7 +29,7 @@ export default function StudentLoginPage() {
           alt="CDP Logo"
         />
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Student Login
+          Sign in to your account
         </h2>
       </div>
 

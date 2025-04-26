@@ -10,6 +10,7 @@ interface SkillsButtonProps {
   onSelect?: (value: string) => void;
   selectedSkills?: string[];
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  text?: string
 }
 
 const SkillsButton: React.FC<SkillsButtonProps> = ({
@@ -17,6 +18,7 @@ const SkillsButton: React.FC<SkillsButtonProps> = ({
   onSelect,
   onKeyDown,
   selectedSkills = [],
+  text,
 }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -58,7 +60,7 @@ const SkillsButton: React.FC<SkillsButtonProps> = ({
           </div>
         ) : (
           <span className="text-Gray1">
-            Type or Select your skills (You can select up to 5)
+            {text}
           </span>
         )}
         <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-Gray1">

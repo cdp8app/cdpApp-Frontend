@@ -23,6 +23,26 @@ type StudentProfile = {
   portfolio?: string;
 };
 
+type CompanyProfile = {
+  id: number;
+  phone_number?: string;
+  profile_picture?: string;
+  company_name?: string;
+  company_reg_num?: string;
+  company_industry?: string;
+  company_description?: string;
+  company_address1?: string;
+  company_address2?: string;
+  company_city?: string;
+  company_state?: string;
+  company_website?: string;
+  company_size?: string;
+  company_linkedin?: string;
+  company_facebook?: string;
+  company_twitter?: string;
+  company_instagram?: string;
+}
+
 interface User {
   id: string;
   email: string;
@@ -72,7 +92,7 @@ interface AuthContextType {
   updateProfile: (userData: User) => Promise<void>;
   clearError: () => void;
   getStudentProfile: () => Promise<StudentProfile | null>;
-  getCompanyProfile: () => Promise<void>;
+  getCompanyProfile: () => Promise<CompanyProfile | null>;
 }
 
 // Create context
@@ -120,6 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           if (response.ok) {
             const userData = await response.json();
+            console.log("Fetched user data: ", userData);
             setUser(userData);
             setUserType(storedUserType);
             setToken(storedToken);
@@ -165,13 +186,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+        throw new Error(data.message || data.detail || "Login failed");
       }
     
       localStorage.setItem("token", data.access);
       localStorage.setItem("refreshToken", data.refresh);
       localStorage.setItem("userType", type as string);
       setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
       setUserType(type);
       setToken(data.access);
     
@@ -385,6 +407,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
       const token = localStorage.getItem("token");
       localStorage.getItem("token");
+      localStorage.getItem("userType");
   
       if (!token) {
         throw new Error("User not authenticated");
@@ -396,7 +419,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({userData})
+        body: JSON.stringify(userData)
       });
   
       const data = await response.json();
@@ -406,7 +429,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
   
       setUser(data.user);
-      router.push("/student/profile");
+      if (userType === "student") {
+        router.push("/student/profile");
+      } else {
+        router.push("/company/profile");
+      }
+      
     }
     catch (err: any) {
       setError(err.message || "Profile update failed");
@@ -452,7 +480,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return null; // Ensure a return value in all code paths
   };
 
-  const getCompanyProfile = async () => {
+  const getCompanyProfile = async (): Promise<CompanyProfile | null> => {
     try {
       setLoading(true);
       setError(null);
@@ -478,11 +506,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
   
       setUser(data.user);
+      return data;
     } catch (err: any) {
       setError(err.message || "Profile retrieval failed");
     } finally {
       setLoading(false);
     }
+    return null; // Ensure a return value in all code paths
   };
 
   const clearError = () => {

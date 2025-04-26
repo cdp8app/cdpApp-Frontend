@@ -1,5 +1,8 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
+import { useAuth } from "@/./contexts/AuthContext";
+
 import Link from "next/link";
 import EditAboutModal from "../../Components/Modals/EditAboutModal";
 import Button5 from "../../user/Components/Button5";
@@ -8,9 +11,10 @@ import Header1 from "../../Components/Header1";
 import Logout from "@/app/user/auth/logout/page";
 
 export default function CompanyProfile() {
-  const [aboutText, setAboutText] = useState<string>(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-  );
+  const { getCompanyProfile, loading, error, clearError } = useAuth();
+  const [company_name, setCompanyName] = useState<string>("");
+  const [company_industry, setCompanyIndustry] = useState<string>("");
+  const [aboutText, setAboutText] = useState<string>("");
   const [isAboutModalOpen, setIsAboutModalOpen] = useState<boolean>(false);
 
   const openAboutModal = () => setIsAboutModalOpen(true);
@@ -20,6 +24,36 @@ export default function CompanyProfile() {
     setAboutText(newText);
     closeAboutModal();
   };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await getCompanyProfile();
+
+        console.log("Profile: ", profile);
+
+        if (profile && profile.company_name) setCompanyName(profile.company_name);
+        if (profile && profile.company_industry) setCompanyIndustry(profile.company_industry);
+        if (profile && profile.company_description) setAboutText(profile.company_description);
+        // if (profile && profile.phone_number)
+        // if (profile && profile.company_facebook)
+        // if (profile && profile.company_instagram)
+        // if (profile && profile.company_linkedin)
+        // if (profile && profile.company_twitter)
+
+        // const formattedSkills = profile?.skills?.split(",").map((skill: string) => skill.trim()) || [];
+
+        // if (profile && profile.skills) setSkills(formattedSkills);
+        
+  
+        // Set other profile data as needed (e.g., name, profile picture)
+      } catch (error) {
+        console.error("Failed to fetch profile", error);
+      }
+    };
+    fetchProfile();
+  }, []);
+
   return (
     <div className="flex flex-col">
       <div className="p-[1%]">
@@ -53,7 +87,7 @@ export default function CompanyProfile() {
               <div className="mr-[24px] h-[120px] w-[120px] rounded-[60px] bg-White"></div>
               <div>
                 <h1 className="mb-1 font-sans text-[36px]/[100%] font-semibold text-GoldenWhite">
-                  Big Star Technology
+                  {company_name}
                 </h1>
                 <h2 className="flex flex-row font-sans text-[16px] text-Gold3">
                   <svg
@@ -70,7 +104,7 @@ export default function CompanyProfile() {
                       d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"
                     />
                   </svg>
-                  INFORMATION TECHNOLOGY
+                  {company_industry}
                 </h2>
               </div>
             </div>
@@ -153,7 +187,7 @@ export default function CompanyProfile() {
                 19
               </h1>
             </div>
-            <button className="mt-[12px] flex max-w-[280px] justify-center justify-self-start rounded-[999px] bg-PriGold px-[60px] py-[14px] font-sans text-GoldenWhite">
+            <button onClick={() => router.push("/com")} className="mt-[12px] flex max-w-[280px] justify-center justify-self-start rounded-[999px] bg-PriGold px-[60px] py-[14px] font-sans text-GoldenWhite">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

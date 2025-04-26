@@ -9,7 +9,6 @@ import { useStorageContext } from "@/contexts/storageContext";
 import "../../../../app/globals.css";
 import Image from "next/image";
 import SkillsButton from "./SelectDropdown";
-import Button1 from "@/app/user/Components/Button1";
 import Button3 from "@/app/user/Components/Button3";
 
 
@@ -28,10 +27,8 @@ export default function SetUpStudentProfileForm() {
   const [end_date, setEndDate] = useState<string>("");
   const [resume, setResume] = useState<File | null>(null);
   const [skills, setSkills] = useState<string[]>([]);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [formError, setFormError] = useState("");
   const { uploadFile } = useStorageContext();
-  // const [user, setUser] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -59,7 +56,6 @@ export default function SetUpStudentProfileForm() {
     }
   };
 
-  const [selectedSkills, setSelectedSkills] = useState();
   const options = [
     { value: "option1", label: "Option 1" },
     { value: "option2", label: "Option 2" },
@@ -67,13 +63,6 @@ export default function SetUpStudentProfileForm() {
     { value: "option4", label: "Option 4" },
   ];
 
-  // useEffect(() => {
-  //   const storedUserData = localStorage.getItem("userDate");
-  //   console.log("storedUserData: ", user);
-  //   if (storedUserData) {
-  //     setUser(storedUserData);
-  //   }
-  // }, []);
   console.log("storedUserData: ", user);
 
   const handleSelect = (value: string) => {
@@ -249,7 +238,8 @@ export default function SetUpStudentProfileForm() {
         </h1>
       </div>
 
-      <SkillsButton options={options} selectedSkills={skills} onSelect={handleSelect} />
+      <SkillsButton options={options} selectedSkills={skills} onSelect={handleSelect} text="  Type or Select your skills (You can select up to 5)
+" />
 
       <div className="flex w-[100%] flex-col items-center justify-center">
         <input

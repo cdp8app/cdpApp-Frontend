@@ -9,6 +9,15 @@ interface Application {
   id: string;
   title: string;
   description: string;
+  requirements: string;
+  companyName: string;
+  address1: string;
+  address2: string;
+  state: string;
+  country: string;
+  salary: string;
+  duration: string;
+  jobType: string;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -34,11 +43,38 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const router = useRouter();
 
+  const createApplication = async (applicationData: Application) => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(applicationData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to create application");
+      }
+
+      setApplications(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getApplications = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch("https://careerxhub.onrender.com/api/application/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -63,7 +99,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://careerxhub.onrender.com/api/application/${applicationId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application/${applicationId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -84,38 +120,13 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   };
 
-  const createApplication = async (applicationData: Application) => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch("https://careerxhub.onrender.com/api/application/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(applicationData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create application");
-      }
-
-      setApplications(data);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   const updateApplication = async (applicationId: string, applicationData: Application) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://careerxhub.onrender.com/api/application/${applicationId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application/${applicationId}/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -142,7 +153,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://careerxhub.onrender.com/api/application/${applicationId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/application/${applicationId}/`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

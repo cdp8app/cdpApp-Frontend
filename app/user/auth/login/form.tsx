@@ -12,7 +12,7 @@ import Label from "@/app/user/Components/Label";
 import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
-  userType: "student" | "company";
+  userType: "student" | "company" | null;
 }
 
 export default function LoginForm({ userType }: LoginFormProps) {

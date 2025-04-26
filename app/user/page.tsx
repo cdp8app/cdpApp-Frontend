@@ -10,6 +10,7 @@ const BestDescribes = () => {
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
+    localStorage.setItem("userType", option.toLowerCase());
     // console.log("Selected option:", option);
   };
 

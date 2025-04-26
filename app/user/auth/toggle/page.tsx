@@ -9,6 +9,18 @@ import googleIcon from "../../../../public/Images/Icons/googleIcon.png";
 import { useParams } from "next/navigation";
 
 const StudentAuthTogglePage = () => {
+  // Get the user type from local storage
+
+  const [userType, setUserType] = useState<"student" | "company" | null>(null);
+  useEffect(() => {
+    const storedUserType = localStorage.getItem("userType");
+    if (storedUserType === "student" || storedUserType === "company") {
+      setUserType(storedUserType);
+    }
+  }, []);
+
+  console.log("User type:", userType);
+
   const [activeContent, setActiveContent] = useState<1 | 2>(1);
   const handleToggle = (content: 1 | 2) => {
     setActiveContent(content);
@@ -67,7 +79,7 @@ const StudentAuthTogglePage = () => {
                 </span>
               </p>
             </div>
-            <StudentLoginForm userType="student" />
+            <StudentLoginForm userType={userType} />
             {/* <div className="mb-[30px] w-[100%] items-end justify-end text-end">
               <button className="mx-[11px] my-[10px]">
                 <h6 className="justify-end font-sans text-[12px] text-Gold1">
