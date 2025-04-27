@@ -8,7 +8,11 @@ import { useRouter } from "next/navigation";
 export interface Job {
   id: string;
   title: string;
-    company: string;
+  company?: {
+    id: string;
+    company_name: string;
+    company_industry: string;
+  };
     location: string;
     job_type: string;
   description: string;

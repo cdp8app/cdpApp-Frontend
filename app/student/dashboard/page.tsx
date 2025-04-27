@@ -42,7 +42,7 @@ export default function Dashboard() {
                 </p>
                 <Link
                   className="flex flex-row items-center py-[12px] font-sans text-[21px]/[120%] font-normal text-Gray2"
-                  href={"/student/dashboard/internships"}
+                  href={"/student/internships"}
                 >
                   See all
                   <svg

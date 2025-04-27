@@ -5,20 +5,20 @@ import { useRouter } from "next/navigation";
 
 
 // Define types
-interface Application {
+export interface Application {
   id: string;
-  title: string;
+  job: string
+  cover_letter: string
+  skills: string
+  experience: string
   description: string;
-  requirements: string;
-  companyName: string;
-  address1: string;
-  address2: string;
-  state: string;
-  country: string;
-  salary: string;
-  duration: string;
-  jobType: string;
+  resume: string
   status: string;
+  user?: {
+    full_name: string;
+    course: string;
+    location: string;
+  };
   createdAt: string;
   updatedAt: string;
 };
@@ -28,7 +28,7 @@ interface ApplicationContextType {
   loading: boolean;
   error: string | null;
   getApplications: () => Promise<void>;
-  getApplicationsById: (applicationId: string) => Promise<void>;
+  getApplicationsById: (applicationId: string) => Promise<Application | null>;
   createApplication: (applicationData: any) => Promise<void>;
   updateApplication: (applicationId: string, applicationData: any) => Promise<void>;
   deleteApplication: (applicationId: string) => Promise<void>;
@@ -43,33 +43,6 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const router = useRouter();
 
-  const createApplication = async (applicationData: Application) => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(applicationData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create application");
-      }
-
-      setApplications(data);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const getApplications = async () => {
     try {
       setLoading(true);
@@ -82,12 +55,14 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
       const data = await response.json();
 
+      console.log("From app context: ", data.results);
+
       if (!response.ok) {
         throw new Error(data.message || "Failed to fetch applications");
       }
     
-      setApplications(data);
-      router.push("/Dashboard");
+      setApplications(data.results);
+      return data;
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -95,7 +70,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   };
 
-  const getApplicationsById = async (applicationId: string) => {
+  const getApplicationsById = async (applicationId: string): Promise<Application | null> => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
@@ -112,15 +87,44 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       }
     
       setApplications(data);
+      return data;
     } catch (err: any) {
       setError(err.message);
+      return null;
     }
     finally {
       setLoading(false);
     }
   };
 
-  
+  const createApplication = async (applicationData: Application) => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(applicationData),
+      });
+
+      const data = await response.json();
+      console.log("Created application data: ", data);
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to create application");
+      }
+
+      setApplications(data);
+      router.push("/student/jobs/");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const updateApplication = async (applicationId: string, applicationData: Application) => {
     try {

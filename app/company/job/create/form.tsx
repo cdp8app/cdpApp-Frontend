@@ -46,7 +46,7 @@ export default function SetUpJobForm() {
 
       await createJob(jobData);
     } catch (err: any) {
-      setFormError(err.message || "Login failed. Please check your credentials and try again.");
+      setFormError(err.message || "Failed to create job.");
     }
   };
 
