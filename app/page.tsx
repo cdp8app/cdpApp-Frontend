@@ -1,9 +1,9 @@
-import StudentAuthPage from "./UsersAuthentication/StudentAuth/StudentAuthPage/page";
+import BestDescribes from "./user/page";
 
 export default function Home() {
   return (
     <div>
-      <StudentAuthPage/>
+      <BestDescribes/>
     </div>
   );
 }

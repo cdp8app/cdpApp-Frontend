@@ -72,7 +72,7 @@
 "use client";
 import React from "react";
 import "../../app/globals.css";
-import Button6 from "../UsersAuthentication/Components/Button6";
+import Button6 from "../user/Components/Button6";
 
 export default function ResumeUploadButton2() {
   return (

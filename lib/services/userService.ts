@@ -52,7 +52,7 @@ const userService = {
     return response.data;
   },
 
-  async activateAccount(code: string) {
+  activateAccount: async(code: string) => {
     const response = await api.put("/api/user/activate/", code);
     return response.data;
   },
