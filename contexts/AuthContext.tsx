@@ -140,7 +140,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           if (response.ok) {
             const userData = await response.json();
-            console.log("Fetched user data: ", userData);
             setUser(userData);
             setUserType(storedUserType);
             setToken(storedToken);

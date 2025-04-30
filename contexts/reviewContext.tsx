@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 
 // Define types
-export interface Job {
+export interface Review {
   id: string;
   title: string;
   company?: {
@@ -14,45 +14,42 @@ export interface Job {
     company_industry: string;
   };
     location: string;
-    job_type: string;
+    review_type: string;
   description: string;
     requirements: string;
     salary: string;
     deadline: string;
-    // startDate: string;
-    // endDate: string;
-    // status: string;
   createdAt: string;
   updatedAt: string;
 };
 
-interface JobContextType {
-  jobs: Job | null;
-  currentJob: Job | null;
+interface ReviewContextType {
+  reviews: Review | null;
+  currentReview: Review | null;
   loading: boolean;
   error: string | null;
-  getJobs: () => Promise<void>;
-  getJobsById: (jobId: string) => Promise<Job | null>;
-  createJob: (jobData: any) => Promise<void>;
-  updateJob: (jobId: string, jobData: any) => Promise<void>;
-  deleteJob: (jobId: string) => Promise<void>;
+  getReviews: () => Promise<void>;
+  getReviewsById: (reviewId: string) => Promise<Review | null>;
+  createReview: (reviewData: any) => Promise<void>;
+  updateReview: (reviewId: string, reviewData: any) => Promise<void>;
+  deleteReview: (reviewId: string) => Promise<void>;
 };
 
-const JobContext = createContext<JobContextType | undefined>(undefined);
+const ReviewContext = createContext<ReviewContextType | undefined>(undefined);
 
-export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [jobs, setJobs] = useState<Job | null>(null);
-  const [currentJob, setCurrentJob] = useState<Job | null>(null);
+export const ReviewProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [reviews, setReviews] = useState<Review | null>(null);
+  const [currentReview, setCurrentReview] = useState<Review | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
-  const getJobs = async () => {
+  const getReviews = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,10 +58,10 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
   
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch jobs");
+        throw new Error(data.message || "Failed to fetch reviews");
       }
 
-      setJobs(data);
+      setReviews(data);
       return data;
     } catch (err: any) {
       setError(err.message);
@@ -73,11 +70,11 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
   
-  const getJobsById = async (jobId: string): Promise<Job | null> => {
+  const getReviewsById = async (reviewId: string): Promise<Review | null> => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/${jobId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews/${reviewId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,10 +83,10 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch job");
+        throw new Error(data.message || "Failed to fetch review");
       }
       
-      setCurrentJob(data);
+      setCurrentReview(data);
       return data;
     } catch (err: any) {
       setError(err.message);
@@ -99,27 +96,27 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const createJob = async (jobData: Job) => {
+  const createReview = async (reviewData: Review) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(jobData),
+        body: JSON.stringify(reviewData),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || data.detail || "Failed to create job");
+        throw new Error(data.message || data.detail || "Failed to create review");
       }
 
-      setJobs(data);
-      router.push("/company/job");
+      setReviews(data);
+      router.push("/company/review");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -127,26 +124,26 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const updateJob = async (jobId: string, jobData: Job) => {
+  const updateReview = async (reviewId: string, reviewData: Review) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/${jobId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews/${reviewId}/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(jobData),
+        body: JSON.stringify(reviewData),
       });
     
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update job");
+        throw new Error(data.message || "Failed to update review");
       }
     
-      setJobs(data);
+      setReviews(data);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -154,11 +151,11 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const deleteJob = async (jobId: string) => {
+  const deleteReview = async (reviewId: string) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/${jobId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews/${reviewId}/`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -167,10 +164,10 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete job");
+        throw new Error(data.message || "Failed to delete review");
       }
         
-      setJobs(null);
+      setReviews(null);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -180,28 +177,28 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
 
   return (
-    <JobContext.Provider 
+    <ReviewContext.Provider 
       value={{ 
-        jobs, 
-        currentJob,
+        reviews, 
+        currentReview,
         loading, 
         error, 
-        getJobs, 
-        getJobsById, 
-        createJob, 
-        updateJob, 
-        deleteJob 
+        getReviews, 
+        getReviewsById, 
+        createReview, 
+        updateReview, 
+        deleteReview 
       }}
     >
       {children}
-    </JobContext.Provider>
+    </ReviewContext.Provider>
   );
 };
 
-export const useJobContext = () => {
-  const context = useContext(JobContext);
+export const useReviewContext = () => {
+  const context = useContext(ReviewContext);
   if (!context) {
-    throw new Error("useJobContext must be used within an JobProvider");
+    throw new Error("useReviewContext must be used within an ReviewProvider");
   }
   return context;
 };

@@ -8,16 +8,36 @@ import Footer1 from "@/app/Components/Footer1";
 import Link from "next/link";
 import ScheduleInterviewModal from "./schedule-interview/model";
 import ViewScheduledInterviewModal from "./view-interview/modal";
-import RateStudentsModal from "@/app/Old/RateStudents/modal";
+import RateStudentsModal from "@/app/student/rate/modal";
 import StarRating from "@/app/Components/StarRating";
 import { Application, useApplicationContext } from "@/contexts/applicationContext";
+import { useOfferContext } from "@/contexts/offerContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useReviewContext } from "@/contexts/reviewContext";
 
 export default function CompanyJobApplicantInfo() {
   const params = useParams();
   const router = useRouter();
+  const { user } = useAuth();
   const applicationId = Array.isArray(params.id) ? params.id[0] : params.id;
   const [application, setApplication] = useState<Application | null>(null);
-  const { getApplicationsById, loading, error } = useApplicationContext();
+  const { getApplicationsById, updateApplication, error } = useApplicationContext();
+  const { getOffers, updateOffer } = useOfferContext();
+  const { createOffer } = useOfferContext();
+  const [formError, setFormError] = useState("");
+  const [interviewDate, setInterviewDate] = useState("");
+  const [interviewTime, setInterviewTime] = useState("");
+  const [isScheduleInterviewModalOpen, setIsScheduleInterviewModalOpen] =
+  useState(false);
+  const [
+    isViewScheduledInterviewModalOpen,
+    setIsViewScheduledInterviewModalOpen
+  ] = useState(false);
+  const [isRateStudentsModalOpen, setIsRateStudentsModalOpen] = useState(false);
+  const [ offers, setOffers ] = useState<{ id: string }[]>([]);
+  const { createReview } = useReviewContext();
+
+  console.log("Application: ", application);
   
   useEffect(() => {
     const fetchApplicationDetails = async () => {
@@ -30,13 +50,110 @@ export default function CompanyJobApplicantInfo() {
     fetchApplicationDetails();
   }, [applicationId]);
 
-  const [isScheduleInterviewModalOpen, setIsScheduleInterviewModalOpen] =
-    useState(false);
-  const [
-    isViewScheduledInterviewModalOpen,
-    setIsViewScheduledInterviewModalOpen
-  ] = useState(false);
-  const [isRateStudentsModalOpen, setIsRateStudentsModalOpen] = useState(false);
+  const fetchOffers = async () => {
+    try {
+      const fetchedOffers = (await getOffers()) ?? {};
+    
+      if (fetchedOffers && typeof fetchedOffers === "object" && Array.isArray((fetchedOffers as any)?.results)) {
+        setOffers((fetchedOffers as any).results);
+      }
+    } catch (error) {
+      console.error("Failed to fetch offers", error);
+    }
+  };
+
+  const handleScheduleInterview = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Convert DD/MM to YYYY-MM-DD
+    const [day, month] = interviewDate.split("/");
+    const currentYear = new Date().getFullYear(); // You can improve this later to select year too
+
+    const formattedDate = `${currentYear}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+
+    // Combine into ISO 8601 format
+    const formattedTime = `${interviewTime}:00`;
+
+    try {
+      const offerData = {
+        company: user?.id,
+        student: application?.user?.id,
+        application: application?.id,
+        interview_date: formattedDate,
+        interview_time: formattedTime,
+        status: "interview"
+      };
+  
+      if (applicationId) {
+        await updateApplication(applicationId, { status: "interview" });
+        await createOffer(offerData);
+        const updatedApp = await getApplicationsById(applicationId);
+        setApplication(updatedApp);
+        setIsScheduleInterviewModalOpen(false);
+      } else {
+        console.error("Application ID is undefined.");
+      }
+    } catch (err: any) {
+      setFormError(err.message || "Failed to create offer.");
+    }
+  };
+
+  const handleExtendOffer = async () => {
+    try {
+      const internshipData = {
+
+      };
+
+      
+
+      if (applicationId) {
+        // First update the application status to "accepted"
+        await updateApplication(applicationId, { status: "accepted" });
+  
+        // Optionally, you can update the offer status as well if needed
+        const offer = offers.find((offer) => offer.id === application?.id);
+        if (offer) {
+          await updateOffer(offer.id, "accepted");
+        } else {
+          console.error("Offer not found for the application.");
+        }
+  
+        // Refresh application
+        const updatedApp = await getApplicationsById(applicationId);
+        setApplication(updatedApp);
+      } else {
+        console.error("Application ID is undefined.");
+      }
+    } catch (err: any) {
+      setFormError(err.message || "Failed to extend offer.");
+    }
+  };
+
+  // Work on this 
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const reviewData = {
+        company: user?.id,
+        student: application?.user?.id,
+        application: application?.id,
+        status: "interview"
+      };
+  
+      if (applicationId) {
+        await updateApplication(applicationId, { status: "interview" });
+        await createOffer(reviewData);
+        const updatedApp = await getApplicationsById(applicationId);
+        setApplication(updatedApp);
+        setIsScheduleInterviewModalOpen(false);
+      } else {
+        console.error("Application ID is undefined.");
+      }
+    } catch (err: any) {
+      setFormError(err.message || "Failed to create offer.");
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -152,7 +269,7 @@ export default function CompanyJobApplicantInfo() {
                 <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] bg-red-800"></div>
                 <div className="flex h-[100%] flex-col justify-between">
                   <h1 className="font-sans text-[16px]/[100%] font-normal text-Black2">
-                    John Doe
+                    {application?.user?.full_name}
                   </h1>
                   <h2 className="flex flex-row font-sans text-[16px] text-Gray2">
                     <svg
@@ -169,10 +286,10 @@ export default function CompanyJobApplicantInfo() {
                         d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
                       />
                     </svg>
-                    COMPUTER ENGINEERING
+                    {application?.user?.course}
                   </h2>
                   <Link
-                    href={"#"}
+                    href={"/student/profile/view"}
                     className="max-w-[136px] rounded-[999px] border-[2px] border-PriGold px-[20px] py-[10px] text-center font-sans text-[12px]/[120%] text-PriGold"
                   >
                     View details
@@ -358,7 +475,7 @@ export default function CompanyJobApplicantInfo() {
                         {application.user?.course}
                       </h2>
                       <Link
-                        href={"/student/view"}
+                        href={"/student/profile/view"}
                         className="max-w-[136px] rounded-[999px] border-[2px] border-PriGold px-[20px] py-[10px] text-center font-sans text-[12px]/[120%] text-PriGold"
                       >
                       View details
@@ -386,9 +503,13 @@ export default function CompanyJobApplicantInfo() {
                           />
                         </svg>
                         <div className="h-[37px] w-[2px] bg-Gray2"></div>
-                        <h1 className="font-sans text-[16px] text-Gray2">
-                        DD/MM
-                        </h1>
+                        <input
+                          type="text"
+                          value={interviewDate}
+                          onChange={(e) => setInterviewDate(e.target.value)}
+                          placeholder="DD/MM"
+                          className="flex-1 bg-transparent font-sans text-[16px] text-Gray2 outline-none"
+                        />
                       </button>
                     </div>
                     <div className="w-[45%]">
@@ -412,9 +533,13 @@ export default function CompanyJobApplicantInfo() {
                         </svg>
 
                         <div className="h-[37px] w-[2px] bg-Gray2"></div>
-                        <h1 className="font-sans text-[16px] text-Gray2">
-                        00:00
-                        </h1>
+                        <input
+                          type="text"
+                          value={interviewTime}
+                          onChange={(e) => setInterviewTime(e.target.value)}
+                          placeholder="00:00"
+                          className="flex-1 bg-transparent font-sans text-[16px] text-Gray2 outline-none"
+                        />
                       </button>
                     </div>
                   </div>
@@ -439,7 +564,7 @@ export default function CompanyJobApplicantInfo() {
                     </h1>
                   </div>
                   <div className="mt-[28px] flex flex-row space-x-[24px]">
-                    <button className="flex flex-row items-center rounded-[999px] bg-PriGold px-[70px] py-[18px] font-sans text-[16px]/[120%] text-GoldenWhite">
+                    <button onClick={handleScheduleInterview} className="flex flex-row items-center rounded-[999px] bg-PriGold px-[70px] py-[18px] font-sans text-[16px]/[120%] text-GoldenWhite">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -472,7 +597,7 @@ export default function CompanyJobApplicantInfo() {
                 <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
                 Withdraw job offer
                 </button>
-                <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
+                <button onClick={() => handleExtendOffer()} className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
                 Extend job offer
                 </button>
               </div>
@@ -505,7 +630,7 @@ export default function CompanyJobApplicantInfo() {
                     <div className="mt-[6px] justify-self-center rounded-[15px] bg-GoldenWhite px-[20px] py-[24px]">
                       <div className="h-[100px] w-[100px] justify-self-center rounded-[50px] bg-Gray2"></div>
                       <h1 className="my-[8px] font-sans text-[16px]/[120%]">
-                      John Doe
+                        {application?.user?.full_name}
                       </h1>
                       <div className="flex items-center justify-center">
                         <svg
@@ -524,10 +649,10 @@ export default function CompanyJobApplicantInfo() {
                         </svg>
 
                         <h1 className="ml-[6px] font-sans text-[16px]/[120%] text-Gray2">
-                        MED/SURGERY
+                          {application?.user?.course}
                         </h1>
                       </div>
-                      <button className="mt-[12px] rounded-[999px] border-[2px] border-PriGold px-[48px] py-[10px] font-sans text-[12px]/[120%] text-PriGold">
+                      <button onClick={() => "/student/profile/view"} className="mt-[12px] rounded-[999px] border-[2px] border-PriGold px-[48px] py-[10px] font-sans text-[12px]/[120%] text-PriGold">
                       View student
                       </button>
                     </div>

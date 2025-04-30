@@ -11,7 +11,7 @@ const RateStudentsModal: React.FC<RateStudentsModalProps> = ({ isRateStudentsMod
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className=" bg-white h-[90%] w-[60%] p-12 rounded-[18px] shadow-lg overflow-x-auto">
+      <div className=" bg-white h-[90%] w-[60%] p-10 rounded-[18px] shadow-lg overflow-x-auto">
         <button
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
           onClick={onRateStudentsModalClose}

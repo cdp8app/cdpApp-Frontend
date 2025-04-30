@@ -1,15 +1,42 @@
 "use client";
 import Footer1 from "@/app/Components/Footer1";
 import Header1 from "@/app/Components/Header1";
+import { useOfferContext } from "@/contexts/offerContext";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 export default function CompanyOffersExtended() {
+  const router = useRouter();
+  
+  const { getOffers, loading, error } = useOfferContext();
   const [section, setSection] = useState(1);
 
   const handleSectionChange = (sectionNumber: number) => {
     setSection(sectionNumber);
   };
+
+  const [offers, setOffers] = useState<{ title: string; results?: any[] }[]>([]);
+  
+  useEffect(() => {
+    const fetchOffers = async () => {
+      try {
+        const fetchedOffers = (await getOffers()) ?? {};
+      
+        if (fetchedOffers && typeof fetchedOffers === "object" && Array.isArray((fetchedOffers as any)?.results)) {
+          setOffers((fetchedOffers as any).results);
+        }
+      } catch (error) {
+        console.error("Failed to fetch offers", error);
+      }
+    };
+    fetchOffers();
+  }, []);
+  
+  const handleClick = (applicationId: number) => {
+    router.push(`/company/applicant/${applicationId}`);
+  };
+  
   return (
     <div>
       <div className="mb-[100px] p-[1.5%]">

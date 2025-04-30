@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Header1 from "../../Components/Header1";
 import Button7 from "../../user/Components/Button7";
 import Link from "next/link";
@@ -7,10 +7,55 @@ import Footer1 from "../../Components/Footer1";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext"; 
 import Logout from "@/app/user/auth/logout/page";
+import { useJobContext } from "@/contexts/jobContext";
+import { useApplicationContext } from "@/contexts/applicationContext";
+import { useOfferContext } from "@/contexts/offerContext";
 
 export default function Dashboard() {
-  const { user, loading, error, clearError } = useAuth();
+  const { user, clearError } = useAuth();
+  const { getJobs } = useJobContext();
+  const { getApplications } = useApplicationContext();
+  const { getOffers } = useOfferContext();
+  const [jobs, setJobs] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
+  const [applications, setApplications] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
+  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]);    
 
+  useEffect(() => {
+    const fetchData  = async () => {
+      try {
+        const fetchedJobs = (await getJobs()) ?? {};
+        const fetchApplications = (await getApplications()) ?? {};
+        const fetchOffers = (await getOffers()) ?? {};
+ 
+        if (fetchedJobs && typeof fetchedJobs === "object" && Array.isArray((fetchedJobs as any)?.results)) {
+          setJobs((fetchedJobs as any).results);
+        }
+        if (fetchApplications && typeof fetchApplications === "object" && Array.isArray((fetchApplications as any)?.results)) {
+          setApplications((fetchApplications as any).results);
+        }
+        if (fetchOffers && typeof fetchOffers === "object" && Array.isArray((fetchOffers as any)?.results)) {
+          setOffers((fetchOffers as any).results);
+        }
+      } catch (error) {
+        console.error("Failed to fetch jobs", error);
+      }
+    };
+    fetchData ();
+  }, []);
+
+  const allJobsCount = jobs?.length || 0;
+  const openJobsCount = jobs?.filter((job) => job.status === "open").length || 0;
+  const closedJobsCount = jobs?.filter((job) => job.status === "closed").length || 0;
+  
+  const approvedApplications = applications?.filter((app) => app.status === "approved").length || 0;
+  const interviewApplications = applications?.filter((app) => app.status === "interview").length || 0;
+  const pendingApplications = applications?.filter((app) => app.status === "pending").length || 0;
+  const deniedApplications = applications?.filter((app) => app.status === "rejected").length || 0;
+  
+  const allOffers = offers?.length || 0;
+  const acceptedOffers = offers?.filter((offer) => offer.status === "accepted").length || 0;
+  const pendingOffers = offers?.filter((offer) => offer.status === "pending").length || 0;
+  const rejectedOffers = offers?.filter((offer) => offer.status === "rejected").length || 0;
 
   return (
     <div className="flex flex-col">
@@ -104,7 +149,7 @@ export default function Dashboard() {
                 </p>
                 <Link
                   className="flex flex-row items-center py-[12px] font-sans text-[21px]/[120%] font-normal text-Gray2"
-                  href={"/student/dashboard/applications"}
+                  href={"/student/applications"}
                 >
                   See all
                   <svg
@@ -132,7 +177,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {approvedApplications}
                   </p>
                 </div>
                 <div className="bg-BlueB1 w-[24%] rounded-[11.62px] bg-opacity-15 px-[22.29px] py-[21.39]">
@@ -143,7 +188,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {interviewApplications}
                   </p>
                 </div>
                 <div className="bg-Yellow2 w-[24%] rounded-[11.62px] px-[22.29px] py-[21.39]">
@@ -154,7 +199,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {pendingApplications}
                   </p>
                 </div>
                 <div className="w-[24%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39]">
@@ -165,7 +210,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {deniedApplications}
                   </p>
                 </div>
               </div>
@@ -177,7 +222,7 @@ export default function Dashboard() {
                 </p>
                 <Link
                   className="flex flex-row items-center py-[12px] font-sans text-[21px]/[120%] font-normal text-Gray2"
-                  href={"/student/dashboard/offers"}
+                  href={"/student/offers"}
                 >
                   See all
                   <svg
@@ -205,7 +250,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {allOffers}
                   </p>
                 </div>
                 <div className="w-[24%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39]">
@@ -216,7 +261,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {acceptedOffers}
                   </p>
                 </div>
                 <div className="bg-Yellow2 w-[24%] rounded-[11.62px] px-[22.29px] py-[21.39]">
@@ -227,7 +272,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {pendingOffers}
                   </p>
                 </div>
                 <div className="w-[24%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39]">
@@ -238,7 +283,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {rejectedOffers}
                   </p>
                 </div>
               </div>

@@ -15,6 +15,7 @@ export interface Application {
   resume: string
   status: string;
   user?: {
+    id: string;
     full_name: string;
     course: string;
     location: string;
@@ -55,13 +56,11 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
       const data = await response.json();
 
-      console.log("From app context: ", data.results);
-
       if (!response.ok) {
         throw new Error(data.message || "Failed to fetch applications");
       }
     
-      setApplications(data.results);
+      setApplications(data);
       return data;
     } catch (err: any) {
       setError(err.message);
@@ -111,7 +110,6 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       });
 
       const data = await response.json();
-      console.log("Created application data: ", data);
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to create application");
@@ -131,7 +129,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/${applicationId}/`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -140,6 +138,8 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       });
     
       const data = await response.json();
+
+      console.log("Updated application: ", data);
     
       if (!response.ok) {
         throw new Error(data.message || "Failed to update application");

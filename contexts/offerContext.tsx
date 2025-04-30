@@ -5,54 +5,44 @@ import { useRouter } from "next/navigation";
 
 
 // Define types
-export interface Job {
+export interface Offer {
   id: string;
-  title: string;
   company?: {
     id: string;
     company_name: string;
     company_industry: string;
   };
-    location: string;
-    job_type: string;
-  description: string;
-    requirements: string;
-    salary: string;
-    deadline: string;
-    // startDate: string;
-    // endDate: string;
-    // status: string;
   createdAt: string;
   updatedAt: string;
 };
 
-interface JobContextType {
-  jobs: Job | null;
-  currentJob: Job | null;
+interface OfferContextType {
+  offers: Offer | null;
+  currentOffer: Offer | null;
   loading: boolean;
   error: string | null;
-  getJobs: () => Promise<void>;
-  getJobsById: (jobId: string) => Promise<Job | null>;
-  createJob: (jobData: any) => Promise<void>;
-  updateJob: (jobId: string, jobData: any) => Promise<void>;
-  deleteJob: (jobId: string) => Promise<void>;
+  getOffers: () => Promise<void>;
+  getOffersById: (offerId: string) => Promise<Offer | null>;
+  createOffer: (offerData: any) => Promise<void>;
+  updateOffer: (offerId: string, offerData: any) => Promise<void>;
+  deleteOffer: (offerId: string) => Promise<void>;
 };
 
-const JobContext = createContext<JobContextType | undefined>(undefined);
+const OfferContext = createContext<OfferContextType | undefined>(undefined);
 
-export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [jobs, setJobs] = useState<Job | null>(null);
-  const [currentJob, setCurrentJob] = useState<Job | null>(null);
+export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [offers, setOffers] = useState<Offer | null>(null);
+  const [currentOffer, setCurrentOffer] = useState<Offer | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
-  const getJobs = async () => {
+  const getOffers = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,10 +51,10 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
   
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch jobs");
+        throw new Error(data.message || "Failed to fetch offers");
       }
 
-      setJobs(data);
+      setOffers(data);
       return data;
     } catch (err: any) {
       setError(err.message);
@@ -73,11 +63,11 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
   
-  const getJobsById = async (jobId: string): Promise<Job | null> => {
+  const getOffersById = async (offerId: string): Promise<Offer | null> => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/${jobId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/${offerId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,10 +76,10 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch job");
+        throw new Error(data.message || "Failed to fetch offer");
       }
       
-      setCurrentJob(data);
+      setCurrentOffer(data);
       return data;
     } catch (err: any) {
       setError(err.message);
@@ -99,27 +89,27 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const createJob = async (jobData: Job) => {
+  const createOffer = async (offerData: Offer) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(jobData),
+        body: JSON.stringify(offerData),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || data.detail || "Failed to create job");
+        throw new Error(data.message || data.detail || "Failed to create offer");
       }
 
-      setJobs(data);
-      router.push("/company/job");
+      setOffers(data);
+      // router.push("/company/offers");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -127,26 +117,26 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const updateJob = async (jobId: string, jobData: Job) => {
+  const updateOffer = async (offerId: string, offerData: Offer) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/${jobId}/`, {
-        method: "PUT",
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/${offerId}/`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(jobData),
+        body: JSON.stringify(offerData),
       });
     
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update job");
+        throw new Error(data.message || "Failed to update offer");
       }
     
-      setJobs(data);
+      setOffers(data);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -154,11 +144,11 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const deleteJob = async (jobId: string) => {
+  const deleteOffer = async (offerId: string) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/${jobId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/${offerId}/`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -167,10 +157,10 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete job");
+        throw new Error(data.message || "Failed to delete offer");
       }
         
-      setJobs(null);
+      setOffers(null);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -180,28 +170,28 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
 
   return (
-    <JobContext.Provider 
+    <OfferContext.Provider 
       value={{ 
-        jobs, 
-        currentJob,
+        offers, 
+        currentOffer,
         loading, 
         error, 
-        getJobs, 
-        getJobsById, 
-        createJob, 
-        updateJob, 
-        deleteJob 
+        getOffers, 
+        getOffersById, 
+        createOffer, 
+        updateOffer, 
+        deleteOffer 
       }}
     >
       {children}
-    </JobContext.Provider>
+    </OfferContext.Provider>
   );
 };
 
-export const useJobContext = () => {
-  const context = useContext(JobContext);
+export const useOfferContext = () => {
+  const context = useContext(OfferContext);
   if (!context) {
-    throw new Error("useJobContext must be used within an JobProvider");
+    throw new Error("useOfferContext must be used within an OfferProvider");
   }
   return context;
 };
