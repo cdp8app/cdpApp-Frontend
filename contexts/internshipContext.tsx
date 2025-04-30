@@ -14,6 +14,9 @@ interface Internship {
     requirements: string;
     duration: string;
     stipend: string;
+        student: string;
+        job: string;
+        application: string;
 //     startDate: string;
 //     endDate: string;
 //   status: string;
