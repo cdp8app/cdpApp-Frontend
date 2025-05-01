@@ -1,10 +1,15 @@
+"use client";
+
 import React from "react";
 import SetUpJobForm from "./form";
 import Header1 from "@/app/Components/Header1";
 import Footer1 from "@/app/Components/Footer1";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const SetUpJobPage = () => {
+  const router = useRouter();
+
   return (
     <div >
       <div className="mb-[100px] p-[1.5%]">
@@ -12,9 +17,9 @@ const SetUpJobPage = () => {
         <div className="flex flex-col px-[20%] text-center">
           <div className="mb-[18px]">
 
-            <Link
+            <button
               className="flex flex-row items-center py-[12px] font-sans text-[36px]/[120%] font-normal text-Gold1"
-              href={"#"}
+              onClick={() => router.back()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +36,7 @@ const SetUpJobPage = () => {
                 />
               </svg>
                   Post a job
-            </Link>
+            </button>
             <p className="">Provide your job details below</p>
           </div>
           <div className="space-x-[16px]" >

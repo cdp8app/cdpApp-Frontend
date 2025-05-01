@@ -29,7 +29,7 @@ export default function StudentHomePage() {
   }, []);
 
   const handleClick = (jobId: number) => {
-    router.push(`/company/job/${jobId}`);
+    router.push(`/student/jobs/${jobId}`);
   };
 
   return (

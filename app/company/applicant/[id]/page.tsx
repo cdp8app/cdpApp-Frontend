@@ -38,8 +38,6 @@ export default function CompanyJobApplicantInfo() {
   const [isRateStudentsModalOpen, setIsRateStudentsModalOpen] = useState(false);
   const [ offers, setOffers ] = useState<{ id: string }[]>([]);
   const { createReview } = useReviewContext();
-
-  console.log("Application: ", application);
   
   useEffect(() => {
     const fetchApplicationDetails = async () => {
@@ -50,7 +48,7 @@ export default function CompanyJobApplicantInfo() {
     };
     
     fetchApplicationDetails();
-  }, [applicationId]);
+  }, []);
 
   const fetchOffers = async () => {
     try {
@@ -59,8 +57,8 @@ export default function CompanyJobApplicantInfo() {
       if (fetchedOffers && typeof fetchedOffers === "object" && Array.isArray((fetchedOffers as any)?.results)) {
         setOffers((fetchedOffers as any).results);
       }
-    } catch (error) {
-      console.error("Failed to fetch offers", error);
+    } catch (error: any) {
+      setFormError(error);
     }
   };
 
@@ -180,7 +178,7 @@ export default function CompanyJobApplicantInfo() {
             </div>
           </div>
           <div className="w-[75%]">
-            <Link href={"#"} className="mb-[21px] flex flex-row items-center">
+            <button onClick={() => router.back()} className="mb-[21px] flex flex-row items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -198,7 +196,7 @@ export default function CompanyJobApplicantInfo() {
               <p className="font-sans text-[36px]/[120%] text-Gold1">
                 Application status
               </p>
-            </Link>
+            </button>
             {application?.status === "pending" && (
               <div className="flex w-[114px] flex-row items-center rounded-[8px] bg-Yellow2 px-[16px] py-[8px]">
                 <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Yellow1"></div>

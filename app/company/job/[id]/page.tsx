@@ -14,6 +14,7 @@ export default function CompanyJobsPostedInfo() {
   const jobId = Array.isArray(params.id) ? params.id[0] : params.id;
   const [job, setJob] = useState<Job | null>(null);
   const { getJobsById, deleteJob, loading, error } = useJobContext();
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -24,19 +25,17 @@ export default function CompanyJobsPostedInfo() {
     };
   
     fetchJobDetails();
-  }, [jobId]);
+  }, []);
 
   const handleDeleteJob = async () => {
     if (jobId) {
       const confirmed = window.confirm("Are you sure you want to delete this job post?");
       if (confirmed) {
         try {
-          await deleteJob(jobId); // Call deleteJob function from context
-          alert("Job post deleted successfully.");
-          router.push("/jobs"); // Redirect to the jobs list page
-        } catch (err) {
-          console.error("Error deleting job post:", err);
-          alert("Failed to delete the job post.");
+          await deleteJob(jobId);
+          router.push("/jobs");
+        } catch (err: any) {
+          setFormError(err || "Failed to delete the job post.");
         }
       }
     }
@@ -46,12 +45,16 @@ export default function CompanyJobsPostedInfo() {
     <div className="flex flex-col">
       <div className="p-[2%]">
         <Header1 />
-        {error && <p className="text-red-500">{error}</p>}
+        {(formError || error) && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-center">
+            {formError || error}
+          </div>
+        )}
         <div className="mb-[80px] w-[100%] justify-center">
           <div className="px-[10%]">
-            <Link
+            <button
               className="flex flex-row items-center py-[12px] font-sans text-[36px]/[120%] font-normal text-Gold1"
-              href={"#"}
+              onClick={() => router.back()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -68,19 +71,23 @@ export default function CompanyJobsPostedInfo() {
                 />
               </svg>
               Job description
-            </Link>
-            <div className="flex w-[88px] flex-row items-center rounded-[8px] bg-Red2 px-[16px] py-[8px]">
-              <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Red1"></div>
-              <p className="font-sans text-[12px]/[120%] font-medium text-Red1">
+            </button>
+            {job?.status === "closed" && (
+              <div className="flex w-[88px] flex-row items-center rounded-[8px] bg-Red2 px-[16px] py-[8px]">
+                <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Red1"></div>
+                <p className="font-sans text-[12px]/[120%] font-medium text-Red1">
                 Closed
-              </p>
-            </div>
-            <div className="flex w-[130px] flex-row items-center rounded-[8px] bg-Green2 px-[16px] py-[8px]">
-              <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Green1"></div>
-              <p className="font-sans text-[12px]/[120%] font-medium text-Green1">
+                </p>
+              </div>
+            )}
+            {job?.status === "open" && (
+              <div className="flex w-[130px] flex-row items-center rounded-[8px] bg-Green2 px-[16px] py-[8px]">
+                <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Green1"></div>
+                <p className="font-sans text-[12px]/[120%] font-medium text-Green1">
                 Open position
-              </p>
-            </div>
+                </p>
+              </div>
+            )}
             <Button7
               text="View applicants"
               className="mt-[12px] text-[16px]/[120%] font-normal"
@@ -134,14 +141,23 @@ export default function CompanyJobsPostedInfo() {
             ) : (
               <p className="mt-10 text-center text-Gray2">Loading job details...</p>
             )}
-            <div className="mb-[20px] mt-[21px] flex flex-row space-x-[18px]">
-              <button onClick={handleDeleteJob} className="rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
+            {job?.status === "open" && (
+              <div className="mb-[20px] mt-[21px] flex flex-row space-x-[18px]">
+                <button onClick={handleDeleteJob} className="rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
                 Delete job post
-              </button>
-              <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
+                </button>
+                <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
                 View applicants
-              </button>
-            </div>
+                </button>
+              </div>
+            )}
+            {job?.status === "closed" && (
+              <div className="mb-[20px] mt-[21px]">
+                <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
+                View applicants
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

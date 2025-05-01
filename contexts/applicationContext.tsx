@@ -29,6 +29,7 @@ interface ApplicationContextType {
   loading: boolean;
   error: string | null;
   getApplications: () => Promise<void>;
+  getStudentApplications: () => Promise<void>;
   getApplicationsById: (applicationId: string) => Promise<Application | null>;
   createApplication: (applicationData: any) => Promise<void>;
   updateApplication: (applicationId: string, applicationData: any) => Promise<void>;
@@ -49,6 +50,31 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch applications");
+      }
+    
+      setApplications(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStudentApplications = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/my-job-applications/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -112,7 +138,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to create application");
+        throw new Error(data.message || data.detail || "Failed to create application");
       }
 
       setApplications(data);
@@ -185,6 +211,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         loading, 
         error, 
         getApplications, 
+        getStudentApplications,
         getApplicationsById, 
         createApplication, 
         updateApplication, 

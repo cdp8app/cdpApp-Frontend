@@ -10,23 +10,22 @@ import { useRouter } from "next/navigation";
 export default function CompanyJobApplicant() {
   const router = useRouter();
 
-  const { getApplications, loading, error } = useApplicationContext();
+  const { getStudentApplications, loading, error } = useApplicationContext();
   const [applications, setApplications] = useState<{ title: string; results?: any[] }[]>([]);
-  console.log("Application Data: ",applications);
 
   useEffect(() => {
-    const fetchApplications = async () => {
+    const fetchData  = async () => {
       try {
-        const fetchedApplications = (await getApplications()) ?? {};
-    
-        if (fetchedApplications && typeof fetchedApplications === "object" && Array.isArray((fetchedApplications as any)?.results)) {
-          setApplications((fetchedApplications as any).results);
+        const fetchApplications = (await getStudentApplications()) ?? {};
+   
+        if (fetchApplications && typeof fetchApplications === "object" && Array.isArray((fetchApplications as any)?.results)) {
+          setApplications((fetchApplications as any).results);
         }
       } catch (error) {
-        console.error("Failed to fetch applications", error);
+        console.error("Failed to fetch jobs", error);
       }
     };
-    fetchApplications();
+    fetchData ();
   }, []);
 
   const handleClick = (applicationId: number) => {
@@ -38,9 +37,9 @@ export default function CompanyJobApplicant() {
       <div className="px-[3%] py-[1%]">
         <Header1 />
         <div className="px-[4%]">
-          <Link
+          <button
             className="flex flex-row items-center border-b-[1px] border-Gold3 py-[12px] font-sans text-[36px]/[120%] font-normal text-Gold1"
-            href={"#"}
+            onClick={() => router.back()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -57,10 +56,10 @@ export default function CompanyJobApplicant() {
               />
             </svg>
             Applicants
-          </Link>
-          <div className="mt-[21px]">
+          </button>
+          <div className="mt-[21px] grid grid-cols-2 gap-[10px]">
             {applications.map((application: any, index: number) => (
-              <div key={index} className="flex max-w-[48%] flex-row items-center justify-between rounded-[15px] p-[18px] shadow-custom2">
+              <div key={index} className="flex flex-row items-center justify-between rounded-[15px] p-[18px] shadow-custom2">
                 <div className="mr-[12px] h-[145px] w-[145px] rounded-full bg-Gray1 bg-opacity-30"></div>
                 <div className="max-w-[73%]">
                   <h1 className="mb-[1px] font-sans text-[16px]/[120%] text-Black2">

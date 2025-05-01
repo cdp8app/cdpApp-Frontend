@@ -12,6 +12,18 @@ export interface Offer {
     company_name: string;
     company_industry: string;
   };
+  job: {
+    title: string;
+    location: string;
+    description: string;
+    requirements: string;
+    deadline: string;
+  };
+  employer?: {
+    company_name: string;
+    company_industry: string;
+  };
+  status: string;
   createdAt: string;
   updatedAt: string;
 };

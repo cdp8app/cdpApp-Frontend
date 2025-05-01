@@ -22,6 +22,7 @@ export interface Job {
     // startDate: string;
     // endDate: string;
     // status: string;
+    status: string;
   createdAt: string;
   updatedAt: string;
 };

@@ -18,7 +18,7 @@ export default function Navbar1({ userType }: Navbar1Props) {
   const companyLinks = [
     { name: "Home", href: "/" },
     { name: "Dashboard", href: "/company/dashboard" },
-    { name: "Applicants", href: "/company/applicants" },
+    { name: "Applicants", href: "/company/applicant" },
     { name: "Post Job", href: "/company/post-job" },
     { name: "Settings", href: "/company/settings" },
   ];
