@@ -37,9 +37,9 @@ export default function StudentApplications() {
         <Header1 />
         <div className="px-[4%]">
           <div className="mb-[18px] border-b-[1px] border-Gold2">
-            <Link
+            <button
               className="flex flex-row items-center py-[12px] font-sans text-[27px]/[120%] font-normal text-Gold1"
-              href={"#"}
+              onClick={() => router.back()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +56,7 @@ export default function StudentApplications() {
                 />
               </svg>
               Applications
-            </Link>
+            </button>
           </div>
           <div className="space-x-[16px]">
             <button

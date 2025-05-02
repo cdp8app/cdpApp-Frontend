@@ -5,21 +5,31 @@ import { useRouter } from "next/navigation";
 
 
 // Define types
-interface Internship {
+export interface Internship {
   id: string;
   title: string;
-  company: string;
   location: string;
   description: string;
     requirements: string;
     duration: string;
     stipend: string;
         student: string;
-        job: string;
-        application: string;
+        job?: {
+          title: string;
+          location?: string;
+          description?: string;
+          requirements?: string;
+          deadline?: string;
+        };
 //     startDate: string;
 //     endDate: string;
 //   status: string;
+company?: {
+  company_name?: string;
+  company_industry?: string;
+};
+application?: string;
+status: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -48,7 +58,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch("https://careerxhub.onrender.com/api/internship/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/internships/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -57,13 +67,14 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch internships");
+        throw new Error(data.message || data.detail || "Failed to fetch internships");
       }
     
       setInternships(data);
-      router.push("/Dashboard");
+      return data;
     } catch (err: any) {
       setError(err.message);
+      return null;
     } finally {
       setLoading(false);
     }
@@ -73,7 +84,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://careerxhub.onrender.com/api/internship/${internshipId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/internships/${internshipId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -82,12 +93,14 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch internship");
+        throw new Error(data.message || data.detail || "Failed to fetch internship");
       }
     
       setInternships(data);
+      return data;
     } catch (err: any) {
       setError(err.message);
+      return null;
     }
     finally {
       setLoading(false);
@@ -98,7 +111,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch("https://careerxhub.onrender.com/api/internship/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/internships/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,7 +123,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to create internship");
+        throw new Error(data.message || data.detail || "Failed to create internship");
       }
 
       setInternships(data);
@@ -125,7 +138,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://careerxhub.onrender.com/api/internship/${internshipId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/internships/${internshipId}/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -137,7 +150,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update internship");
+        throw new Error(data.message || data.detail || "Failed to update internship");
       }
     
       setInternships(data);
@@ -152,7 +165,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://careerxhub.onrender.com/api/internship/${internshipId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/internships/${internshipId}/`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -161,7 +174,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete internship");
+        throw new Error(data.message || data.detail || "Failed to delete internship");
       }
         
       setInternships(null);

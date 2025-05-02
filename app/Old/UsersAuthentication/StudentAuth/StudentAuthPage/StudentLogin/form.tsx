@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Button1 from "../../../Components/Button1";
 // import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Label from "@/app/UsersAuthentication/Components/Label";
+import Label from "@/app/user/Components/Label";
 
 interface LoginFormProps {
   userType: "student" | "company";

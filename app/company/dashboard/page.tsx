@@ -48,7 +48,7 @@ export default function CompanyDashboard() {
   const openJobsCount = jobs?.filter((job) => job.status === "open").length || 0;
   const closedJobsCount = jobs?.filter((job) => job.status === "closed").length || 0;
   
-  const approvedApplications = applications?.filter((app) => app.status === "approved").length || 0;
+  const approvedApplications = applications?.filter((app) => app.status === "accepted").length || 0;
   const interviewApplications = applications?.filter((app) => app.status === "interview").length || 0;
   const pendingApplications = applications?.filter((app) => app.status === "pending").length || 0;
   const deniedApplications = applications?.filter((app) => app.status === "rejected").length || 0;

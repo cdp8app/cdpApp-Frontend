@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 // Define types
 export interface Application {
   id: string;
-  job: string
+  job?: {id: string;}
   cover_letter: string
   skills: string
   experience: string
@@ -58,7 +58,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch applications");
+        throw new Error(data.message || data.detail || "Failed to fetch applications");
       }
     
       setApplications(data);
@@ -83,7 +83,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch applications");
+        throw new Error(data.message || data.detail || "Failed to fetch applications");
       }
     
       setApplications(data);
@@ -108,7 +108,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch application");
+        throw new Error(data.message || data.detail || "Failed to fetch application");
       }
     
       setApplications(data);
@@ -164,11 +164,9 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       });
     
       const data = await response.json();
-
-      console.log("Updated application: ", data);
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update application");
+        throw new Error(data.message || data.detail || "Failed to update application");
       }
     
       setApplications(data);
@@ -192,7 +190,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete application");
+        throw new Error(data.message || data.detail || "Failed to delete application");
       }
         
       setApplications(null);

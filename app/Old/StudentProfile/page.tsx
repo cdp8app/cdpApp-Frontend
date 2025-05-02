@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import EditAboutModal from "../Components/Modals/EditAboutModal";
+import EditAboutModal from "@/app/Components/Modals/EditAboutModal";
 import Button5 from "../UsersAuthentication/Components/Button5";
-import ResumeUploadButton2 from "../Components/ResumeUpload2";
+import ResumeUploadButton2 from "@/app/Components/ResumeUpload2";
 import Image from "next/image";
 import Portfolio from "../../public/Images/Portfolio.png";
-import Footer1 from "../Components/Footer1";
-import Header1 from "../Components/Header1";
-import EditEducationModal from "../Components/Modals/editEducationModal";
+import Footer1 from "@/app/Components/Footer1";
+import Header1 from "@/app/Components/Header1";
+import EditEducationModal from "@/app/Components/Modals/editEducationModal";
 
 export default function StudentProfilePage() {
   const [aboutText, setAboutText] = useState<string>(

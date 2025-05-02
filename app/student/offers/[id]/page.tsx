@@ -8,16 +8,16 @@ import Footer1 from "@/app/Components/Footer1";
 import Logout from "@/app/user/auth/logout/page";
 import { Offer, useOfferContext } from "@/contexts/offerContext";
 
-export default function CompanyOfferDetails() {
+export default function StudentOfferInformation() {
   const params = useParams();
   const router = useRouter();
-
+  
   const offerId = Array.isArray(params.id) ? params.id[0] : params.id;
   const [offer, setOffer] = useState<Offer | null>(null);
   const { getOffersById, updateOffer, error } = useOfferContext();
-
+  
   const [formError, setFormError] = useState("");
-
+  
   useEffect(() => {
     const fetchOfferDetails = async () => {
       if (offerId) {
@@ -27,7 +27,7 @@ export default function CompanyOfferDetails() {
         }
       }
     };
-      
+        
     fetchOfferDetails();
   }, []);
 
@@ -40,10 +40,10 @@ export default function CompanyOfferDetails() {
             <div className="flex flex-col items-center justify-center">
               <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
               <h1 className="mb-[6px] text-center font-sans text-[27px]/[120%] font-bold">
-                {offer?.employer?.company_name}
+                {offer?.company_details?.company_name}
               </h1>
               <h1 className="mb-[21px] font-sans text-[12px]/[120%] font-normal text-Gray2">
-                {offer?.employer?.company_industry}
+                {offer?.company_details?.company_industry}
               </h1>
               <Button7
                 text="View Profile"
@@ -80,36 +80,16 @@ export default function CompanyOfferDetails() {
                 </p>
               </div>
             )}
-            {offer?.status === "interview" && (
-              <div className="flex w-[123px] flex-row items-center rounded-[8px] bg-BlueB1 bg-opacity-15 px-[16px] py-[8px]">
-                <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-BlueB1"></div>
-                <p className="font-sans text-[16px]/[120%] font-normal text-BlueB1">
-                Interview
-                </p>
-              </div>
-            )}
-
-            {offer?.status === "pending" && (
-              <button onClick={() => router.back()} className="mt-[21px] rounded-[999px] border-[2px] border-PriGold px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-PriGold">
-              Return to applications
-              </button>
-            )}
-            {offer?.status === "interview" && (
-              <button className="mt-[21px] rounded-[999px] border-[2px] border-PriGold px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-PriGold">
-              Interview Schedule
-              </button>
-            )}
             {offer?.status === "rejected" && (
               <button className="mt-[21px] rounded-[999px] border-[2px] border-PriGold px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-PriGold">
-              Interview Schedule
+              Return to offers
               </button>
             )}
-            {offer?.status === "accepted" && (
+            {offer?.status === "pending" && (
               <button className="mt-[21px] rounded-[999px] border-[2px] border-PriGold px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-PriGold">
-              Start Internship
+              Accept offer
               </button>
             )}
-
             <div className="mt-[21px] flex w-[80%] flex-col">
               <div>
                 <h1 className="font-sans text-[16px]/[120%] text-Gold1">
@@ -124,7 +104,7 @@ export default function CompanyOfferDetails() {
                   LOCATION:
                 </h1>
                 <p className="font-sans text-[16px]/[120%] text-Black2">
-                  {offer?.job?.location}
+                  On-site: {offer?.application_details?.job?.location}
                 </p>
               </div>
               <div className="mt-[21px]">
@@ -132,7 +112,7 @@ export default function CompanyOfferDetails() {
                   DESCRIPTION:
                 </h1>
                 <p className="font-sans text-[16px]/[120%] text-Black2">
-                  {offer?.job?.description}
+                  {offer?.application_details?.job?.description}
                 </p>
               </div>
               <div className="mt-[21px]">
@@ -140,7 +120,7 @@ export default function CompanyOfferDetails() {
                   REQUIREMENTS:
                 </h1>
                 <p className="font-sans text-[16px]/[120%] text-Black2">
-                  {offer?.job?.requirements}
+                  {offer?.application_details?.job?.requirements}
                 </p>
               </div>
               <div className="mt-[21px]">
@@ -148,7 +128,7 @@ export default function CompanyOfferDetails() {
                   DURATION:
                 </h1>
                 <p className="font-sans text-[16px]/[120%] text-Black2">
-                  {offer?.job?.deadline}
+                  {offer?.application_details?.job?.deadline}
                 </p>
               </div>
             </div>

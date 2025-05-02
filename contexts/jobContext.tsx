@@ -62,7 +62,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
   
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch jobs");
+        throw new Error(data.message || data.detail || "Failed to fetch jobs");
       }
 
       setJobs(data);
@@ -87,7 +87,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch job");
+        throw new Error(data.message || data.detail || "Failed to fetch job");
       }
       
       setCurrentJob(data);
@@ -144,7 +144,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update job");
+        throw new Error(data.message || data.detail || "Failed to update job");
       }
     
       setJobs(data);
@@ -168,7 +168,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete job");
+        throw new Error(data.message || data.detail || "Failed to delete job");
       }
         
       setJobs(null);

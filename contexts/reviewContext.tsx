@@ -58,7 +58,7 @@ export const ReviewProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const data = await response.json();
   
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch reviews");
+        throw new Error(data.message || data.detail || "Failed to fetch reviews");
       }
 
       setReviews(data);
@@ -83,7 +83,7 @@ export const ReviewProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch review");
+        throw new Error(data.message || data.detail || "Failed to fetch review");
       }
       
       setCurrentReview(data);
@@ -140,7 +140,7 @@ export const ReviewProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update review");
+        throw new Error(data.message || data.detail || "Failed to update review");
       }
     
       setReviews(data);
@@ -164,7 +164,7 @@ export const ReviewProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete review");
+        throw new Error(data.message || data.detail || "Failed to delete review");
       }
         
       setReviews(null);

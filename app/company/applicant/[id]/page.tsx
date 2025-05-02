@@ -78,10 +78,10 @@ export default function CompanyJobApplicantInfo() {
       const offerData = {
         company: user?.id,
         student: application?.user?.id,
-        application: application?.id,
+        application: applicationId,
         interview_date: formattedDate,
         interview_time: formattedTime,
-        status: "interview"
+        status: "pending"
       };
   
       if (applicationId) {
@@ -100,24 +100,22 @@ export default function CompanyJobApplicantInfo() {
 
   const handleExtendOffer = async () => {
     try {
-      const job = application?.job || null; // Initialize job with a value
+      const job = application?.job || null;
       const internshipData = {
         company: user?.id,
         student: application?.user?.id,
-        job,
-        application: application?.id
+        job: application?.job?.id,
+        application: applicationId
       };
 
       if (applicationId) {
         // First update the application status to "accepted"
         await updateApplication(applicationId, { status: "accepted" });
-        await createInternship({internshipData});
+        await createInternship(internshipData);
 
         const offer = offers.find((offer) => offer.id === application?.id);
         if (offer) {
           await updateOffer(offer.id, "accepted");
-        } else {
-          console.error("Offer not found for the application.");
         }
   
         // Refresh application

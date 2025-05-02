@@ -45,7 +45,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch storage files");
+        throw new Error(data.message || data.detail || "Failed to fetch storage files");
       }
 
       setStorageList(data);
@@ -69,7 +69,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch file");
+        throw new Error(data.message || data.detail || "Failed to fetch file");
       }
 
       return data;
@@ -99,7 +99,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to upload file");
+        throw new Error(data.message || data.detail || "Failed to upload file");
       }
 
       setStorageList((prev) => [data, ...prev]); // Add new file to top
@@ -122,7 +122,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete file");
+        throw new Error(data.message || data.detail || "Failed to delete file");
       }
 
       setStorageList((prev) => prev.filter((file) => file.id !== id));

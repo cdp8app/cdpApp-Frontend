@@ -23,6 +23,18 @@ export interface Offer {
     company_name: string;
     company_industry: string;
   };
+  company_details?: {
+    company_name?: string;
+    company_industry?: string;
+  };
+  application_details?: {
+    job?: {
+      location?: string;
+      description?: string;
+      requirements?: string;
+      deadline?: string;
+    };
+  };
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -63,7 +75,7 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const data = await response.json();
   
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch offers");
+        throw new Error(data.message || data.detail || "Failed to fetch offers");
       }
 
       setOffers(data);
@@ -88,7 +100,7 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch offer");
+        throw new Error(data.message || data.detail || "Failed to fetch offer");
       }
       
       setCurrentOffer(data);
@@ -145,7 +157,7 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update offer");
+        throw new Error(data.message || data.detail || "Failed to update offer");
       }
     
       setOffers(data);
@@ -169,7 +181,7 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete offer");
+        throw new Error(data.message || data.detail || "Failed to delete offer");
       }
         
       setOffers(null);

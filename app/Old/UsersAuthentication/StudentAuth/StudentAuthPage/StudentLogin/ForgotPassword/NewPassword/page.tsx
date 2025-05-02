@@ -2,7 +2,7 @@
 import Logo from "@/app/Components/Logo";
 import Link from "next/link";
 import NewPasswordForm from "./form";
-import Button2 from "@/app/UsersAuthentication/Components/Button2";
+import Button2 from "@/app/user/Components/Button2";
 
 export default function NewPasswordPage() {
   return (
