@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useAuth } from "@/./contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { useAuth, UserType } from "@/./contexts/AuthContext";
+import { CldImage } from "next-cloudinary";
 
 import Link from "next/link";
 import EditAboutModal from "../../Components/Modals/EditAboutModal";
@@ -13,13 +15,19 @@ import Footer1 from "../../Components/Footer1";
 import Header1 from "../../Components/Header1";
 import EditEducationModal from "../../Components/Modals/editEducationModal";
 import Logout from "@/app/user/auth/logout/page";
+import { useStorageContext } from "@/contexts/storageContext";
 
 export default function StudentProfilePage() {
-  const { getStudentProfile, loading, error, clearError } = useAuth();
+  const { user, updateProfile, getStudentProfile, loading, error, clearError } = useAuth();
+  const { uploadFile } = useStorageContext();
   const [formError, setFormError] = useState("");
   const [name, setName] = useState("");
   const [department, setDepartment] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
+  const [profilePicture, setProfilePicture] = useState("");
+  const [resume, setResume] = useState("");
+  const router = useRouter();
+  const [fileName, setFileName] = useState<string | null>(null);
   
 
   const [aboutText, setAboutText] = useState<string>("");
@@ -28,9 +36,22 @@ export default function StudentProfilePage() {
   const openAboutModal = () => setIsAboutModalOpen(true);
   const closeAboutModal = () => setIsAboutModalOpen(false);
 
-  const changeAboutText = (newText: string) => {
+  const changeAboutText = async (newText: string) => {
     setAboutText(newText);
     closeAboutModal();
+
+    if (!user?.id || !user?.email) return;
+
+    try {
+      await updateProfile({
+        id: user.id,
+        email: user.email,
+        userType: "student",
+        bio: newText,
+      });
+    } catch (err: any) {
+      setFormError(`Failed to update bio: ${err}`);
+    }
   };
   const [educationData, setEducationData] = useState({
     university: "",
@@ -45,7 +66,7 @@ export default function StudentProfilePage() {
   const openEditEducationModal = () => setIsEditEducationModalOpen(true);
   const closeEditEducationModal = () => setIsEditEducationModalOpen(false);
 
-  const changeEducationData = (newData: {
+  const changeEducationData = async (newData: {
     university: string;
     department: string;
     fromYear: string;
@@ -53,6 +74,35 @@ export default function StudentProfilePage() {
   }) => {
     setEducationData(newData);
     closeEditEducationModal();
+
+    if (!user?.id || !user?.email) return;
+
+    try {
+      await updateProfile({
+        id: user.id,
+        email: user.email,
+        userType: "student",
+        intuition: newData.university,
+        course: newData.department,
+        start_data: newData.fromYear,
+        end_data: newData.toYear,
+      });
+    } catch (err: any) {
+      setFormError(`Failed to update education", ${err}`);
+    }
+  };
+
+  const saveSkills = async (newSkills: string[]) => {
+    setSkills(newSkills);
+  
+    if (!user?.id || !user?.email) return;
+  
+    await updateProfile({
+      id: user.id,
+      email: user.email,
+      userType: "student",
+      skills: newSkills.join(","),
+    });
   };
 
   useEffect(() => {
@@ -78,8 +128,10 @@ export default function StudentProfilePage() {
         const formattedSkills = profile?.skills?.split(",").map((skill: string) => skill.trim()) || [];
 
         if (profile && profile.skills) setSkills(formattedSkills);
-        
-  
+
+        if (profile && profile.profile_picture) setProfilePicture(profile.profile_picture);
+        if (profile && profile.resume) setResume(profile.resume);
+
         // Set other profile data as needed (e.g., name, profile picture)
       } catch (error) {
         console.error("Failed to fetch profile", error);
@@ -95,9 +147,9 @@ export default function StudentProfilePage() {
         <Header1 />
         <div className="px-[6%]">
           <div className="mb-[18px] flex flex-row justify-between border-b-[1px] border-Gold2">
-            <Link
+            <button
               className="flex flex-row items-center py-[12px] font-sans text-[27px]/[120%] font-normal text-Gold1"
-              href={"#"}
+              onClick={() => router.back()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -114,12 +166,25 @@ export default function StudentProfilePage() {
                 />
               </svg>
               Your Profile
-            </Link>
+            </button>
             <Logout/>
           </div>
           <div className="mb-[18px] flex w-[100%] flex-row items-center justify-between rounded-[16px] border-[1px] border-PriGold bg-gradient-to-r p-[30px]">
             <div className="flex flex-row items-center">
-              <div className="mr-[24px] h-[120px] w-[120px] rounded-[60px] bg-White"></div>
+              <div className="mr-[24px] h-[120px] w-[120px] rounded-[60px] overflow-hidden bg-White">
+                {profilePicture ? (
+                  <CldImage
+                    width="120"
+                    height="120"
+                    src={profilePicture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="h-full w-full bg-White flex items-center justify-center text-gray-400">
+          No Image
+                  </div>
+                )}
+              </div>
               <div>
                 <h1 className="mb-1 font-sans text-[36px]/[100%] font-semibold text-GoldenWhite">
                   {name}
@@ -144,7 +209,7 @@ export default function StudentProfilePage() {
               </div>
             </div>
             <div>
-              <button className="rounded-[999px] border-2 border-Black2 px-[80px] py-[18px] font-sans text-[16px]/[120%] text-Black2">
+              <button onClick={() => router.push("/settings")} className="rounded-[999px] border-2 border-Black2 px-[80px] py-[18px] font-sans text-[16px]/[120%] text-Black2">
                 Go to settings
               </button>
             </div>
@@ -361,72 +426,6 @@ export default function StudentProfilePage() {
                   className="mt-[25px] text-[16px] font-normal"
                 />
               </div>
-              {/* <div>
-                <div className="flex flex-row items-center pb-[10px]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="size-6 text-Gold0"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"
-                    />
-                  </svg>
-                  <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    University of Calabar, Calabar
-                  </h1>
-                </div>
-                <div className="flex flex-row items-center pb-[10px]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="size-6 text-Gold0"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
-                    />
-                  </svg>
-
-                  <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    MBBS
-                  </h1>
-                </div>
-                <div className="flex flex-row items-center pb-[10px]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="size-6 text-Gold0"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
-                    />
-                  </svg>
-
-                  <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    2017-2025
-                  </h1>
-                </div>
-                <Button5
-                  // onClick={handleSave}
-                  text="Add Education"
-                  className="mt-[25px] text-[16px] font-normal"
-                />
-              </div> */}
             </div>
             <div className="flex w-[50%] flex-col justify-between rounded-r-[16px] border-[1px] border-PriGold px-[25px] py-[32px]">
               <div>
@@ -474,7 +473,23 @@ export default function StudentProfilePage() {
               </div>
             </div>
           </div>
-          <ResumeUploadButton2 />
+          <ResumeUploadButton2
+            fileName={fileName || ""}
+            fileUrl={resume}
+            onUpload={async (file: File) => {
+              const result = await uploadFile(file);
+              if (result && result.file_url && user?.id && user?.email) {
+                setResume(result.file_url);
+
+                await updateProfile({
+                  id: user.id,
+                  email: user.email,
+                  userType: "student",
+                  resume: result.file_url,
+                });
+              }
+            }}
+          />
           <div className="mb-[160px] mt-[18px] flex w-[100%] flex-col rounded-[16px] border-[1px] border-PriGold p-[42px]">
             <h1 className="mb-[32px] font-sans text-[21px]/[120%] font-normal text-Black2">
               Portfolio{" "}

@@ -5,7 +5,7 @@ import Header1 from "../Components/Header1";
 import Link from "next/link";
 import NotificationSettingsModal from "./notifications/modal";
 import ToggleSwitch from "./notifications/toggleSwitch";
-import Button4 from "../UsersAuthentication/Components/Button4";
+import Button4 from "../user/Components/Button4";
 import ProfileVisibilityModal from "./profile-visibility/modal";
 import ManageDataSharingModal from "./manage-data/modal";
 import RecommendationsModal from "./recommendations/modal";

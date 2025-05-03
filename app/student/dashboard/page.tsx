@@ -10,6 +10,7 @@ import Logout from "@/app/user/auth/logout/page";
 import { useInternshipContext } from "@/contexts/internshipContext";
 import { useApplicationContext } from "@/contexts/applicationContext";
 import { useOfferContext } from "@/contexts/offerContext";
+import { CldImage } from "next-cloudinary";
 
 export default function Dashboard() {
   const { user, clearError } = useAuth();
@@ -18,8 +19,7 @@ export default function Dashboard() {
   const { getOffers } = useOfferContext();
   const [internships, setInternships] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
   const [applications, setApplications] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
-  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]); 
-  console.log("INternship", internships);   
+  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]);  
 
   useEffect(() => {
     const fetchData  = async () => {
@@ -66,7 +66,18 @@ export default function Dashboard() {
         <div className="shadow-custom flex w-[100%] flex-row justify-between rounded-[30px] mb-[80px] bg-GoldenWhite p-[2%]">
           <div className="flex py-[5%] space-y-[200px] w-[20%] items-center flex-col">
             <div className="flex flex-col items-center justify-center">
-              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] overflow-hidden bg-White">
+                {user?.profile_picture ? (
+                  <CldImage
+                    width="120"
+                    height="120"
+                    src={user?.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+                )}
+              </div>
               <h1 className="mb-[6px] font-sans text-[27px]/[120%] font-bold">
                 {user?.full_name}
               </h1>

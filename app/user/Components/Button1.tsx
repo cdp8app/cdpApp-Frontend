@@ -30,7 +30,7 @@ const Button1: React.FC<Button1Props> = ({
     >
       {loading ? (
         <>
-          <Spinner />
+          <Spinner className="mx-auto" />
         </>
       ) : (
         text

@@ -70,18 +70,73 @@
 
 // export default ResumeUploadButton2;
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import "../../app/globals.css";
 import Button6 from "../user/Components/Button6";
+import ResumePdf from "../../public/Images/resume_pdf.png";
+import Image from "next/image";
+import { CldImage } from "next-cloudinary";
 
-export default function ResumeUploadButton2() {
+type ResumeUploadButton2Props = {
+  fileName: string;
+  onUpload: (file: File) => Promise<void>;
+  fileUrl: string
+};
+
+const ResumeUploadButton2: React.FC<ResumeUploadButton2Props> = ({
+  fileName,
+  onUpload,
+  fileUrl,
+}) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      await onUpload(file);
+    }
+  };
+
   return (
     <div className="mt-[18px] flex w-[100%] flex-row items-center justify-between rounded-[16px] border-[1px] border-PriGold px-[40px] py-[20px]">
-      <p className="font-sans">222</p>
+      <div className="mt-[10px] text-gray-700 flex items-center gap-2">
+        {fileUrl ? (
+          <>
+            <CldImage
+              width="50"
+              height="50"
+              src={fileUrl}
+              alt="Description of my image"
+            />
+          </>
+        ) : (
+          <span className="text-sm text-gray-400">No resume uploaded</span>
+        )}
+      </div>
+
+      <input
+        type="file"
+        accept=".pdf"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+      />
+
       <Button6
         text="Upload a resume"
         className="text-[12px]/[120%] font-normal"
+        onClick={triggerFileInput}
       />
     </div>
   );
-}
+};
+
+export default ResumeUploadButton2;

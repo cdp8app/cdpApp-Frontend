@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 
 import { useAuth, UserType } from "@/./contexts/AuthContext";
 import { useStorageContext } from "@/contexts/storageContext";
+import { skillsOptions } from "@/app/constants/skillsOptions";
 
 import "../../../../app/globals.css";
 import Image from "next/image";
 import SkillsButton from "./SelectDropdown";
 import Button3 from "@/app/user/Components/Button3";
+import FormAlert from "@/app/Components/FormAlert";
 
 
 export default function SetUpStudentProfileForm() {
@@ -56,15 +58,6 @@ export default function SetUpStudentProfileForm() {
     }
   };
 
-  const options = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
-    { value: "option4", label: "Option 4" },
-  ];
-
-  console.log("storedUserData: ", user);
-
   const handleSelect = (value: string) => {
     setSkills((prev) => [...prev, value]);
   };
@@ -81,26 +74,26 @@ export default function SetUpStudentProfileForm() {
     setFormError("");
     clearError();
 
-    // let profilePictureUrl = "";
-    // let resumeUrl = "";
+    let profilePictureUrl = "";
+    let resumeUrl = "";
 
-    // if (profile_picture) {
-    //   const uploadResult = await uploadFile(profile_picture);
-    //   if (typeof uploadResult === "string") {
-    //     profilePictureUrl = uploadResult;
-    //   } else {
-    //     throw new Error("Failed to upload profile picture.");
-    //   }
-    // }
-
-    // if (resume) {
-    //   const uploadResult = await uploadFile(resume);
-    //   if (typeof uploadResult === "string") {
-    //     resumeUrl = uploadResult;
-    //   } else {
-    //     throw new Error("Failed to upload resume.");
-    //   }
-    // }
+    if (profile_picture) {
+      const uploadResult = await uploadFile(profile_picture);
+      if (uploadResult && typeof uploadResult === "object" && uploadResult !== null && "file_url" in uploadResult) {
+        profilePictureUrl = uploadResult.file_url;
+      } else {
+        setFormError("Failed to upload profile picture.");
+      }
+    }
+    
+    if (resume) {
+      const uploadResult = await uploadFile(resume);
+      if (uploadResult && typeof uploadResult === "object" && "file_url" in uploadResult) {
+        resumeUrl = uploadResult.file_url;
+      } else {
+        setFormError("Failed to upload resume.");
+      }
+    }    
 
     try {
       if (!user?.id || !user?.email) {
@@ -121,31 +114,34 @@ export default function SetUpStudentProfileForm() {
         start_data: start_date,
         end_data: end_date,
         skills: skills.join(","),
+        profile_picture: profilePictureUrl || undefined,
+        resume: resumeUrl || undefined,
       };
 
       await updateProfile(userData);
-      // Note: The redirect is handled inside the login function in AuthContext
-      console.log("✅ Profile update successful: ", userData);
-      // Optionally show a success message or toast
-      // toast.success("Profile updated successfully!");
     } catch (err: any) {
-      // Form-specific errors are set here
-      setFormError(err.message || "Login failed. Please check your credentials and try again.");
+      setFormError(err.message || "Update profile failed.");
     }
-
-    
-
-
-    
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col justify-start">
+
       {(formError || error) && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-center">
-          {formError || error}
-        </div>
+        <FormAlert
+          message={(formError || error) ?? ""}
+          type="error"
+          duration={5000}
+          onClose={() => {
+            if (formError) {
+              setFormError("");
+            } else {
+              clearError();
+            }
+          }}
+        />
       )}
+
       <div
         className="mx-auto h-[150px] w-[150px] mb-[12px] rounded-[100%] border-[1px] border-Gold3 bg-GoldenWhite"
       >
@@ -160,8 +156,8 @@ export default function SetUpStudentProfileForm() {
             />
           ) : (
             <Image
-              src="/Images/Icons/profile-default.png"
-              alt="Profile Icon"
+              src="/Images/profile-default.png"
+              alt=""
               className="h-full w-full rounded-[100%] object-cover"
               width={150}
               height={150}
@@ -192,7 +188,7 @@ export default function SetUpStudentProfileForm() {
         placeholder="Tell us a little bit about yourself (Note: Recruiters will be able to see this information when you apply for internships)"
         value={bio}
         onChange={(e) => setBio(e.target.value)}
-        className="mb-[12px] h-[100px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
+        className="mb-[12px] h-[100px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[50px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
       />
       <div className="mb-[12px] border-b-2 border-Gray1">
         <h1 className="p-[10px] font-sans text-[21px]/[120%] text-Gray1">
@@ -238,7 +234,7 @@ export default function SetUpStudentProfileForm() {
         </h1>
       </div>
 
-      <SkillsButton options={options} selectedSkills={skills} onSelect={handleSelect} text="  Type or Select your skills (You can select up to 5)
+      <SkillsButton options={skillsOptions} selectedSkills={skills} onSelect={handleSelect} text="  Type or Select your skills (You can select up to 5)
 " />
 
       <div className="flex w-[100%] flex-col items-center justify-center">
@@ -279,17 +275,17 @@ export default function SetUpStudentProfileForm() {
               </p>
             </div>
           ) : (
-            <div className="mt-4 text-gray-500"></div>
+            <div className="mt-4 text-gray-500">!!!</div>
           )}
         </button>
         <Button3 text="Create Profile" className="text-[16px] font-normal" type="submit" loading={loading} disabled={loading} />
         {/* {fileName ? (
-                <div className="mt-4 text-gray-700">
-                    <p>Uploaded File: <span className="font-bold">{fileName}</span></p>
-                </div>
-            ) : (
-                <div className="mt-4 text-gray-500">No file uploaded yet.</div>
-            )} */}
+          <div className="mt-4 text-gray-700">
+            <p>Uploaded File: <span className="font-bold">{fileName}</span></p>
+          </div>
+        ) : (
+          <div className="mt-4 text-gray-500">No file uploaded yet.</div>
+        )} */}
       </div>
       
       <div className="mb-[100px]"></div>

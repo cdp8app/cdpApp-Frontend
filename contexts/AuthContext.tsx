@@ -228,7 +228,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || data.error || "Registration failed");
+        throw new Error(data.message || data.detail || "Registration failed");
       }
 
       localStorage.setItem("verifyOtpEmail", userData.email);
