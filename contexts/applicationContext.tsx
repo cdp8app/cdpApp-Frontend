@@ -7,7 +7,10 @@ import { useRouter } from "next/navigation";
 // Define types
 export interface Application {
   id: string;
-  job?: {id: string;}
+  job?: {
+    id: string;
+    location: string;
+  }
   cover_letter: string
   skills: string
   experience: string
@@ -19,6 +22,7 @@ export interface Application {
     full_name: string;
     course: string;
     location: string;
+    profile_picture: string;
   };
   createdAt: string;
   updatedAt: string;

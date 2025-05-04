@@ -9,7 +9,7 @@ import { useInternshipContext } from "@/contexts/internshipContext";
 export default function StudentInternships() {
   const router = useRouter();
       
-  const { getInternships, loading, error } = useInternshipContext();
+  const { getStudentInternships, loading, error } = useInternshipContext();
   const [section, setSection] = useState(1);
   
   const handleSectionChange = (sectionNumber: number) => {
@@ -21,7 +21,7 @@ export default function StudentInternships() {
   useEffect(() => {
     const fetchInternships = async () => {
       try {
-        const fetchedInternships = (await getInternships()) ?? {};
+        const fetchedInternships = (await getStudentInternships()) ?? {};
           
         if (fetchedInternships && typeof fetchedInternships === "object" && Array.isArray((fetchedInternships as any)?.results)) {
           setInternships((fetchedInternships as any).results);

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { CldImage } from "next-cloudinary";
 
 import Header1 from "@/app/Components/Header1";
 import Footer1 from "@/app/Components/Footer1";
@@ -8,6 +9,7 @@ import Button7 from "@/app/user/Components/Button7";
 import ApplyModel from "@/app/Components/Modals/ApplyModal";
 import Link from "next/link";
 import { Job, useJobContext } from "@/contexts/jobContext";
+import Logout from "@/app/user/auth/logout/page";
 
 export default function ApplyInternship() {
   const params = useParams();
@@ -33,11 +35,38 @@ export default function ApplyInternship() {
       <div className="p-[2%]">
         <Header1 />
         {error && <p className="text-red-500">{error}</p>}
-        <div className="mb-[80px] w-[100%] justify-center">
+        <div className="mb-[80px] flex w-[100%] flex-row justify-between rounded-[30px]r">
+          <div className="flex w-[20%] flex-col items-center space-y-[200px] py-[1%]">
+            <div className="flex flex-col items-center justify-center">
+              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] overflow-hidden bg-White">
+                {job?.company?.profile_picture ? (
+                  <CldImage
+                    width="120"
+                    height="120"
+                    src={job?.company?.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="mb-[16px] h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
+                )}
+              </div>
+              <h1 className="mb-[6px] text-center font-sans text-[27px]/[120%] font-bold">
+                {job?.company?.company_name}
+              </h1>
+              <h1 className="mb-[21px] font-sans text-[12px]/[120%] font-normal text-Gray2">
+                {job?.company?.company_industry}
+              </h1>
+              <Button7
+                text="View Profile"
+                className="text-[12px]/[120%] font-normal"
+              />
+            </div>
+            <Logout/>
+          </div>
           <div className="px-[10%]">
-            <Link
+            <button
               className="flex flex-row items-center py-[12px] font-sans text-[36px]/[120%] font-normal text-Gold1"
-              href={"#"}
+              onClick={() => router.back()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -54,19 +83,7 @@ export default function ApplyInternship() {
                 />
               </svg>
               Internship description
-            </Link>
-            <div className="flex w-[88px] flex-row items-center rounded-[8px] bg-Red2 px-[16px] py-[8px]">
-              <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Red1"></div>
-              <p className="font-sans text-[12px]/[120%] font-medium text-Red1">
-                Closed
-              </p>
-            </div>
-            <div className="flex w-[130px] flex-row items-center rounded-[8px] bg-Green2 px-[16px] py-[8px]">
-              <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Green1"></div>
-              <p className="font-sans text-[12px]/[120%] font-medium text-Green1">
-                Open position
-              </p>
-            </div>
+            </button>
             <Button7
               text="Apply"
               className="mt-[12px] text-[16px]/[120%] font-normal"
@@ -121,8 +138,8 @@ export default function ApplyInternship() {
               <p className="mt-10 text-center text-Gray2">Loading job details...</p>
             )}
             <div className="mb-[20px] mt-[21px] flex flex-row space-x-[18px]">
-              <button className="rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
-                Delete job post
+              <button onClick={() => router.back()} className="rounded-[999px] border-[2px] border-PriGold px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-PriGold">
+              Return to internships
               </button>
               <button onClick={() => setIsModalOpen(true)} className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
                 Apply

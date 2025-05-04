@@ -6,6 +6,7 @@ import Footer1 from "@/app/Components/Footer1";
 import Link from "next/link";
 import { useApplicationContext } from "@/contexts/applicationContext";
 import { useRouter } from "next/navigation";
+import { CldImage } from "next-cloudinary";
 
 export default function CompanyJobApplicant() {
   const router = useRouter();
@@ -60,7 +61,18 @@ export default function CompanyJobApplicant() {
           <div className="mt-[21px] grid grid-cols-2 gap-[10px]">
             {applications.map((application: any, index: number) => (
               <div key={index} className="flex flex-row items-center justify-between rounded-[15px] p-[18px] shadow-custom2">
-                <div className="mr-[12px] h-[145px] w-[145px] rounded-full bg-Gray1 bg-opacity-30"></div>
+                <div className="mr-[12px] h-[145px] w-[145px] rounded-full overflow-hidden bg-White">
+                  {application?.user?.profile_picture ? (
+                    <CldImage
+                      width="145"
+                      height="145"
+                      src={application?.user?.profile_picture}
+                      alt="Description of my image"
+                    />
+                  ) : (
+                    <div className="mr-[12px] h-[145px] w-[145px] rounded-full bg-Gray1 bg-opacity-30"></div>
+                  )}
+                </div>
                 <div className="max-w-[73%]">
                   <h1 className="mb-[1px] font-sans text-[16px]/[120%] text-Black2">
                     {application.user?.full_name}
@@ -85,7 +97,7 @@ export default function CompanyJobApplicant() {
                     </p>
                   </div>
                   <p className="mb-[10px] mt-[4px] w-[98%] font-sans text-[12px]/[120%] font-normal text-Gray1">
-                    {application.description}
+                    {application.description.slice(0,100)}...
                   </p>
 
                   <button

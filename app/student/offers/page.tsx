@@ -8,7 +8,7 @@ import { useOfferContext } from "@/contexts/offerContext";
 export default function StudentOffers() {
   const router = useRouter();
     
-  const { getOffers, loading, error } = useOfferContext();
+  const { getStudentOffers, loading, error } = useOfferContext();
   const [section, setSection] = useState(1);
 
   const handleSectionChange = (sectionNumber: number) => {
@@ -20,7 +20,7 @@ export default function StudentOffers() {
   useEffect(() => {
     const fetchOffers = async () => {
       try {
-        const fetchedOffers = (await getOffers()) ?? {};
+        const fetchedOffers = (await getStudentOffers()) ?? {};
         
         if (fetchedOffers && typeof fetchedOffers === "object" && Array.isArray((fetchedOffers as any)?.results)) {
           setOffers((fetchedOffers as any).results);
@@ -92,12 +92,6 @@ export default function StudentOffers() {
             </button>
             <button
               onClick={() => handleSectionChange(4)}
-              className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 4 ? "bg-PriGold" : "bg-GoldenWhite text-Gray2"}`}
-            >
-              Interview
-            </button>
-            <button
-              onClick={() => handleSectionChange(5)}
               className={`w-[186px] rounded-[30px] px-[20px] py-[12px] font-sans text-[16px]/[120%] shadow-custom2 ${section === 5 ? "bg-PriGold" : "bg-GoldenWhite text-Gray2"}`}
             >
               Rejection

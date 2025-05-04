@@ -15,6 +15,7 @@ import { useOfferContext } from "@/contexts/offerContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useReviewContext } from "@/contexts/reviewContext";
 import { useInternshipContext } from "@/contexts/internshipContext";
+import { CldImage } from "next-cloudinary";
 
 export default function CompanyJobApplicantInfo() {
   const params = useParams();
@@ -91,7 +92,7 @@ export default function CompanyJobApplicantInfo() {
         setApplication(updatedApp);
         setIsScheduleInterviewModalOpen(false);
       } else {
-        console.error("Application ID is undefined.");
+        setFormError("Application ID is undefined.");
       }
     } catch (err: any) {
       setFormError(err.message || "Failed to create offer.");
@@ -122,7 +123,7 @@ export default function CompanyJobApplicantInfo() {
         const updatedApp = await getApplicationsById(applicationId);
         setApplication(updatedApp);
       } else {
-        console.error("Application ID is undefined.");
+        setFormError("Application ID is undefined.");
       }
     } catch (err: any) {
       setFormError(err.message || "Failed to extend offer.");
@@ -148,10 +149,28 @@ export default function CompanyJobApplicantInfo() {
         setApplication(updatedApp);
         setIsScheduleInterviewModalOpen(false);
       } else {
-        console.error("Application ID is undefined.");
+        setFormError("Application ID is undefined.");
       }
     } catch (err: any) {
       setFormError(err.message || "Failed to create offer.");
+    }
+  };
+
+  const handleRejection = async () => {
+    try {
+
+      if (applicationId) {
+        // First update the application status to "accepted"
+        await updateApplication(applicationId, { status: "rejected" });
+  
+        // Refresh application
+        const updatedApp = await getApplicationsById(applicationId);
+        setApplication(updatedApp);
+      } else {
+        setFormError("Application ID is undefined.");
+      }
+    } catch (err: any) {
+      setFormError(err.message || "Failed to extend offer.");
     }
   };
 
@@ -162,7 +181,18 @@ export default function CompanyJobApplicantInfo() {
         <div className="mb-[80px] flex w-[100%] flex-row justify-between rounded-[30px]">
           <div className="flex w-[20%] flex-col items-center space-y-[200px] py-[1%]">
             <div className="flex flex-col items-center justify-center">
-              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] overflow-hidden bg-White">
+                {application?.user?.profile_picture ? (
+                  <CldImage
+                    width="135"
+                    height="135"
+                    src={application?.user?.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+                )}
+              </div>
               <h1 className="mb-[6px] text-center font-sans text-[27px]/[120%] font-bold">
                 {application?.user?.full_name}
               </h1>
@@ -266,7 +296,18 @@ export default function CompanyJobApplicantInfo() {
                   </button> */}
               </div>
               <div className="flex flex-row items-center rounded-[15px] bg-Gold3 px-[20px] py-[16px]">
-                <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] bg-red-800"></div>
+                <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] overflow-hidden bg-White">
+                  {application?.user?.profile_picture ? (
+                    <CldImage
+                      width="100"
+                      height="100"
+                      src={application?.user?.profile_picture}
+                      alt="Description of my image"
+                    />
+                  ) : (
+                    <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] bg-red-800"></div>
+                  )}
+                </div>
                 <div className="flex h-[100%] flex-col justify-between">
                   <h1 className="font-sans text-[16px]/[100%] font-normal text-Black2">
                     {application?.user?.full_name}
@@ -417,7 +458,7 @@ export default function CompanyJobApplicantInfo() {
                   LOCATION:
                 </h1>
                 <p className="font-sans text-[16px]/[120%] text-Black2">
-                  {application?.user?.location}
+                  {application?.job?.location}
                 </p>
               </div>
             </div>
@@ -452,7 +493,18 @@ export default function CompanyJobApplicantInfo() {
                   </button> */}
                   </div>
                   <div className="flex flex-row items-center rounded-[15px] bg-Gold3 px-[20px] py-[16px]">
-                    <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] bg-red-800"></div>
+                    <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] overflow-hidden bg-White">
+                      {application?.user?.profile_picture ? (
+                        <CldImage
+                          width="100"
+                          height="100"
+                          src={application?.user?.profile_picture}
+                          alt="Description of my image"
+                        />
+                      ) : (
+                        <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] bg-red-800"></div>
+                      )}
+                    </div>
                     <div className="flex h-[100%] flex-col justify-between">
                       <h1 className="font-sans text-[16px]/[100%] font-normal text-Black2">
                         {application.user?.full_name}

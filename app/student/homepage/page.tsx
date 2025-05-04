@@ -6,12 +6,12 @@ import Footer1 from "../../Components/Footer1";
 import { useRouter } from "next/navigation";
 import { useApplicationContext } from "@/contexts/applicationContext";
 import { useJobContext } from "@/contexts/jobContext";
+import { CldImage } from "next-cloudinary";
 
 export default function StudentHomePage() {
   const router = useRouter();
   const { getJobs } = useJobContext();
   const [jobs, setJobs] = useState<{ title: string; results?: any[] }[]>([]);
-  console.log("fetch: ",jobs);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -37,10 +37,21 @@ export default function StudentHomePage() {
       <div className="px-[3%] py-[1%]">
         <Header1 />
         <SearchBar />
-        <div className="mt-[21px] flex row">
+        <div className="mt-[21px] grid grid-cols-3 gap-[10px]">
           {jobs.map((job: any, index: number) => (
             <div key={index} className="flex max-w-[432px] flex-row items-center rounded-[15px] p-[18px] shadow-custom2 mr-3">
-              <div className="mr-[12px] h-[125px] w-[125px] rounded-[12px] bg-Gray1 bg-opacity-30"></div>
+              <div className="mr-[12px] h-[125px] w-[125px] rounded-[12px] overflow-hidden bg-White">
+                {job?.company?.profile_picture ? (
+                  <CldImage
+                    width="125"
+                    height="125"
+                    src={job?.company?.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="mr-[12px] h-[125px] w-[125px] rounded-[12px] bg-Gray1 bg-opacity-30"></div>
+                )}
+              </div>
               <div>
                 <h1 className="mb-[4px] font-sans text-[16px]/[120%] text-Black2">
                   {job.title}
@@ -61,25 +72,14 @@ export default function StudentHomePage() {
                     />
                   </svg>
                   <p className="font-sans text-[16px]/[80%] text-Gray1">
-                    {job.company?.company_industry}
+                    {job.company?.company_name}
                   </p>
                 </div>
-                <div className="">
-                  <div className="my-[6px] flex max-w-[79px] flex-row items-center rounded-[6px] bg-Green2 px-[15px] py-[6px]">
-                    <div className="h-[10px] w-[10px] rounded-full bg-Green1"></div>
-                    <p className="ml-[5px] font-sans text-[12px]/[120%] text-Green1">
-                    Hiring
-                    </p>
-                  </div>
-                  <div className="my-[6px] flex max-w-[150px] flex-row items-center rounded-[6px] bg-Red2 px-[15px] py-[6px]">
-                    <div className="h-[10px] w-[10px] rounded-full bg-Red1"></div>
-                    <p className="ml-[5px] font-sans text-[12px]/[120%] text-Red1">
-                    Not Hiring
-                    </p>
-                  </div>
-                </div>
+                <p className="text-xs leading-snug text-Gray1 font-sans line-clamp-2">
+                  {job.description?.slice(0, 100)}...
+                </p>
                 <div className="flex flex-row" >
-                  <button className="mt-[1px] rounded-[999px] border-[2px] border-PriGold px-[24px] py-[10px] font-sans text-[12px]/[120%] text-PriGold">
+                  <button onClick={() => handleClick(job.id)} className="mt-[1px] rounded-[999px] border-[2px] border-PriGold px-[24px] py-[10px] font-sans text-[12px]/[120%] text-PriGold">
                 View Details
                   </button>
                   <button onClick={() => handleClick(job.id)} className="mt-[1px] rounded-[999px] px-[24px] py-[10px] font-sans text-[12px]/[120%] text-GoldenWhite bg-PriGold ml-2">

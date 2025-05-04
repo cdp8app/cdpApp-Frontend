@@ -123,8 +123,6 @@ export default function StudentProfilePage() {
           });
         }
 
-        console.log("Profile: ", profile);
-
         const formattedSkills = profile?.skills?.split(",").map((skill: string) => skill.trim()) || [];
 
         if (profile && profile.skills) setSkills(formattedSkills);

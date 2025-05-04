@@ -5,11 +5,12 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useJobContext } from "@/contexts/jobContext";
+import { CldImage } from "next-cloudinary";
 
 export default function CompanyJobsPosted() {
   const router = useRouter();
 
-  const { getJobs, loading, error } = useJobContext();
+  const { getPostedJobs, loading, error } = useJobContext();
   const [section, setSection] = useState(1);
   const [jobs, setJobs] = useState<{ title: string; status: string; results?: any[] }[]>([]);
   const [formError, setFormError] = useState("");
@@ -18,7 +19,7 @@ export default function CompanyJobsPosted() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const fetchedJobs = (await getJobs()) ?? {};
+        const fetchedJobs = (await getPostedJobs()) ?? {};
 
         if (fetchedJobs && typeof fetchedJobs === "object" && Array.isArray((fetchedJobs as any)?.results)) {
           setJobs((fetchedJobs as any).results);
@@ -99,7 +100,18 @@ export default function CompanyJobsPosted() {
               {filteredJobs.map((job: any, index: number) => (
                 <div key={index} className="mt-[20px] flex w-[100%] flex-row items-center justify-between rounded-[18px] bg-GoldenWhite py-[16px] pl-[16px] pr-[55px] shadow-custom2">
                   <div className="flex flex-row items-center">
-                    <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
+                    <div className="mb-[16px] h-[127px] w-[127px] rounded-[12px] overflow-hidden bg-White">
+                      {job?.company?.profile_picture ? (
+                        <CldImage
+                          width="120"
+                          height="120"
+                          src={job?.company?.profile_picture}
+                          alt="Description of my image"
+                        />
+                      ) : (
+                        <div className="mb-[16px] h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
+                      )}
+                    </div>
                     <div className="ml-[12px] flex flex-col">
                       <h1 className="mb-[6px] font-sans text-[16px]/[120%]">
                         {job.title}

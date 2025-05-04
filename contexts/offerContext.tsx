@@ -46,6 +46,8 @@ interface OfferContextType {
   loading: boolean;
   error: string | null;
   getOffers: () => Promise<void>;
+  getStudentOffers: () => Promise<void>;
+  getCompanyExtendOffers: () => Promise<void>;
   getOffersById: (offerId: string) => Promise<Offer | null>;
   createOffer: (offerData: any) => Promise<void>;
   updateOffer: (offerId: string, offerData: any) => Promise<void>;
@@ -108,6 +110,56 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } catch (err: any) {
       setError(err.message);
       return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStudentOffers = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/my-offers/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.detail || "Failed to fetch offers");
+      }
+    
+      setOffers(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getCompanyExtendOffers = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/sent-offers/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.detail || "Failed to fetch offers");
+      }
+    
+      setOffers(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -201,6 +253,8 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         loading, 
         error, 
         getOffers, 
+        getStudentOffers,
+        getCompanyExtendOffers,
         getOffersById, 
         createOffer, 
         updateOffer, 

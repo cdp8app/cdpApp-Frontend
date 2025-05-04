@@ -37,7 +37,7 @@ const SetUpJobPage = () => {
               </svg>
                   Post a job
             </button>
-            <p className="">Provide your job details below</p>
+            <p className="text-Gray1 font-sans text-[12px]/[30%] mr-[65%] ">Provide your job details below</p>
           </div>
           <div className="space-x-[16px]" >
             <SetUpJobForm />

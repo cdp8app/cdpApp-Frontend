@@ -39,6 +39,7 @@ interface InternshipContextType {
   loading: boolean;
   error: string | null;
   getInternships: () => Promise<void>;
+  getStudentInternships: () => Promise<void>;
   getInternshipsById: (internshipId: string) => Promise<void>;
   createInternship: (internshipData: any) => Promise<void>;
   updateInternship: (internshipId: string, internshipData: any) => Promise<void>;
@@ -75,6 +76,31 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     } catch (err: any) {
       setError(err.message);
       return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStudentInternships = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/internships/my-internships/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.detail || "Failed to fetch internships");
+      }
+    
+      setInternships(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -193,6 +219,7 @@ export const InternshipProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         loading, 
         error, 
         getInternships, 
+        getStudentInternships,
         getInternshipsById, 
         createInternship, 
         updateInternship, 

@@ -14,9 +14,9 @@ import { CldImage } from "next-cloudinary";
 
 export default function Dashboard() {
   const { user, clearError } = useAuth();
-  const { getInternships } = useInternshipContext();
+  const { getStudentInternships } = useInternshipContext();
   const { getApplications } = useApplicationContext();
-  const { getOffers } = useOfferContext();
+  const { getStudentOffers } = useOfferContext();
   const [internships, setInternships] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
   const [applications, setApplications] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
   const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]);  
@@ -24,9 +24,9 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData  = async () => {
       try {
-        const fetchedInternships = (await getInternships()) ?? {};
+        const fetchedInternships = (await getStudentInternships()) ?? {};
         const fetchApplications = (await getApplications()) ?? {};
-        const fetchOffers = (await getOffers()) ?? {};
+        const fetchOffers = (await getStudentOffers()) ?? {};
  
         if (fetchedInternships && typeof fetchedInternships === "object" && Array.isArray((fetchedInternships as any)?.results)) {
           setInternships((fetchedInternships as any).results);

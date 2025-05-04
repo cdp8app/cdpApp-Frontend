@@ -275,7 +275,7 @@ export default function SetUpStudentProfileForm() {
               </p>
             </div>
           ) : (
-            <div className="mt-4 text-gray-500">!!!</div>
+            <div className="mt-4 text-gray-500"></div>
           )}
         </button>
         <Button3 text="Create Profile" className="text-[16px] font-normal" type="submit" loading={loading} disabled={loading} />
