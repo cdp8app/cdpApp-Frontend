@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
-import "../../../../app/globals.css";
+import "../../../../../app/globals.css";
 import StudentLoginForm from "../StudentAuthPage/StudentLogin/form";
 import StudentRegisterForm from "../StudentAuthPage/StudentRegister/form";
 import Image from "next/image";
-import appleIcon from "../../../../public/Images/Icons/appleIcon.png";
-import googleIcon from "../../../../public/Images/Icons/googleIcon.png";
+import appleIcon from "../../../../../public/Images/Icons/appleIcon.png";
+import googleIcon from "../../../../../public/Images/Icons/googleIcon.png";
 
 const StudentAuthTogglePage = () => {
   const [activeContent, setActiveContent] = useState<1 | 2>(1);
