@@ -8,8 +8,12 @@ import appleIcon from "../../../../public/Images/Icons/appleIcon.png";
 import googleIcon from "../../../../public/Images/Icons/googleIcon.png";
 import { useParams } from "next/navigation";
 
-const StudentAuthTogglePage = () => {
-  // Get the user type from local storage
+type Props = {
+  activeContent: 1 | 2;
+  onToggle: (content: 1 | 2) => void;
+};
+
+const StudentAuthTogglePage = ({ activeContent, onToggle }: Props) => {
 
   const [userType, setUserType] = useState<"student" | "company" | null>(null);
   useEffect(() => {
@@ -19,29 +23,11 @@ const StudentAuthTogglePage = () => {
     }
   }, []);
 
-  console.log("User type:", userType);
-
-  const [activeContent, setActiveContent] = useState<1 | 2>(1);
-  const handleToggle = (content: 1 | 2) => {
-    setActiveContent(content);
-  };
-
-  const params = useParams();
-
-  useEffect(() => {
-    const pageType = params?.userType;
-    if (pageType === "login") {
-      setActiveContent(1);
-    } else if (pageType === "register") {
-      setActiveContent(2);
-    }
-  }, [params]);
-
   return (
     <div className="flex w-[75%] flex-col items-center p-6">
       <div className="hidden lg:block mb-[20px] flex-row space-x-[5px] rounded-[30px] pl-[10px] pr-[10px] bg-Gold3 pb-[12px] pt-[12px]">
         <button
-          onClick={() => handleToggle(1)}
+          onClick={() => onToggle(1)}
           className={`rounded-[30px] px-[50px] py-[9.5px] font-sans text-[16px] transition-colors ${
             activeContent === 1 ? "bg-PriGold text-White" : "text-Gold1"
           } hover:bg-black`}
@@ -50,7 +36,7 @@ const StudentAuthTogglePage = () => {
         </button>
 
         <button
-          onClick={() => handleToggle(2)}
+          onClick={() => onToggle(2)}
           className={`rounded-[30px] px-[50px] py-[9.5px] font-sans text-[16px] transition-colors ${
             activeContent === 2 ? "bg-PriGold text-White" : "text-Gold1"
           } hover:bg-black`}
@@ -71,7 +57,7 @@ const StudentAuthTogglePage = () => {
                 <span> </span>
                 <span>
                   <button
-                    onClick={() => handleToggle(2)}
+                    onClick={() => onToggle(2)}
                     className="font-sans text-[16px] font-semibold text-Gold1"
                   >
                     Register here!
@@ -87,7 +73,7 @@ const StudentAuthTogglePage = () => {
                 </h6>
               </button>
             </div> */}
-            <h1 className="my-6 w-[100%] text-center font-sans text-[16px] font-medium text-Gray1">
+            {/* <h1 className="my-6 w-[100%] text-center font-sans text-[16px] font-medium text-Gray1">
               or continue with
             </h1>
             <div className="w-[100%] justify-center text-center">
@@ -101,7 +87,7 @@ const StudentAuthTogglePage = () => {
               <button className="ml-[19.94px]">
                 <Image src={googleIcon} alt="GoogleLogo" className="" />
               </button>
-            </div>
+            </div> */}
           </div>
         ) : (
           <div className="items-center" id="register-section">
@@ -114,7 +100,7 @@ const StudentAuthTogglePage = () => {
                 <span> </span>
                 <span>
                   <button
-                    onClick={() => handleToggle(1)}
+                    onClick={() => onToggle(1)}
                     className="font-sans text-[16px] font-semibold text-Gold1"
                   >
                     Login here!
@@ -123,7 +109,7 @@ const StudentAuthTogglePage = () => {
               </p>
             </div>
             <StudentRegisterForm />
-            <h1 className="mb-[15px] mt-6 w-[100%] text-center font-sans text-[16px] font-medium text-Gray1">
+            {/* <h1 className="mb-[15px] mt-6 w-[100%] text-center font-sans text-[16px] font-medium text-Gray1">
               or continue with
             </h1>
             <div className="w-[100%] justify-center text-center">
@@ -137,7 +123,7 @@ const StudentAuthTogglePage = () => {
               <button className="ml-[19.94px]">
                 <Image src={googleIcon} alt="GoogleLogo" className="" />
               </button>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
