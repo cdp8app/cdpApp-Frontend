@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Logo from "@/app/Components/Logo";
-import StudentAuthTogglePage from "@/app/user/auth/toggle/page";
+import StudentAuthTogglePage from "@/app/Components/StudentAuthTogglePage";
 import "../../../app/globals.css";
 
 export default function StudentAuthPage() {
