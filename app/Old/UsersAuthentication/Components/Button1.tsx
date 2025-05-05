@@ -1,7 +1,7 @@
 // components/Button1.tsx
 "use client";
 import React from "react";
-import "../../../app/globals.css";
+import "../../../../app/globals.css";
 import Spinner from "@/app/Components/Spinner";
 
 interface Button1Props {

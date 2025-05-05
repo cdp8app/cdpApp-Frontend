@@ -1,5 +1,5 @@
 "use client";
-import "../../../app/globals.css";
+import "../../../../app/globals.css";
 // import ResumeUploadButton from "./ResumeUpload/page";
 // import SkillsButton from "./SelectDropdown";
 
