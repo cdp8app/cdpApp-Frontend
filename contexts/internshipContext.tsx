@@ -14,7 +14,7 @@ export interface Internship {
     duration: string;
     stipend: string;
         student: string;
-        job?: {
+        job_details?: {
           title: string;
           location?: string;
           description?: string;
@@ -24,9 +24,10 @@ export interface Internship {
 //     startDate: string;
 //     endDate: string;
 //   status: string;
-company?: {
+company_details?: {
   company_name?: string;
   company_industry?: string;
+  profile_picture?: string;
 };
 application?: string;
 status: string;

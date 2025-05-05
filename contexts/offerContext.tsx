@@ -24,16 +24,23 @@ export interface Offer {
     company_industry: string;
   };
   company_details?: {
+    id: string;
     company_name?: string;
     company_industry?: string;
+    profile_picture?: string;
   };
   application_details?: {
+    id: string;
     job?: {
+      id: string;
       location?: string;
       description?: string;
       requirements?: string;
       deadline?: string;
     };
+  };
+  student_details?: {
+    id: string;
   };
   status: string;
   createdAt: string;

@@ -1,12 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { CldImage } from "next-cloudinary";
 
 import Header1 from "@/app/Components/Header1";
 import Button7 from "@/app/user/Components/Button7";
 import Footer1 from "@/app/Components/Footer1";
 import Logout from "@/app/user/auth/logout/page";
 import { Offer, useOfferContext } from "@/contexts/offerContext";
+import { Application, useApplicationContext } from "@/contexts/applicationContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useInternshipContext } from "@/contexts/internshipContext";
+import FormAlert from "@/app/Components/FormAlert";
 
 export default function StudentOfferInformation() {
   const params = useParams();
@@ -15,6 +20,9 @@ export default function StudentOfferInformation() {
   const offerId = Array.isArray(params.id) ? params.id[0] : params.id;
   const [offer, setOffer] = useState<Offer | null>(null);
   const { getOffersById, updateOffer, error } = useOfferContext();
+  const { getApplicationsById, updateApplication } = useApplicationContext();
+  const { user } = useAuth();
+  const { createInternship } = useInternshipContext();
   
   const [formError, setFormError] = useState("");
   
@@ -31,6 +39,32 @@ export default function StudentOfferInformation() {
     fetchOfferDetails();
   }, []);
 
+  const handleAcceptOffer = async () => {
+    try {
+      const internshipData = {
+        company: offer?.company_details?.id,
+        student: offer?.student_details?.id,
+        job: offer?.application_details?.job?.id,
+        application: offer?.application_details?.id,
+        offer: offer?.id
+      };
+
+      if (offer?.application_details?.id) {
+        await updateApplication(offer?.application_details?.id, { status: "accepted" });
+        await createInternship(internshipData);
+
+        if (offer?.id) {
+          await updateOffer(offer.id, { status: "accepted" });
+        }
+
+        router.push("/student/offers");
+      }
+    } catch (err: any) {
+      setFormError(err.message || "Failed to extend offer.");
+    }
+  };
+
+
   return (
     <div className="flex flex-col">
       <div className="p-[2%]">
@@ -38,7 +72,18 @@ export default function StudentOfferInformation() {
         <div className="mb-[80px] flex w-[100%] flex-row justify-between rounded-[30px]">
           <div className="flex w-[20%] flex-col items-center space-y-[200px] py-[1%]">
             <div className="flex flex-col items-center justify-center">
-              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] overflow-hidden bg-White">
+                {offer?.company_details?.profile_picture ? (
+                  <CldImage
+                    width="134"
+                    height="134"
+                    src={offer?.company_details?.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+                )}
+              </div>
               <h1 className="mb-[6px] text-center font-sans text-[27px]/[120%] font-bold">
                 {offer?.company_details?.company_name}
               </h1>
@@ -53,6 +98,18 @@ export default function StudentOfferInformation() {
             <Logout/>
           </div>
           <div className="w-[75%]">
+            {(formError || error) && (
+              <FormAlert
+                message={(formError || error) ?? ""}
+                type="error"
+                duration={5000}
+                onClose={() => {
+                  if (formError) {
+                    setFormError("");
+                  }
+                }}
+              />
+            )}
             <h1 className="mb-[21px] font-sans text-[36px]/[120%] text-Gold1">
               Offer information
             </h1>
@@ -145,17 +202,17 @@ export default function StudentOfferInformation() {
                 End Internship
                 </button>
                 <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
-                Start Internship
+                Rate company
                 </button>
               </div>
             )}
             {offer?.status === "pending" && (
               <div className="mt-[21px] flex flex-row">
                 <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
-                Decline interview
+                Decline offer
                 </button>
-                <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
-                Interview schedule
+                <button onClick={() => handleAcceptOffer()} className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
+                Accept offer
                 </button>
               </div>
             )}

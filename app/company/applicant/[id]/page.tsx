@@ -14,7 +14,6 @@ import { Application, useApplicationContext } from "@/contexts/applicationContex
 import { useOfferContext } from "@/contexts/offerContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useReviewContext } from "@/contexts/reviewContext";
-import { useInternshipContext } from "@/contexts/internshipContext";
 import { CldImage } from "next-cloudinary";
 
 export default function CompanyJobApplicantInfo() {
@@ -26,7 +25,6 @@ export default function CompanyJobApplicantInfo() {
   const { getApplicationsById, updateApplication, error } = useApplicationContext();
   const { getOffers, updateOffer } = useOfferContext();
   const { createOffer } = useOfferContext();
-  const { createInternship } =useInternshipContext();
   const [formError, setFormError] = useState("");
   const [interviewDate, setInterviewDate] = useState("");
   const [interviewTime, setInterviewTime] = useState("");
@@ -39,6 +37,7 @@ export default function CompanyJobApplicantInfo() {
   const [isRateStudentsModalOpen, setIsRateStudentsModalOpen] = useState(false);
   const [ offers, setOffers ] = useState<{ id: string }[]>([]);
   const { createReview } = useReviewContext();
+
   
   useEffect(() => {
     const fetchApplicationDetails = async () => {
@@ -82,7 +81,7 @@ export default function CompanyJobApplicantInfo() {
         application: applicationId,
         interview_date: formattedDate,
         interview_time: formattedTime,
-        status: "pending"
+        status: "interview"
       };
   
       if (applicationId) {
@@ -101,24 +100,13 @@ export default function CompanyJobApplicantInfo() {
 
   const handleExtendOffer = async () => {
     try {
-      const job = application?.job || null;
-      const internshipData = {
-        company: user?.id,
-        student: application?.user?.id,
-        job: application?.job?.id,
-        application: applicationId
-      };
-
       if (applicationId) {
-        // First update the application status to "accepted"
-        await updateApplication(applicationId, { status: "accepted" });
-        await createInternship(internshipData);
 
         const offer = offers.find((offer) => offer.id === application?.id);
         if (offer) {
-          await updateOffer(offer.id, "accepted");
+          await updateOffer(offer.id, "pending");
         }
-  
+
         // Refresh application
         const updatedApp = await getApplicationsById(applicationId);
         setApplication(updatedApp);

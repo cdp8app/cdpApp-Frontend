@@ -4,6 +4,7 @@ import Header1 from "@/app/Components/Header1";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useOfferContext } from "@/contexts/offerContext";
+import { CldImage } from "next-cloudinary";
 
 export default function StudentOffers() {
   const router = useRouter();
@@ -101,7 +102,18 @@ export default function StudentOffers() {
             {filteredOffers.map((offer: any, index: number) => (
               <div key={index} className="flex w-[100%] flex-row items-center justify-between rounded-[18px] bg-GoldenWhite py-[16px] pl-[16px] pr-[55px] shadow-custom2">
                 <div className="flex flex-row items-center">
-                  <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
+                  <div className="h-[127px] w-[127px] rounded-[12px] overflow-hidden bg-White">
+                    {offer?.company_details?.profile_picture ? (
+                      <CldImage
+                        width="127"
+                        height="127"
+                        src={offer?.company_details?.profile_picture}
+                        alt="Description of my image"
+                      />
+                    ) : (
+                      <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
+                    )}
+                  </div>
                   <div className="ml-[12px] flex flex-col">
                     <h1 className="mb-[6px] font-sans text-[16px]/[120%]">
                       {offer?.job?.title}

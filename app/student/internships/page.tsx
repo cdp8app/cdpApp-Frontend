@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useInternshipContext } from "@/contexts/internshipContext";
+import { CldImage } from "next-cloudinary";
 
 export default function StudentInternships() {
   const router = useRouter();
@@ -103,10 +104,21 @@ export default function StudentInternships() {
             {filteredInternships.map((internship: any, index: number) => (
               <div key={index} className="flex w-[100%] flex-row items-center justify-between rounded-[18px] bg-GoldenWhite py-[16px] pl-[16px] pr-[55px] shadow-custom2">
                 <div className="flex flex-row items-center">
-                  <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
+                  <div className="h-[127px] w-[127px] rounded-[12px] overflow-hidden bg-White">
+                    {internship?.company_details?.profile_picture ? (
+                      <CldImage
+                        width="127"
+                        height="127"
+                        src={internship?.company_details?.profile_picture}
+                        alt="Description of my image"
+                      />
+                    ) : (
+                      <div className="h-[127px] w-[127px] rounded-[12px] bg-Gray3"></div>
+                    )}
+                  </div>
                   <div className="ml-[12px] flex flex-col">
                     <h1 className="mb-[6px] font-sans text-[16px]/[120%]">
-                      {internship?.job?.title}
+                      {internship?.job_details?.title}
                     </h1>
                     <div className="flex flex-row items-center">
                       <svg
@@ -125,7 +137,7 @@ export default function StudentInternships() {
                       </svg>
 
                       <h1 className="font-sans text-[16px]/[120%] text-Gray2">
-                        {internship?.company?.company_industry}
+                        {internship?.company_details?.company_industry}
                       </h1>
                     </div>
                     <button 
