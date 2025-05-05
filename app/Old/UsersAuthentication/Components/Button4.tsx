@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import "../../../app/globals.css";
+import "../../../../app/globals.css";
 
 interface Button4Props {
   text: string;
