@@ -2,7 +2,10 @@
 
 import { useApplicationContext } from "@/contexts/applicationContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { useState } from "react";
+import Image from "next/image";
+import { useRef, useState } from "react";
+import { CldImage } from "next-cloudinary";
+import { useStorageContext } from "@/contexts/storageContext";
 // import { FaUpload } from "react-icons/fa";
 
 // Define or import the Job type
@@ -13,6 +16,7 @@ interface Job {
     id: string;
     company_name: string;
     company_industry: string;
+    profile_picture: string;
   };
 }
 
@@ -22,19 +26,35 @@ interface ApplyModalProps {
   }
 
 const ApplyModal: React.FC<ApplyModalProps> = ({ onClose, job  }) => {
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [message, setMessage] = useState("");
+  const [resume, setResume] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const { user } = useAuth();
   const [formError, setFormError] = useState("");
-
-  console.log("User from model: ", user);
-  console.log("Job from model: ", job);
-
+  const { uploadFile } = useStorageContext();
   const { createApplication, getApplications, error } = useApplicationContext();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setResumeFile(e.target.files[0]);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {      
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File is too large! Max size is 5MB.");
+      } else {
+        setResume(file);
+      }
+    }
+    if (file) {
+      setFileName(file.name);
+    } else {
+      setFileName(null);
+    }
+  };
+
+  const triggerFileInput = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
@@ -42,14 +62,25 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ onClose, job  }) => {
     e.preventDefault();
     setFormError("");
 
+    let resumeUrl = "";
+
+    if (resume) {
+      const uploadResult = await uploadFile(resume);
+      if (uploadResult && typeof uploadResult === "object" && "file_url" in uploadResult) {
+        resumeUrl = uploadResult.file_url;
+      } else {
+        setFormError("Failed to upload resume.");
+      }
+    } 
+
     try {
       const applicationData = {
-        job: job.id,
+        job_id: job.id,
         user: user?.id,
-        // cover_letter: string,
+        cover_letter: message,
         // location: user?.location,
         description: message,
-        //   resume: string
+        resume: resumeUrl || undefined,
         employer: job.company?.id
       };
 
@@ -72,7 +103,18 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ onClose, job  }) => {
 
         {/* Company Info */}
         <div className="flex items-center gap-4 bg-GoldenWhite rounded-[12px] p-4 mb-6">
-          <div className="w-14 h-14 bg-gray-300 rounded-md" />
+          <div className="mb-[16px] h-[120px] w-[125px] rounded-[67px]overflow-hidden bg-White">
+            {job?.company?.profile_picture ? (
+              <CldImage
+                width="120"
+                height="120"
+                src={job?.company?.profile_picture}
+                alt="Description of my image"
+              />
+            ) : (
+              <div className="mb-[16px] h-[120px] w-[120px] rounded-[12px] bg-Gray3"></div>
+            )}
+          </div>
           <div>
             <div className="text-black font-semibold">{job.company?.company_name}</div>
             <div className="text-Gray1 text-sm">{job.company?.company_industry}</div>
@@ -82,20 +124,48 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ onClose, job  }) => {
           </div>
         </div>
 
-        {/* Resume Upload */}
-        {resumeFile ? (
-          <div className="flex items-center gap-2 mb-4">
-            <img src="/pdf-icon.png" alt="PDF" className="w-6 h-6" />
-            <span className="text-black">My resume</span>
-            <span className="text-sm text-gray-500">(Doc type: {resumeFile.type})</span>
-          </div>
-        ) : null}
+        <div className="flex w-[100%] flex-col items-center justify-center">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
 
-        <label className="flex flex-col items-center justify-center border-2 border-dashed border-Gold2 rounded-[10px] p-4 cursor-pointer text-Gold1 mb-6 hover:bg-GoldenWhite">
-          {/* <FaUpload className="text-2xl mb-2" /> */}
-          <span>Upload a resume</span>
-          <input type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} className="hidden" />
-        </label>
+          <button
+            onClick={triggerFileInput}
+            type="button"
+            className="mb-[20px] flex w-[100%] flex-col items-center rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite bg-white px-[18px] py-[20px] font-sans text-[12px]/[120%] font-semibold text-Gray1 outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
+          >
+            <div className="flex h-[75.58px] w-[76px] items-center justify-center rounded-[60px] bg-Gold3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                stroke="currentColor"
+                className="size-5 text-Black1"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+                />
+              </svg>
+            </div>
+        Upload your resume
+            <span className="font-normal text-PriGold">MAX SIZE: 5MB</span>
+            {fileName ? (
+              <div className="mt-[10px] text-gray-700">
+                <p>
+              Uploaded File: <span className="font-bold">{fileName}</span>
+                </p>
+              </div>
+            ) : (
+              <div className="mt-4 text-gray-500"></div>
+            )}
+          </button>
+        </div>
 
         {/* Message Box */}
         <textarea

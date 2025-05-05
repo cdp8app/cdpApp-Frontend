@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { CldImage } from "next-cloudinary";
 
 import { useJobContext } from "@/contexts/jobContext";
 
@@ -41,10 +42,21 @@ export default function StudentJobsView() {
       <div className="px-[3%] py-[1%]">
         <Header1 />
         <SearchBar />
-        <div className="mt-[21px]">
+        <div className="mt-[21px] grid grid-cols-2 gap-4 mb-6">
           {jobs.map((job: any, index: number) => (
             <div key={index} className="flex max-w-[627px] flex-row items-center rounded-[15px] p-[18px] shadow-custom2">
-              <div className="mr-[12px] h-[145px] w-[145px] min-w-[145px] rounded-[12px] bg-Gray1 bg-opacity-30"></div>
+              <div className="mr-[12px] h-[145px] w-[145px] min-w-[145px] overflow-hidden bg-White">
+                {job?.company?.profile_picture ? (
+                  <CldImage
+                    width="120"
+                    height="120"
+                    src={job?.company?.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="mr-[12px] h-[145px] w-[145px] min-w-[145px] rounded-[12px]  bg-Gray1"></div>
+                )}
+              </div>
               <div>
                 <h1 className="mb-[4px] font-sans text-[16px]/[120%] text-Black2">
                   {job.title}
@@ -69,12 +81,12 @@ export default function StudentJobsView() {
                   </p>
                 </div>
                 <p className="font-sans text-Gray2 mt-[5px] text-[12px]/[120%] max-w-[80%]">
-                  {job.description}
+                  {job.description?.slice(0,100)}...
                 </p>
                 <button onClick={() => handleClick(job.id)} className="mt-[5px] rounded-[999px] border-[2px] border-PriGold px-[24px] py-[10px] font-sans text-[12px]/[120%] text-PriGold">
                 View details
                 </button>
-                <button className="mt-[5px] rounded-[999px] border-[2px] border-PriGold px-[24px] py-[10px] font-sans text-[12px]/[120%] text-PriGold">
+                <button onClick={() => handleClick(job.id)} className="mt-[5px] rounded-[999px] border-[2px] border-PriGold px-[24px] py-[10px] font-sans text-[12px]/[120%] text-PriGold">
                 Apply
                 </button>
               </div>

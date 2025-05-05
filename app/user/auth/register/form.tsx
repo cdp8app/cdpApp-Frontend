@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
-// import { useRouter } from "next/navigation";
-import Link from "next/link";
+
+import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/./contexts/AuthContext";
+
 import Button1 from "../../Components/Button1";
 import Label2 from "../../Components/Label2";
-import Image from "next/image";
+import SelectDropDown from "@/app/Components/SelectDropdown";
+import FormAlert from "@/app/Components/FormAlert";
+
 
 export default function StudentRegisterForm() {
   const [role, setRole] = useState("");
@@ -19,7 +22,6 @@ export default function StudentRegisterForm() {
   const [debugInfo, setDebugInfo] = useState("");
   
   const { register, error, loading, clearError } = useAuth();
-  // const router = useRouter();
 
   const validateForm = () => {    
     if (!role) {
@@ -49,6 +51,15 @@ export default function StudentRegisterForm() {
     
     setFormError("");
     return true;
+  };
+
+  const options = [
+    { value: "Student" },
+    { value: "Company"},
+  ];
+
+  const handleSelect = (value: string) => {
+    setRole(value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,16 +107,18 @@ export default function StudentRegisterForm() {
     <form className="mt-[12.96px] flex flex-col justify-start" onSubmit={handleSubmit}>
 
       {(formError || error) && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md  text-center">
-          {formError || error}
-          <button 
-            type="button"
-            onClick={() => {formError ? setFormError("") : clearError();}} 
-            className="float-right text-red-700"
-          >
-            ×
-          </button>
-        </div>
+        <FormAlert
+          message={(formError || error) ?? ""}
+          type="error"
+          duration={5000}
+          onClose={() => {
+            if (formError) {
+              setFormError("");
+            } else {
+              clearError();
+            }
+          }}
+        />
       )}
 
       {/* {debugInfo && (
@@ -183,8 +196,7 @@ export default function StudentRegisterForm() {
         text="Role"
         className="text-start font-sans text-[13px] font-medium text-Gold0"
       />
-      <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
-        {/* <Image src={emailIcon} alt="Phone" className="mr-[8px] w-[22.18px] h-[17.31px]" /> */}
+      {/* <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
         <input
           placeholder="Are you a student or company?"
           className="font-sans text-[16px] placeholder-Gray1 outline-none"
@@ -194,7 +206,14 @@ export default function StudentRegisterForm() {
           onChange={(e) => setRole(e.target.value)}
           required
         />
-      </div>
+      </div> */}
+
+      <SelectDropDown
+        options={options}
+        selectedOption={role}
+        onSelect={handleSelect}
+        text="Are you a student or company?"
+      />
 
       {/* <div className="mb-6">
         <Label2 text="Email"></Label2>
@@ -239,7 +258,7 @@ export default function StudentRegisterForm() {
         </svg>
         <input
           placeholder="Enter your email address"
-          className="font-sans text-[16px] placeholder-Gray1 outline-none"
+          className="w-full font-sans text-[16px] placeholder-Gray1 outline-none"
           id="email"
           type="email"
           value={email}
@@ -282,7 +301,6 @@ export default function StudentRegisterForm() {
         className="text-start font-sans text-[13px] font-medium text-Blue4"
       />
       <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
-        {/* <Image src={passwordIcon} alt="password" className="mr-[8px] w-[16px] h-[20px]" /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -299,20 +317,20 @@ export default function StudentRegisterForm() {
         </svg>
         <input
           placeholder="Create password"
-          className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
+          className="w-full font-sans text-[16px] placeholder-Gray1 outline-none"
           id="password"
           type={showPassword ? "text" : "password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        {/* <button
+        <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500"
+          className=" right top-2/2 transform -translate-y-2/2 text-gray-500"
         >
-          {showPassword ? "Hide" : "Show"}
-        </button> */}
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
       </div>
 
       {/* <div className="mb-6">
@@ -369,17 +387,17 @@ export default function StudentRegisterForm() {
           type={showConfirmPassword ? "text" : "password"}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-[95%] font-sans text-[16px] placeholder-Gray1 outline-none"
+          className="w-full font-sans text-[16px] placeholder-Gray1 outline-none"
           placeholder="Confirm your password"
           required
         />
-        {/* <button
+        <button
           type="button"
           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500"
+          className="right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500"
         >
-          {showConfirmPassword ? "Hide" : "Show"}
-        </button> */}
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
       </div>
 
       {/* <Button1 

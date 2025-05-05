@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/./contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import { CldImage } from "next-cloudinary";
+import { useJobContext } from "@/contexts/jobContext";
 
 import Link from "next/link";
 import EditAboutModal from "../../Components/Modals/EditAboutModal";
@@ -14,45 +16,83 @@ import Logout from "@/app/user/auth/logout/page";
 export default function CompanyProfile() {
 
   const router = useRouter();
+  const [formError, setFormError] = useState("");
 
-  const { getCompanyProfile, loading, error, clearError } = useAuth();
+  const { user, updateProfile, getCompanyProfile, loading, error, clearError } = useAuth();
+  const { getPostedJobs } = useJobContext();
   const [company_name, setCompanyName] = useState<string>("");
   const [company_industry, setCompanyIndustry] = useState<string>("");
   const [aboutText, setAboutText] = useState<string>("");
+  const [profilePicture, setProfilePicture] = useState("");
+  const [phone_number, setPhoneNumber] = useState<string>("");
+  const [company_website, setCompanyWebsite] = useState<string>("");
+  const [company_size, setCompanySize] = useState<string[]>([]);
+  const [company_linkedin, setCompanyLinkedin] = useState<string>("");
+  const [company_facebook, setCompanyFacebook] = useState<string>("");
+  const [company_twitter, setCompanyTwitter] = useState<string>("");
+  const [company_instagram, setCompanyInstagram ] = useState<string>("");
   const [isAboutModalOpen, setIsAboutModalOpen] = useState<boolean>(false);
+  const [jobs, setJobs] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
 
   const openAboutModal = () => setIsAboutModalOpen(true);
   const closeAboutModal = () => setIsAboutModalOpen(false);
 
-  const changeAboutText = (newText: string) => {
+  const changeAboutText = async (newText: string) => {
     setAboutText(newText);
     closeAboutModal();
+
+    if (!user?.id || !user?.email) return;
+
+    try {
+      await updateProfile({
+        id: user.id,
+        email: user.email,
+        userType: "student",
+        bio: newText,
+      });
+    } catch (err: any) {
+      setFormError(`Failed to update bio: ${err}`);
+    }
   };
+
+  useEffect(() => {
+    const fetchData  = async () => {
+      try {
+        const fetchedJobs = (await getPostedJobs()) ?? {};
+   
+        if (fetchedJobs && typeof fetchedJobs === "object" && Array.isArray((fetchedJobs as any)?.results)) {
+          setJobs((fetchedJobs as any).results);
+        }
+      } catch (error) {
+        setFormError(`Failed to fetch jobs, ${error}`);
+      }
+    };
+    fetchData ();
+  }, []);
+
+  const allJobsCount = jobs?.length || 0;
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const profile = await getCompanyProfile();
 
-        console.log("Profile: ", profile);
-
         if (profile && profile.company_name) setCompanyName(profile.company_name);
         if (profile && profile.company_industry) setCompanyIndustry(profile.company_industry);
+        if (profile && profile.company_size) setCompanySize(profile.company_size.split(",").map((size: string) => size.trim()));
         if (profile && profile.company_description) setAboutText(profile.company_description);
-        // if (profile && profile.phone_number)
-        // if (profile && profile.company_facebook)
-        // if (profile && profile.company_instagram)
-        // if (profile && profile.company_linkedin)
-        // if (profile && profile.company_twitter)
-
-        // const formattedSkills = profile?.skills?.split(",").map((skill: string) => skill.trim()) || [];
-
-        // if (profile && profile.skills) setSkills(formattedSkills);
-        
+        if (profile && profile.phone_number) setPhoneNumber(profile.phone_number);
+        if (profile && profile.company_facebook) setCompanyFacebook(profile.company_facebook);
+        if (profile && profile.company_instagram) setCompanyInstagram(profile.company_instagram);
+        if (profile && profile.company_linkedin) setCompanyLinkedin(profile.company_linkedin);
+        if (profile && profile.company_twitter) setCompanyTwitter(profile.company_twitter);
+        if (profile && profile.company_website) setCompanyWebsite(profile.company_website);
+        if (profile && profile.profile_picture) setProfilePicture(profile.profile_picture);
+        if (profile && profile.phone_number) setPhoneNumber(profile.phone_number);
   
         // Set other profile data as needed (e.g., name, profile picture)
-      } catch (error) {
-        console.error("Failed to fetch profile", error);
+      } catch (error: any) {
+        setFormError(`Failed to fetch profile, ${error}`);
       }
     };
     fetchProfile();
@@ -64,9 +104,9 @@ export default function CompanyProfile() {
         <Header1 />
         <div className="px-[6%]">
           <div className="mb-[18px] flex flex-row justify-between border-b-[1px] border-Gold2">
-            <Link
+            <button
               className="flex flex-row items-center py-[12px] font-sans text-[27px]/[120%] font-normal text-Gold1"
-              href={"#"}
+              onClick={() => router.back()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -83,12 +123,25 @@ export default function CompanyProfile() {
                 />
               </svg>
               Your Profile
-            </Link>
+            </button>
             <Logout/>
           </div>
           <div className="mb-[18px] flex w-[100%] flex-row items-center justify-between rounded-[16px] border-[1px] border-PriGold bg-gradient-to-r p-[30px]">
             <div className="flex flex-row items-center">
-              <div className="mr-[24px] h-[120px] w-[120px] rounded-[60px] bg-White"></div>
+              <div className="mr-[24px] h-[120px] w-[120px] rounded-[60px] overflow-hidden bg-White">
+                {profilePicture ? (
+                  <CldImage
+                    width="120"
+                    height="120"
+                    src={profilePicture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="h-full w-full bg-White flex items-center justify-center text-gray-400">
+          No Image
+                  </div>
+                )}
+              </div>
               <div>
                 <h1 className="mb-1 font-sans text-[36px]/[100%] font-semibold text-GoldenWhite">
                   {company_name}
@@ -113,7 +166,7 @@ export default function CompanyProfile() {
               </div>
             </div>
             <div>
-              <button className="rounded-[999px] border-2 border-Black2 px-[80px] py-[18px] font-sans text-[16px]/[120%] text-Black2">
+              <button onClick={() => router.push("/settings")} className="rounded-[999px] border-2 border-Black2 px-[80px] py-[18px] font-sans text-[16px]/[120%] text-Black2">
                 Profile settings
               </button>
             </div>
@@ -188,7 +241,7 @@ export default function CompanyProfile() {
                 Jobs posted
               </h1>
               <h1 className="ml-[5px] font-sans text-[52px]/[120%] font-bold text-Gold1">
-                19
+                {allJobsCount}
               </h1>
             </div>
             <button onClick={() => router.push("/company/job/create")} className="mt-[12px] flex max-w-[280px] justify-center justify-self-start rounded-[999px] bg-PriGold px-[60px] py-[14px] font-sans text-GoldenWhite">
@@ -252,7 +305,7 @@ export default function CompanyProfile() {
                 Company Size
               </h1>
               <h1 className="ml-[5px] font-sans text-[36px]/[120%] font-normal text-Gold1">
-                21-50
+                {company_size}
               </h1>
             </div>
           </div>
@@ -300,7 +353,7 @@ export default function CompanyProfile() {
                   </svg>
 
                   <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    companyemail@domain.com
+                    {user?.email}
                   </h1>
                 </div>
                 <div className="flex flex-row items-center pb-[10px]">
@@ -320,7 +373,7 @@ export default function CompanyProfile() {
                   </svg>
 
                   <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    +234 812 345 6789
+                    {phone_number}
                   </h1>
                 </div>
                 <div className="flex flex-row items-center pb-[10px]">
@@ -340,7 +393,7 @@ export default function CompanyProfile() {
                   </svg>
 
                   <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    2017-2025
+                    {company_website}
                   </h1>
                 </div>
                 <Button5
@@ -394,7 +447,7 @@ export default function CompanyProfile() {
                     </svg>
 
                     <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                      https://linkedprofilelink.com
+                      {company_linkedin}
                     </h1>
                   </div>
                   <div className="flex flex-row items-center pb-[10px]">
@@ -414,7 +467,27 @@ export default function CompanyProfile() {
                     </svg>
 
                     <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                      https://linkedprofilelink.com
+                      {company_facebook}
+                    </h1>
+                  </div>
+                  <div className="flex flex-row items-center pb-[10px]">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="size-6 text-Gold0"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"
+                      />
+                    </svg>
+
+                    <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
+                      {company_twitter}
                     </h1>
                   </div>
                   <div className="flex flex-row items-center pb-[10px]">
@@ -434,7 +507,7 @@ export default function CompanyProfile() {
                     </svg>
 
                     <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                      https://linkedprofilelink.com
+                      {company_instagram}
                     </h1>
                   </div>
                   <Button5

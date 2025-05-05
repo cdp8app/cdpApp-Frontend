@@ -1,6 +1,6 @@
 "";
 "use client";
-import Button2 from "@/app/UsersAuthentication/Components/Button2";
+import Button2 from "@/app/user/Components/Button2";
 
 export default function SuccessfulRegistrationPage() {
   return (

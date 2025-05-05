@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import EditAboutModal from "../Components/Modals/EditAboutModal";
+import EditAboutModal from "@/app/Components/Modals/EditAboutModal";
 import Button5 from "../UsersAuthentication/Components/Button5";
-import ResumeUploadButton2 from "../Components/ResumeUpload2";
+import ResumeUploadButton2 from "@/app/Components/ResumeUpload2";
 import Image from "next/image";
-import Portfolio from "../../public/Images/Portfolio.png";
-import Footer1 from "../Components/Footer1";
-import Header1 from "../Components/Header1";
-import EditEducationModal from "../Components/Modals/editEducationModal";
+import Portfolio from "../../../public/Images/Portfolio.png";
+import Footer1 from "@/app/Components/Footer1";
+import Header1 from "@/app/Components/Header1";
+import EditEducationModal from "@/app/Components/Modals/editEducationModal";
 
 export default function StudentProfilePage() {
   const [aboutText, setAboutText] = useState<string>(
@@ -457,7 +457,7 @@ export default function StudentProfilePage() {
               </div>
             </div>
           </div>
-          <ResumeUploadButton2 />
+          {/* <ResumeUploadButton2 /> */}
           <div className="mb-[160px] mt-[18px] flex w-[100%] flex-col rounded-[16px] border-[1px] border-PriGold p-[42px]">
             <h1 className="mb-[32px] font-sans text-[21px]/[120%] font-normal text-Black2">
               Portfolio{" "}

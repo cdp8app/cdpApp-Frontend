@@ -1,5 +1,5 @@
 "use client";
-import Button3 from "@/app/UsersAuthentication/Components/Button3";
+import Button3 from "@/app/user/Components/Button3";
 import React, { useState, useRef } from "react";
 
 const ResumeUploadButton: React.FC = () => {

@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import Header1 from "../Components/Header1";
-import SearchBar from "../Components/SearchBar";
-import Footer1 from "../Components/Footer1";
+import Header1 from "@/app/Components/Header1";
+import SearchBar from "@/app/Components/SearchBar";
+import Footer1 from "@/app/Components/Footer1";
 
 export default function CompanyHomePage() {
   return (

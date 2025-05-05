@@ -8,6 +8,7 @@ import Button1 from "@/app/user/Components/Button1";
 import Button3 from "@/app/user/Components/Button3";
 import { useAuth } from "@/contexts/AuthContext";
 import { useJobContext } from "@/contexts/jobContext";
+import SelectDropDown from "@/app/Components/SelectDropdown";
 
 
 export default function SetUpJobForm() {
@@ -19,13 +20,11 @@ export default function SetUpJobForm() {
   const [description, setDescription] = useState<string>("");
   const [requirements, setRequirements] = useState<string>("");
   const [address1, setAddress1] = useState<string>("");
-  const [address2, setAddress2] = useState<string>("");
   const [state, setState] = useState<string>("");
   const [country, setCountry] = useState<string>("");
   const [salary, setSalary] = useState<string>("");
   const [duration, setDuration] = useState<string | null>("");
   const [jobType, setJobType] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
   const [formError, setFormError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -43,11 +42,24 @@ export default function SetUpJobForm() {
         deadline: duration,
         jobType,
       };
+      console.log("Before submitting: ", jobData);
 
       await createJob(jobData);
+      console.log("After submitting: ", jobData);
     } catch (err: any) {
       setFormError(err.message || "Failed to create job.");
     }
+  };
+
+  const options = [
+    { value: "Full-time"},
+    { value: "Part-time"},
+    { value: "Internship"},
+    { value: "Contract"},
+  ];
+
+  const handleSelect = (value: string) => {
+    setJobType(value);
   };
 
   return (
@@ -87,11 +99,17 @@ export default function SetUpJobForm() {
           Job type
         </h1>
       </div>
-      <input
+      <SelectDropDown
+        options={options}
+        selectedOption={jobType}
+        onSelect={handleSelect}
+        text="Select the job type"
+      />
+      {/* <input
         placeholder="Enter job type"
         value={jobType} onChange={(e) => setJobType(e.target.value)}
         className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
-      />
+      /> */}
       <div className="mb-[12px] border-b-2 border-Gray1">
         <h1 className="p-[10px] font-sans text-[21px]/[120%] text-Gray1 text-start">
           Location
@@ -139,7 +157,7 @@ export default function SetUpJobForm() {
       <input
         placeholder="Enter job duration"
         value={duration || ""} onChange={(e) => setDuration(e.target.value)}
-        className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
+        className="mb-[80px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
       />
 
       <Button3 text="Create Job" className="text-[16px] font-normal" type="submit" />

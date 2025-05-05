@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Header1 from "@/app/Components/Header1";
-import Button7 from "@/app/UsersAuthentication/Components/Button7";
+import Button7 from "@/app/user/Components/Button7";
 import Link from "next/link";
 import Footer1 from "@/app/Components/Footer1";
 

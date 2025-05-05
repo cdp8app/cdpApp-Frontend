@@ -7,7 +7,10 @@ import { useRouter } from "next/navigation";
 // Define types
 export interface Application {
   id: string;
-  job: string
+  job?: {
+    id: string;
+    location: string;
+  }
   cover_letter: string
   skills: string
   experience: string
@@ -19,6 +22,7 @@ export interface Application {
     full_name: string;
     course: string;
     location: string;
+    profile_picture: string;
   };
   createdAt: string;
   updatedAt: string;
@@ -29,6 +33,7 @@ interface ApplicationContextType {
   loading: boolean;
   error: string | null;
   getApplications: () => Promise<void>;
+  getStudentApplications: () => Promise<void>;
   getApplicationsById: (applicationId: string) => Promise<Application | null>;
   createApplication: (applicationData: any) => Promise<void>;
   updateApplication: (applicationId: string, applicationData: any) => Promise<void>;
@@ -57,7 +62,32 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch applications");
+        throw new Error(data.message || data.detail || "Failed to fetch applications");
+      }
+    
+      setApplications(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStudentApplications = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/my-job-applications/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.detail || "Failed to fetch applications");
       }
     
       setApplications(data);
@@ -82,7 +112,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch application");
+        throw new Error(data.message || data.detail || "Failed to fetch application");
       }
     
       setApplications(data);
@@ -112,7 +142,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to create application");
+        throw new Error(data.message || data.detail || "Failed to create application");
       }
 
       setApplications(data);
@@ -138,11 +168,9 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
       });
     
       const data = await response.json();
-
-      console.log("Updated application: ", data);
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update application");
+        throw new Error(data.message || data.detail || "Failed to update application");
       }
     
       setApplications(data);
@@ -166,7 +194,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete application");
+        throw new Error(data.message || data.detail || "Failed to delete application");
       }
         
       setApplications(null);
@@ -185,6 +213,7 @@ export const ApplicationProvider: React.FC<{ children: React.ReactNode }> = ({ c
         loading, 
         error, 
         getApplications, 
+        getStudentApplications,
         getApplicationsById, 
         createApplication, 
         updateApplication, 

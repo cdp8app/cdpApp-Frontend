@@ -7,28 +7,29 @@ import Footer1 from "../../Components/Footer1";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext"; 
 import Logout from "@/app/user/auth/logout/page";
-import { useJobContext } from "@/contexts/jobContext";
+import { useInternshipContext } from "@/contexts/internshipContext";
 import { useApplicationContext } from "@/contexts/applicationContext";
 import { useOfferContext } from "@/contexts/offerContext";
+import { CldImage } from "next-cloudinary";
 
 export default function Dashboard() {
   const { user, clearError } = useAuth();
-  const { getJobs } = useJobContext();
+  const { getStudentInternships } = useInternshipContext();
   const { getApplications } = useApplicationContext();
-  const { getOffers } = useOfferContext();
-  const [jobs, setJobs] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
+  const { getStudentOffers } = useOfferContext();
+  const [internships, setInternships] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
   const [applications, setApplications] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
-  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]);    
+  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]);  
 
   useEffect(() => {
     const fetchData  = async () => {
       try {
-        const fetchedJobs = (await getJobs()) ?? {};
+        const fetchedInternships = (await getStudentInternships()) ?? {};
         const fetchApplications = (await getApplications()) ?? {};
-        const fetchOffers = (await getOffers()) ?? {};
+        const fetchOffers = (await getStudentOffers()) ?? {};
  
-        if (fetchedJobs && typeof fetchedJobs === "object" && Array.isArray((fetchedJobs as any)?.results)) {
-          setJobs((fetchedJobs as any).results);
+        if (fetchedInternships && typeof fetchedInternships === "object" && Array.isArray((fetchedInternships as any)?.results)) {
+          setInternships((fetchedInternships as any).results);
         }
         if (fetchApplications && typeof fetchApplications === "object" && Array.isArray((fetchApplications as any)?.results)) {
           setApplications((fetchApplications as any).results);
@@ -43,11 +44,12 @@ export default function Dashboard() {
     fetchData ();
   }, []);
 
-  const allJobsCount = jobs?.length || 0;
-  const openJobsCount = jobs?.filter((job) => job.status === "open").length || 0;
-  const closedJobsCount = jobs?.filter((job) => job.status === "closed").length || 0;
+
+  const openOngoingInternships = internships?.filter((internship) => internship.status === "ongoing").length || 0;
+  const completedInternships = internships?.filter((internship) => internship.status === "completed").length || 0;
+  const pendingInternships = internships?.filter((internship) => internship.status === "pending").length || 0;
   
-  const approvedApplications = applications?.filter((app) => app.status === "approved").length || 0;
+  const approvedApplications = applications?.filter((app) => app.status === "accepted").length || 0;
   const interviewApplications = applications?.filter((app) => app.status === "interview").length || 0;
   const pendingApplications = applications?.filter((app) => app.status === "pending").length || 0;
   const deniedApplications = applications?.filter((app) => app.status === "rejected").length || 0;
@@ -64,7 +66,18 @@ export default function Dashboard() {
         <div className="shadow-custom flex w-[100%] flex-row justify-between rounded-[30px] mb-[80px] bg-GoldenWhite p-[2%]">
           <div className="flex py-[5%] space-y-[200px] w-[20%] items-center flex-col">
             <div className="flex flex-col items-center justify-center">
-              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] overflow-hidden bg-White">
+                {user?.profile_picture ? (
+                  <CldImage
+                    width="120"
+                    height="120"
+                    src={user?.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+                )}
+              </div>
               <h1 className="mb-[6px] font-sans text-[27px]/[120%] font-bold">
                 {user?.full_name}
               </h1>
@@ -115,7 +128,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {completedInternships}
                   </p>
                 </div>
                 <div className="bg-Yellow2 w-[32%] rounded-[11.62px] px-[22.29px] py-[21.39]">
@@ -126,7 +139,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {openOngoingInternships}
                   </p>
                 </div>
                 <div className="w-[32%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39]">
@@ -137,7 +150,7 @@ export default function Dashboard() {
                     </h1>
                   </div>
                   <p className="font-sans text-[47px]/[49px] font-bold text-Black2">
-                    11
+                    {pendingInternships}
                   </p>
                 </div>
               </div>

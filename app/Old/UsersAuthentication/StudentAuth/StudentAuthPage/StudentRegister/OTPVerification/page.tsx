@@ -3,7 +3,7 @@ import Logo from "@/app/Components/Logo";
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import Button1 from "@/app/UsersAuthentication/Components/Button1";
+import Button1 from "@/app/user/Components/Button1";
 
 type VerificationStatus = "success" | "error";
 

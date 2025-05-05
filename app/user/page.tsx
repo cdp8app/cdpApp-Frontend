@@ -1,26 +1,35 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+
 import Button2 from "./Components/Button2";
 import Logo from "@/app/Components/Logo";
+import FormAlert from "@/app/Components/FormAlert";
 
 const BestDescribes = () => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const router = useRouter();
+  const [formError, setFormError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
     localStorage.setItem("userType", option.toLowerCase());
-    // console.log("Selected option:", option);
   };
 
   const handleProceed = () => {
+    if (!selectedOption) {
+      setFormError("Please select an option before proceeding.");
+      return;
+    }
+
+    setLoading(true);
+
     if (selectedOption === "Student") {
       router.push("/user/auth");
     } else if (selectedOption === "Company") {
       router.push("/user/auth");
-    } else {
-      alert("Please select an option before proceeding.");
     }
   };
 
@@ -28,6 +37,20 @@ const BestDescribes = () => {
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className=" flex flex-col justify-between items-center text-center h-[80%]">
         <Logo />
+
+        {(formError) && (
+          <FormAlert
+            message={(formError) ?? ""}
+            type="error"
+            duration={5000}
+            onClose={() => {
+              if (formError) {
+                setFormError("");
+              }
+            }}
+          />
+        )}
+        
         <div>
           <h2 className="text-center font-sans text-[27px]/[120%] mb-2 font-normal text-Black2">
                         Which best describes you?
@@ -59,7 +82,7 @@ const BestDescribes = () => {
             <span className='ml-[12px] font-sans text-[21px]/[120%] text-Black2'>Organization</span>
           </button>
         </div>
-        <Button2 text="Proceed to setup profile" className="mb-[14px] mt-[36px] w-[70%]" onClick={handleProceed} />
+        <Button2 loading={loading} disabled={loading} text="Proceed to Login" className="mb-[14px] mt-[36px] w-[70%]" onClick={handleProceed} />
       </div>
     </div>
   );

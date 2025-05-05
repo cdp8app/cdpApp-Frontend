@@ -11,13 +11,15 @@ export interface Storage {
   uploaded_at: string;
 }
 
+type UploadResult = { file_url: string; file_name: string };
+
 interface StorageContextType {
   storageList: Storage[];
   loading: boolean;
   error: string | null;
   getStorages: () => Promise<void>;
   getStorageById: (id: string) => Promise<Storage | null>;
-  uploadFile: (file: File) => Promise<void>;
+  uploadFile: (file: File) => Promise<{ file_url: string; file_name: string } | null>;
   deleteStorage: (id: string) => Promise<void>;
 }
 
@@ -45,7 +47,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch storage files");
+        throw new Error(data.message || data.detail || "Failed to fetch storage files");
       }
 
       setStorageList(data);
@@ -69,7 +71,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch file");
+        throw new Error(data.message || data.detail || "Failed to fetch file");
       }
 
       return data;
@@ -81,13 +83,22 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
-  // Upload file using FormData
-  const uploadFile = async (file: File) => {
+  const uploadFile = async (file: File): Promise<{ file_url: string; file_name: string } | null> => {
     setLoading(true);
+  
+    const user = localStorage.getItem("user");
+    const token = user ? JSON.parse(user).access : null;
+  
+    if (!token) {
+      setLoading(false);
+      setError("User not authenticated");
+      return null; // Fix: return null here
+    }
+  
     try {
       const formData = new FormData();
       formData.append("file", file);
-
+  
       const response = await fetch(baseUrl + "/", {
         method: "POST",
         headers: {
@@ -95,20 +106,23 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
         },
         body: formData,
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
-        throw new Error(data.message || "Failed to upload file");
+        throw new Error(data.message || data.detail || "Failed to upload file");
       }
-
-      setStorageList((prev) => [data, ...prev]); // Add new file to top
+  
+      setStorageList((prev) => [data, ...prev]);
+      return data;
     } catch (err: any) {
       setError(err.message);
+      return null;
     } finally {
       setLoading(false);
     }
   };
+  
 
   const deleteStorage = async (id: string) => {
     setLoading(true);
@@ -122,7 +136,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete file");
+        throw new Error(data.message || data.detail || "Failed to delete file");
       }
 
       setStorageList((prev) => prev.filter((file) => file.id !== id));

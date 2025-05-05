@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import Label3 from "@/app/UsersAuthentication/Components/Label3";
-import "../../../../../../../app/globals.css";
+import Label3 from "@/app/user/Components/Label3";
+import "../../../../../../../../app/globals.css";
 
 export default function NewPasswordForm() {
   const [password, setPassword] = useState("");

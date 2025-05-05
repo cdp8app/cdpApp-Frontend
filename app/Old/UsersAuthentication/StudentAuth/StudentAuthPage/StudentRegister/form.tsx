@@ -3,7 +3,7 @@
 import { useState } from "react";
 // import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "../../../../../contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import Button1 from "../../../Components/Button1";
 import Label2 from "../../../Components/Label2";
 import Image from "next/image";

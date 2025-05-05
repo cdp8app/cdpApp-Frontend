@@ -1,7 +1,7 @@
 "use client";
 import Logo from "@/app/Components/Logo";
 import ForgotPasswordForm from "./form";
-import Button1 from "@/app/UsersAuthentication/Components/Button1";
+import Button1 from "@/app/user/Components/Button1";
 import Link from "next/link";
 
 export default function ForgotPasswordPage() {

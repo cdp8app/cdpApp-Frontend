@@ -11,16 +11,16 @@ export default function Navbar1({ userType }: Navbar1Props) {
     { name: "Home", href: "/student/homepage" },
     { name: "Dashboard", href: "/student/dashboard" },
     { name: "Notifications", href: "/student/notifications" },
-    { name: "Messages", href: "/student/messages" },
-    { name: "Settings", href: "/student/settings" },
+    { name: "Messages", href: "/messaging" },
+    { name: "Settings", href: "/settings" },
   ];
 
   const companyLinks = [
-    { name: "Home", href: "/" },
+    { name: "Home", href: "/company/homepage" },
     { name: "Dashboard", href: "/company/dashboard" },
-    { name: "Applicants", href: "/company/applicants" },
-    { name: "Post Job", href: "/company/post-job" },
-    { name: "Settings", href: "/company/settings" },
+    { name: "Applicants", href: "/company/applicant" },
+    { name: "Post Job", href: "/company/job/create" },
+    { name: "Settings", href: "/settings" },
   ];
 
   const links = userType === "student" ? studentLinks : companyLinks;

@@ -12,6 +12,8 @@ export interface Job {
     id: string;
     company_name: string;
     company_industry: string;
+    company_description: string;
+    profile_picture: string;
   };
     location: string;
     job_type: string;
@@ -22,6 +24,7 @@ export interface Job {
     // startDate: string;
     // endDate: string;
     // status: string;
+    status: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -32,6 +35,8 @@ interface JobContextType {
   loading: boolean;
   error: string | null;
   getJobs: () => Promise<void>;
+  getStudentJobs: () => Promise<void>;
+  getPostedJobs: () => Promise<void>;
   getJobsById: (jobId: string) => Promise<Job | null>;
   createJob: (jobData: any) => Promise<void>;
   updateJob: (jobId: string, jobData: any) => Promise<void>;
@@ -61,9 +66,59 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
   
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch jobs");
+        throw new Error(data.message || data.detail || "Failed to fetch jobs");
       }
 
+      setJobs(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStudentJobs = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/my-jobs/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.detail || "Failed to fetch jobs");
+      }
+    
+      setJobs(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getPostedJobs = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/posted_jobs/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.detail || "Failed to fetch jobs");
+      }
+    
       setJobs(data);
       return data;
     } catch (err: any) {
@@ -86,7 +141,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch job");
+        throw new Error(data.message || data.detail || "Failed to fetch job");
       }
       
       setCurrentJob(data);
@@ -143,7 +198,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update job");
+        throw new Error(data.message || data.detail || "Failed to update job");
       }
     
       setJobs(data);
@@ -167,7 +222,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete job");
+        throw new Error(data.message || data.detail || "Failed to delete job");
       }
         
       setJobs(null);
@@ -187,6 +242,8 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         loading, 
         error, 
         getJobs, 
+        getStudentJobs,
+        getPostedJobs,
         getJobsById, 
         createJob, 
         updateJob, 

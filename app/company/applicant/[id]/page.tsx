@@ -14,7 +14,7 @@ import { Application, useApplicationContext } from "@/contexts/applicationContex
 import { useOfferContext } from "@/contexts/offerContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useReviewContext } from "@/contexts/reviewContext";
-import { useInternshipContext } from "@/contexts/internshipContext";
+import { CldImage } from "next-cloudinary";
 
 export default function CompanyJobApplicantInfo() {
   const params = useParams();
@@ -25,7 +25,6 @@ export default function CompanyJobApplicantInfo() {
   const { getApplicationsById, updateApplication, error } = useApplicationContext();
   const { getOffers, updateOffer } = useOfferContext();
   const { createOffer } = useOfferContext();
-  const { createInternship } =useInternshipContext();
   const [formError, setFormError] = useState("");
   const [interviewDate, setInterviewDate] = useState("");
   const [interviewTime, setInterviewTime] = useState("");
@@ -39,7 +38,6 @@ export default function CompanyJobApplicantInfo() {
   const [ offers, setOffers ] = useState<{ id: string }[]>([]);
   const { createReview } = useReviewContext();
 
-  console.log("Application: ", application);
   
   useEffect(() => {
     const fetchApplicationDetails = async () => {
@@ -50,7 +48,7 @@ export default function CompanyJobApplicantInfo() {
     };
     
     fetchApplicationDetails();
-  }, [applicationId]);
+  }, []);
 
   const fetchOffers = async () => {
     try {
@@ -59,8 +57,8 @@ export default function CompanyJobApplicantInfo() {
       if (fetchedOffers && typeof fetchedOffers === "object" && Array.isArray((fetchedOffers as any)?.results)) {
         setOffers((fetchedOffers as any).results);
       }
-    } catch (error) {
-      console.error("Failed to fetch offers", error);
+    } catch (error: any) {
+      setFormError(error);
     }
   };
 
@@ -80,7 +78,7 @@ export default function CompanyJobApplicantInfo() {
       const offerData = {
         company: user?.id,
         student: application?.user?.id,
-        application: application?.id,
+        application: applicationId,
         interview_date: formattedDate,
         interview_time: formattedTime,
         status: "interview"
@@ -93,7 +91,7 @@ export default function CompanyJobApplicantInfo() {
         setApplication(updatedApp);
         setIsScheduleInterviewModalOpen(false);
       } else {
-        console.error("Application ID is undefined.");
+        setFormError("Application ID is undefined.");
       }
     } catch (err: any) {
       setFormError(err.message || "Failed to create offer.");
@@ -102,31 +100,18 @@ export default function CompanyJobApplicantInfo() {
 
   const handleExtendOffer = async () => {
     try {
-      const job = application?.job || null; // Initialize job with a value
-      const internshipData = {
-        company: user?.id,
-        student: application?.user?.id,
-        job,
-        application: application?.id
-      };
-
       if (applicationId) {
-        // First update the application status to "accepted"
-        await updateApplication(applicationId, { status: "accepted" });
-        await createInternship({internshipData});
 
         const offer = offers.find((offer) => offer.id === application?.id);
         if (offer) {
-          await updateOffer(offer.id, "accepted");
-        } else {
-          console.error("Offer not found for the application.");
+          await updateOffer(offer.id, "pending");
         }
-  
+
         // Refresh application
         const updatedApp = await getApplicationsById(applicationId);
         setApplication(updatedApp);
       } else {
-        console.error("Application ID is undefined.");
+        setFormError("Application ID is undefined.");
       }
     } catch (err: any) {
       setFormError(err.message || "Failed to extend offer.");
@@ -152,10 +137,28 @@ export default function CompanyJobApplicantInfo() {
         setApplication(updatedApp);
         setIsScheduleInterviewModalOpen(false);
       } else {
-        console.error("Application ID is undefined.");
+        setFormError("Application ID is undefined.");
       }
     } catch (err: any) {
       setFormError(err.message || "Failed to create offer.");
+    }
+  };
+
+  const handleRejection = async () => {
+    try {
+
+      if (applicationId) {
+        // First update the application status to "accepted"
+        await updateApplication(applicationId, { status: "rejected" });
+  
+        // Refresh application
+        const updatedApp = await getApplicationsById(applicationId);
+        setApplication(updatedApp);
+      } else {
+        setFormError("Application ID is undefined.");
+      }
+    } catch (err: any) {
+      setFormError(err.message || "Failed to extend offer.");
     }
   };
 
@@ -166,7 +169,18 @@ export default function CompanyJobApplicantInfo() {
         <div className="mb-[80px] flex w-[100%] flex-row justify-between rounded-[30px]">
           <div className="flex w-[20%] flex-col items-center space-y-[200px] py-[1%]">
             <div className="flex flex-col items-center justify-center">
-              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] overflow-hidden bg-White">
+                {application?.user?.profile_picture ? (
+                  <CldImage
+                    width="135"
+                    height="135"
+                    src={application?.user?.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+                )}
+              </div>
               <h1 className="mb-[6px] text-center font-sans text-[27px]/[120%] font-bold">
                 {application?.user?.full_name}
               </h1>
@@ -180,7 +194,7 @@ export default function CompanyJobApplicantInfo() {
             </div>
           </div>
           <div className="w-[75%]">
-            <Link href={"#"} className="mb-[21px] flex flex-row items-center">
+            <button onClick={() => router.back()} className="mb-[21px] flex flex-row items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -198,7 +212,7 @@ export default function CompanyJobApplicantInfo() {
               <p className="font-sans text-[36px]/[120%] text-Gold1">
                 Application status
               </p>
-            </Link>
+            </button>
             {application?.status === "pending" && (
               <div className="flex w-[114px] flex-row items-center rounded-[8px] bg-Yellow2 px-[16px] py-[8px]">
                 <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Yellow1"></div>
@@ -270,7 +284,18 @@ export default function CompanyJobApplicantInfo() {
                   </button> */}
               </div>
               <div className="flex flex-row items-center rounded-[15px] bg-Gold3 px-[20px] py-[16px]">
-                <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] bg-red-800"></div>
+                <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] overflow-hidden bg-White">
+                  {application?.user?.profile_picture ? (
+                    <CldImage
+                      width="100"
+                      height="100"
+                      src={application?.user?.profile_picture}
+                      alt="Description of my image"
+                    />
+                  ) : (
+                    <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] bg-red-800"></div>
+                  )}
+                </div>
                 <div className="flex h-[100%] flex-col justify-between">
                   <h1 className="font-sans text-[16px]/[100%] font-normal text-Black2">
                     {application?.user?.full_name}
@@ -421,7 +446,7 @@ export default function CompanyJobApplicantInfo() {
                   LOCATION:
                 </h1>
                 <p className="font-sans text-[16px]/[120%] text-Black2">
-                  {application?.user?.location}
+                  {application?.job?.location}
                 </p>
               </div>
             </div>
@@ -456,7 +481,18 @@ export default function CompanyJobApplicantInfo() {
                   </button> */}
                   </div>
                   <div className="flex flex-row items-center rounded-[15px] bg-Gold3 px-[20px] py-[16px]">
-                    <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] bg-red-800"></div>
+                    <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] overflow-hidden bg-White">
+                      {application?.user?.profile_picture ? (
+                        <CldImage
+                          width="100"
+                          height="100"
+                          src={application?.user?.profile_picture}
+                          alt="Description of my image"
+                        />
+                      ) : (
+                        <div className="mr-[16px] h-[100px] w-[100px] rounded-[50px] bg-red-800"></div>
+                      )}
+                    </div>
                     <div className="flex h-[100%] flex-col justify-between">
                       <h1 className="font-sans text-[16px]/[100%] font-normal text-Black2">
                         {application.user?.full_name}

@@ -11,9 +11,8 @@ export default function Logout() {
   const handleLogout = async () => {
     try {
       await logout();
-      router.push("/user/auth");
+      router.push("/");
     } catch (err) {
-      // Optionally, you can set an error state here to show a message to the user
     }
   };
 

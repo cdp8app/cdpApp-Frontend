@@ -12,6 +12,37 @@ export interface Offer {
     company_name: string;
     company_industry: string;
   };
+  job: {
+    title: string;
+    location: string;
+    description: string;
+    requirements: string;
+    deadline: string;
+  };
+  employer?: {
+    company_name: string;
+    company_industry: string;
+  };
+  company_details?: {
+    id: string;
+    company_name?: string;
+    company_industry?: string;
+    profile_picture?: string;
+  };
+  application_details?: {
+    id: string;
+    job?: {
+      id: string;
+      location?: string;
+      description?: string;
+      requirements?: string;
+      deadline?: string;
+    };
+  };
+  student_details?: {
+    id: string;
+  };
+  status: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -22,6 +53,8 @@ interface OfferContextType {
   loading: boolean;
   error: string | null;
   getOffers: () => Promise<void>;
+  getStudentOffers: () => Promise<void>;
+  getCompanyExtendOffers: () => Promise<void>;
   getOffersById: (offerId: string) => Promise<Offer | null>;
   createOffer: (offerData: any) => Promise<void>;
   updateOffer: (offerId: string, offerData: any) => Promise<void>;
@@ -51,7 +84,7 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const data = await response.json();
   
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch offers");
+        throw new Error(data.message || data.detail || "Failed to fetch offers");
       }
 
       setOffers(data);
@@ -76,7 +109,7 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch offer");
+        throw new Error(data.message || data.detail || "Failed to fetch offer");
       }
       
       setCurrentOffer(data);
@@ -84,6 +117,56 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } catch (err: any) {
       setError(err.message);
       return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStudentOffers = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/my-offers/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.detail || "Failed to fetch offers");
+      }
+    
+      setOffers(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getCompanyExtendOffers = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/sent-offers/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.detail || "Failed to fetch offers");
+      }
+    
+      setOffers(data);
+      return data;
+    } catch (err: any) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -133,7 +216,7 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const data = await response.json();
     
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update offer");
+        throw new Error(data.message || data.detail || "Failed to update offer");
       }
     
       setOffers(data);
@@ -157,7 +240,7 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete offer");
+        throw new Error(data.message || data.detail || "Failed to delete offer");
       }
         
       setOffers(null);
@@ -177,6 +260,8 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         loading, 
         error, 
         getOffers, 
+        getStudentOffers,
+        getCompanyExtendOffers,
         getOffersById, 
         createOffer, 
         updateOffer, 

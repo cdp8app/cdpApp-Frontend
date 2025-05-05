@@ -10,13 +10,14 @@ import { useRouter } from "next/navigation";
 import { useJobContext } from "@/contexts/jobContext";
 import { useApplicationContext } from "@/contexts/applicationContext";
 import { useOfferContext } from "@/contexts/offerContext";
+import { CldImage } from "next-cloudinary";
 
 export default function CompanyDashboard() {
   const router = useRouter();
   const { user, clearError } = useAuth();
-  const { getJobs } = useJobContext();
+  const { getPostedJobs } = useJobContext();
   const { getApplications } = useApplicationContext();
-  const { getOffers } = useOfferContext();
+  const { getCompanyExtendOffers } = useOfferContext();
   const [jobs, setJobs] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
   const [applications, setApplications] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
   const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]);    
@@ -24,9 +25,9 @@ export default function CompanyDashboard() {
   useEffect(() => {
     const fetchData  = async () => {
       try {
-        const fetchedJobs = (await getJobs()) ?? {};
+        const fetchedJobs = (await getPostedJobs()) ?? {};
         const fetchApplications = (await getApplications()) ?? {};
-        const fetchOffers = (await getOffers()) ?? {};
+        const fetchOffers = (await getCompanyExtendOffers()) ?? {};
  
         if (fetchedJobs && typeof fetchedJobs === "object" && Array.isArray((fetchedJobs as any)?.results)) {
           setJobs((fetchedJobs as any).results);
@@ -48,7 +49,7 @@ export default function CompanyDashboard() {
   const openJobsCount = jobs?.filter((job) => job.status === "open").length || 0;
   const closedJobsCount = jobs?.filter((job) => job.status === "closed").length || 0;
   
-  const approvedApplications = applications?.filter((app) => app.status === "approved").length || 0;
+  const approvedApplications = applications?.filter((app) => app.status === "accepted").length || 0;
   const interviewApplications = applications?.filter((app) => app.status === "interview").length || 0;
   const pendingApplications = applications?.filter((app) => app.status === "pending").length || 0;
   const deniedApplications = applications?.filter((app) => app.status === "rejected").length || 0;
@@ -65,7 +66,20 @@ export default function CompanyDashboard() {
         <div className="mb-[80px] flex w-[100%] flex-row justify-between rounded-[30px] bg-GoldenWhite p-[2%] shadow-custom">
           <div className="flex w-[20%] flex-col items-center space-y-[200px] py-[5%]">
             <div className="flex flex-col items-center justify-center">
-              <div className="mb-[16px] h-[134px] w-[134px] rounded-[18px] bg-Red1"></div>
+              
+              <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] overflow-hidden bg-White">
+                {user?.profile_picture ? (
+                  <CldImage
+                    width="120"
+                    height="120"
+                    src={user?.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="mb-[16px] h-[134px] w-[134px] rounded-[18px] bg-Red1"></div>
+                )}
+              </div>
+              
               <h1 className="mb-[6px] text-center font-sans text-[27px]/[120%] font-bold">
                 {user?.company_name}
               </h1>
