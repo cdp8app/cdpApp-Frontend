@@ -13,7 +13,7 @@ type Props = {
   onToggle: (content: 1 | 2) => void;
 };
 
-export default function  StudentAuthTogglePage ({ activeContent, onToggle }: Props) {
+const StudentAuthTogglePage = ({ activeContent, onToggle }: Props) => {
 
   const [userType, setUserType] = useState<"student" | "company" | null>(null);
   useEffect(() => {
@@ -130,3 +130,5 @@ export default function  StudentAuthTogglePage ({ activeContent, onToggle }: Pro
     </div>
   );
 };
+
+export default StudentAuthTogglePage;
