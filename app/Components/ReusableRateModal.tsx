@@ -61,18 +61,35 @@ const ReusableRateModal: React.FC<ReusableRateModalProps> = ({
           </h2>
 
           <div className="mt-[6px] justify-self-center rounded-[15px] bg-GoldenWhite px-[20px] py-[24px]">
-            <div className="h-[100px] w-[100px] justify-self-center rounded-full overflow-hidden bg-White">
-              {ratingTarget === "company" ? user.company_profile : user.profile_picture ? (
-                <CldImage
-                  width="100"
-                  height="100"
-                  src={ratingTarget === "company" ? user.company_profile || "" : user.profile_picture || ""}
-                  alt="Description of my image"
-                />
-              ) : (
-                <div className="h-[100px] w-[100px] justify-self-center rounded-full bg-Gray2 mx-auto"></div>
-              )}
-            </div>
+            {ratingTarget === "company" && (
+              <div className="h-[100px] w-[100px] justify-self-center rounded-full overflow-hidden bg-White">
+                {user.company_profile ? (
+                  <CldImage
+                    width="100"
+                    height="100"
+                    src={user.company_profile}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="h-[100px] w-[100px] justify-self-center rounded-full bg-Gray2 mx-auto"></div>
+                )}
+              </div>
+            )}
+            {ratingTarget === "student" && (
+              <div className="h-[100px] w-[100px] justify-self-center rounded-full overflow-hidden bg-White">
+                {user.profile_picture ? (
+                  <CldImage
+                    width="100"
+                    height="100"
+                    src={user.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="h-[100px] w-[100px] justify-self-center rounded-full bg-Gray2 mx-auto"></div>
+                )}
+              </div>
+            )}
+            
             <h1 className="my-[8px] font-sans text-[16px]/[120%]">{ratingTarget === "company" ? user.company_name : user.full_name}</h1>
             <div className="flex items-center justify-center">
               <svg
