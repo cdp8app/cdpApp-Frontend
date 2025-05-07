@@ -1,22 +1,41 @@
 "use client";
-import React from "react";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Portfolio from "../../../../public/Images/Portfolio.png";
 import Footer1 from "../../../Components/Footer1";
 import Header1 from "../../../Components/Header1";
 import ResumeUploadButton3 from "../../../Components/ResumeUpload3";
+import { User, useAuth } from "@/contexts/AuthContext";
+import { CldImage } from "next-cloudinary";
 
 export default function ViewStudentProfilePage() {
+  const params = useParams();
+  const router = useRouter();
+  const { getUserDetails } = useAuth();
+  const userId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      if (userId) {
+        const application = await getUserDetails(userId);
+        setUser(application);
+      }
+    };
+      
+    fetchUserDetails();
+  }, []);
+
   return (
     <div className="flex flex-col">
       <div className="p-[1%]">
         <Header1 />
         <div className="px-[6%]">
           <div className="mb-[18px] border-b-[1px] border-Gold2">
-            <Link
+            <button
               className="flex flex-row items-center py-[12px] font-sans text-[27px]/[120%] font-normal text-Gold1"
-              href={"#"}
+              onClick={() => router.back()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -32,15 +51,26 @@ export default function ViewStudentProfilePage() {
                   d="M15.75 19.5 8.25 12l7.5-7.5"
                 />
               </svg>
-              Mary&apos;s Profile
-            </Link>
+              {user?.full_name}&apos;s Profile
+            </button>
           </div>
           <div className="mb-[18px] flex w-[100%] flex-row items-center justify-between rounded-[16px] border-[1px] border-PriGold bg-gradient-to-r p-[30px]">
             <div className="flex flex-row items-center">
-              <div className="mr-[24px] h-[120px] w-[120px] rounded-[60px] bg-White"></div>
+              <div className="mr-[24px] h-[120px] w-[120px] rounded-[60px] overflow-hidden bg-White">
+                {user?.profile_picture ? (
+                  <CldImage
+                    width="120"
+                    height="120"
+                    src={user?.profile_picture}
+                    alt="Description of my image"
+                  />
+                ) : (
+                  <div className="mr-[24px] h-[120px] w-[120px] rounded-[60px] bg-White"></div>
+                )}
+              </div>
               <div>
                 <h1 className="mb-1 font-sans text-[36px]/[100%] font-semibold text-GoldenWhite">
-                  John Doe
+                  {user?.full_name}
                 </h1>
                 <h2 className="flex flex-row font-sans text-[16px] text-Gold3">
                   <svg
@@ -57,7 +87,7 @@ export default function ViewStudentProfilePage() {
                       d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
                     />
                   </svg>
-                  Med/surgery
+                  {user?.course}
                 </h2>
               </div>
             </div>
@@ -124,13 +154,7 @@ export default function ViewStudentProfilePage() {
               </h1>
             </div>
             <p className="mt-[12px] text-justify font-sans text-[16px]/[120%] font-normal text-Gray1">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
+              {user?.bio}
             </p>
           </div>
 
@@ -158,7 +182,7 @@ export default function ViewStudentProfilePage() {
                     />
                   </svg>
                   <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    University of Calabar, Calabar
+                    {user?.intuition}
                   </h1>
                 </div>
                 <div className="flex flex-row items-center pb-[10px]">
@@ -178,7 +202,7 @@ export default function ViewStudentProfilePage() {
                   </svg>
 
                   <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    MBBS
+                    {user?.course}
                   </h1>
                 </div>
                 <div className="flex flex-row items-center pb-[10px]">
@@ -198,7 +222,7 @@ export default function ViewStudentProfilePage() {
                   </svg>
 
                   <h1 className="ml-[10px] font-sans text-[16px]/[120%] text-Gray1">
-                    2017-2025
+                    {user?.start_data} - {user?.end_data}
                   </h1>
                 </div>
               </div>
@@ -210,22 +234,14 @@ export default function ViewStudentProfilePage() {
                     Skills
                   </h1>
                 </div>
-                <div className="flex flex-row space-x-5">
-                  <div className="w-auto rounded-[6px] bg-Gold3 px-[15px] py-[10px]">
-                    <p className="font-sans text-[12px]/[120%] text-Gold1">
-                      Communication
-                    </p>
-                  </div>
-                  <div className="w-auto rounded-[6px] bg-Gold3 px-[15px] py-[10px]">
-                    <p className="font-sans text-[12px]/[120%] text-Gold1">
-                      Communication
-                    </p>
-                  </div>
-                  <div className="w-auto rounded-[6px] bg-Gold3 px-[15px] py-[10px]">
-                    <p className="font-sans text-[12px]/[120%] text-Gold1">
-                      Communication
-                    </p>
-                  </div>
+                <div className="flex flex-row flex-wrap gap-3">
+                  {user?.skills?.split(",").map((skill: string, index: number) => (
+                    <div key={index}  className="w-auto rounded-[6px] bg-Gold3 px-[15px] py-[10px]">
+                      <p className="font-sans text-[12px]/[120%] text-Gold1">
+                        {skill}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

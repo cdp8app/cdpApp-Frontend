@@ -8,6 +8,7 @@ import Button7 from "@/app/user/Components/Button7";
 import Footer1 from "@/app/Components/Footer1";
 import Logout from "@/app/user/auth/logout/page";
 import { Internship, useInternshipContext } from "@/contexts/internshipContext";
+import ReusableRateModal from "@/app/Components/ReusableRateModal";
 
 export default function StudentInternshipInfo() {
   const params = useParams();
@@ -18,7 +19,12 @@ export default function StudentInternshipInfo() {
   const { getInternshipsById, updateInternship, error } = useInternshipContext();
     
   const [formError, setFormError] = useState("");
-    
+
+  const [
+    isRateStudentsModalOpen,
+    setIsRateStudentsModalOpen
+  ] = useState(false);
+
   useEffect(() => {
     const fetchInternshipDetails = async () => {
       if (internshipId) {
@@ -51,6 +57,28 @@ export default function StudentInternshipInfo() {
       }
     }
   };
+
+  // const handleSubmitReview = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  
+  //   try {
+  //     const reviewData = {
+
+  //     };
+    
+  //     if (applicationId) {
+  //       await updateApplication(applicationId, { status: "interview" });
+  //       await createOffer(reviewData);
+  //       const updatedApp = await getApplicationsById(applicationId);
+  //       setApplication(updatedApp);
+  //       setIsScheduleInterviewModalOpen(false);
+  //     } else {
+  //       setFormError("Application ID is undefined.");
+  //     }
+  //   } catch (err: any) {
+  //     setFormError(err.message || "Failed to create offer.");
+  //   }
+  // };
 
   return (
     <div className="flex flex-col">
@@ -179,9 +207,28 @@ export default function StudentInternshipInfo() {
                 <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
                 Write report
                 </button>
-                <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
+                <button 
+                  onClick={() => setIsRateStudentsModalOpen(true)}
+                  className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
                 Rate company
                 </button>
+                <ReusableRateModal
+                  ratingTarget="company"
+                  isOpen={isRateStudentsModalOpen}
+                  onClose={() => setIsRateStudentsModalOpen(false)}
+                  user={{
+                    company_name: internship?.company_details?.company_name || "",
+                    company_industry: internship?.company_details?.company_industry || "",
+                    company_profile: internship?.company_details?.profile_picture || "",
+                  }}
+                  title="Rate the company"
+                  subtitle="Leave a review of your experience with this company"
+                  // viewProfileUrl="/student/profile/view"
+                  onSubmit={(rating, review, dates) => {
+                    // send review to backend
+                    console.log({ rating, review, dates });
+                  }}
+                />
               </div>
             )}
           </div>

@@ -70,8 +70,8 @@ export default function CompanyDashboard() {
               <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] overflow-hidden bg-White">
                 {user?.profile_picture ? (
                   <CldImage
-                    width="120"
-                    height="120"
+                    width="134"
+                    height="134"
                     src={user?.profile_picture}
                     alt="Description of my image"
                   />
@@ -122,7 +122,7 @@ export default function CompanyDashboard() {
                 </Link>
               </div>
               <div className="flex flex-row justify-between">
-                <div className="w-[32%] rounded-[11.62px] bg-Gray3 px-[22.29px] py-[21.39]">
+                <div className="w-[32%] rounded-[11.62px] bg-Gray3 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Gray1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Gray1">
@@ -133,7 +133,7 @@ export default function CompanyDashboard() {
                     {allJobsCount}
                   </p>
                 </div>
-                <div className="w-[32%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39]">
+                <div className="w-[32%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Green1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Green1">
@@ -144,7 +144,7 @@ export default function CompanyDashboard() {
                     {openJobsCount}
                   </p>
                 </div>
-                <div className="w-[32%] rounded-[11.62px] bg-GoldenWhite px-[22.29px] py-[21.39]">
+                <div className="w-[32%] rounded-[11.62px] bg-GoldenWhite px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-PriGold"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-PriGold">
@@ -184,7 +184,7 @@ export default function CompanyDashboard() {
                 </Link>
               </div>
               <div className="flex flex-row justify-between">
-                <div className="w-[24%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Green1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Green1">
@@ -195,7 +195,7 @@ export default function CompanyDashboard() {
                     {approvedApplications}
                   </p>
                 </div>
-                <div className="w-[24%] rounded-[11.62px] bg-GoldenWhite bg-opacity-15 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-GoldenWhite bg-opacity-15 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-PriGold"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-PriGold">
@@ -206,7 +206,7 @@ export default function CompanyDashboard() {
                     {interviewApplications}
                   </p>
                 </div>
-                <div className="w-[24%] rounded-[11.62px] bg-Yellow2 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Yellow2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Yellow1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Yellow1">
@@ -217,7 +217,7 @@ export default function CompanyDashboard() {
                     {pendingApplications}
                   </p>
                 </div>
-                <div className="w-[24%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Red1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Red1">
@@ -257,7 +257,7 @@ export default function CompanyDashboard() {
                 </Link>
               </div>
               <div className="flex flex-row justify-between">
-                <div className="w-[24%] rounded-[11.62px] bg-Gray3 bg-opacity-30 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Gray3 bg-opacity-30 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Gray2"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Gray2">
@@ -268,7 +268,7 @@ export default function CompanyDashboard() {
                     {allOffers}
                   </p>
                 </div>
-                <div className="w-[24%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Green1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Green1">
@@ -279,7 +279,7 @@ export default function CompanyDashboard() {
                     {acceptedOffers}
                   </p>
                 </div>
-                <div className="w-[24%] rounded-[11.62px] bg-Yellow2 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Yellow2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Yellow1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Yellow1">
@@ -290,7 +290,7 @@ export default function CompanyDashboard() {
                     {pendingOffers}
                   </p>
                 </div>
-                <div className="w-[24%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Red1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Red1">

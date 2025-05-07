@@ -43,7 +43,7 @@ type CompanyProfile = {
   company_instagram?: string;
 }
 
-interface User {
+export interface User {
   id: string;
   email: string;
   userType: UserType;
@@ -93,6 +93,7 @@ interface AuthContextType {
   clearError: () => void;
   getStudentProfile: () => Promise<StudentProfile | null>;
   getCompanyProfile: () => Promise<CompanyProfile | null>;
+  getUserDetails: (userId: string) => Promise<User | null>;
 }
 
 // Create context
@@ -514,6 +515,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return null; // Ensure a return value in all code paths
   };
 
+  const getUserDetails = async (userId: string): Promise<User | null> => {
+    try {
+      setLoading(true);
+      setError(null);
+  
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        throw new Error("User not authenticated");
+      }
+  
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/get_user_by_id/${userId}/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || data.error || "User details retrieval failed");
+      }
+  
+      setUser(data.user);
+      return data;
+    } catch (err: any) {
+      setError(err.message || "User details retrieval failed");
+    } finally {
+      setLoading(false);
+    }
+    return null;
+  };
+
   const clearError = () => {
     setError(null);
   };
@@ -537,6 +573,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateProfile,
         getStudentProfile,
         getCompanyProfile,
+        getUserDetails,
         clearError
       }}
     >

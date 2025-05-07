@@ -10,6 +10,7 @@ import Button1 from "../../Components/Button1";
 import Image from "next/image";
 import Label from "@/app/user/Components/Label";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 interface LoginFormProps {
   userType: "student" | "company" | null;
@@ -20,6 +21,7 @@ export default function LoginForm({ userType }: LoginFormProps) {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [formError, setFormError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   
   const { login, loading, error, clearError } = useAuth();
@@ -167,11 +169,18 @@ export default function LoginForm({ userType }: LoginFormProps) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           id="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Enter your password"
           className="w-full font-sans text-[16px] placeholder-Gray1 outline-none"
           required
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className=" right top-2/2 transform -translate-y-2/2 text-gray-500"
+        >
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
       </div>
         
       {/* <div className="flex items-center justify-between mb-4">

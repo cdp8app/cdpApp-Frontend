@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "../contexts/AuthContext"; // Import your AuthProvider
+
+import { AuthProvider } from "../contexts/AuthContext";
 import { ApplicationProvider } from "@/contexts/applicationContext";
 import { InternshipProvider } from "@/contexts/internshipContext";
 import { JobProvider } from "@/contexts/jobContext";
 import { StorageProvider } from "@/contexts/storageContext";
 import { OfferProvider } from "@/contexts/offerContext";
 import { ReviewProvider } from "@/contexts/reviewContext";
+import ClientWrapper from "@/app/Components/ClientWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <ApplicationProvider>
             <InternshipProvider>
@@ -41,7 +41,9 @@ export default function RootLayout({
                 <StorageProvider>
                   <OfferProvider>
                     <ReviewProvider>
-                      {children}
+                      <ClientWrapper>
+                        {children}
+                      </ClientWrapper>
                     </ReviewProvider>
                   </OfferProvider>
                 </StorageProvider>

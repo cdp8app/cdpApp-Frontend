@@ -1,6 +1,8 @@
 import React from "react";
 import "../../app/globals.css";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
+import { CldImage } from "next-cloudinary";
 
 interface Navbar1Props {
   userType: "student" | "company";
@@ -24,6 +26,7 @@ export default function Navbar1({ userType }: Navbar1Props) {
   ];
 
   const links = userType === "student" ? studentLinks : companyLinks;
+  const { user } = useAuth();
 
   return (
     <div className="mb-0 flex flex-row bg-Gold3 items-center justify-between w-[631px] py-[12px] px-[30px] rounded-[999px]">
@@ -36,7 +39,18 @@ export default function Navbar1({ userType }: Navbar1Props) {
           {link.name}
         </Link>
       ))}
-      <div className="bg-White h-[36px] w-[36px] rounded-[18px]"></div>
+      <div className="h-[36px] w-[36px] rounded-[18px] overflow-hidden bg-White">
+        {user?.profile_picture ? (
+          <CldImage
+            width="36"
+            height="36"
+            src={user?.profile_picture}
+            alt="Description of my image"
+          />
+        ) : (
+          <div className="bg-White h-[36px] w-[36px] rounded-[18px]"></div>
+        )}
+      </div>
     </div>
   );
 }
