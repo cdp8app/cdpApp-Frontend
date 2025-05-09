@@ -1,111 +1,133 @@
-"use client";
+"use client"
 
-import { useState } from "react";
+import type React from "react"
 
-import { Eye, EyeOff } from "lucide-react";
-import { useAuth } from "@/./contexts/AuthContext";
+import { useState, useEffect } from "react"
+import { Eye, EyeOff } from "lucide-react"
+import { useAuth } from "@/contexts/AuthContext"
 
-import Button1 from "../../Components/Button1";
-import Label2 from "../../Components/Label2";
-import SelectDropDown from "@/app/Components/SelectDropdown";
-import FormAlert from "@/app/Components/FormAlert";
-
+import Button1 from "../../Components/Button1"
+import Label2 from "../../Components/Label2"
+import SelectDropDown from "@/app/Components/SelectDropdown"
+import FormAlert from "@/app/Components/FormAlert"
 
 export default function StudentRegisterForm() {
-  const [role, setRole] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formError, setFormError] = useState("");
-  const [debugInfo, setDebugInfo] = useState("");
-  
-  const { register, error, loading, clearError } = useAuth();
+  const [role, setRole] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [formError, setFormError] = useState("")
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
+  const [debugInfo, setDebugInfo] = useState("")
 
-  const validateForm = () => {    
+  const { register, error, loading, clearError, fetchCsrfToken } = useAuth()
+
+  // Fetch CSRF token when component mounts
+  useEffect(() => {
+    const initializeForm = async () => {
+      try {
+        await fetchCsrfToken()
+      } catch (error) {
+        console.error("Error fetching CSRF token:", error)
+        setFormError("Error fetching security token. Please refresh the page.")
+      }
+    }
+
+    initializeForm()
+  }, [fetchCsrfToken])
+
+  const validateForm = () => {
     if (!role) {
-      setFormError("Role is required");
-      return false;
+      setFormError("Role is required")
+      return false
     }
 
     if (!email) {
-      setFormError("Email is required");
-      return false;
+      setFormError("Email is required")
+      return false
     }
 
     if (!email.includes("@")) {
-      setFormError("Please enter a valid email address");
-      return false;
+      setFormError("Please enter a valid email address")
+      return false
     }
-    
-    if (password !== confirmPassword) {
-      setFormError("Passwords do not match");
-      return false;
-    }
-    
-    if (password.length < 8) {
-      setFormError("Password must be at least 8 characters long");
-      return false;
-    }
-    
-    setFormError("");
-    return true;
-  };
 
-  const options = [
-    { value: "Student" },
-    { value: "Company"},
-  ];
+    if (password !== confirmPassword) {
+      setFormError("Passwords do not match")
+      return false
+    }
+
+    if (password.length < 8) {
+      setFormError("Password must be at least 8 characters long")
+      return false
+    }
+
+    setFormError("")
+    return true
+  }
+
+  const options = [{ value: "Student" }, { value: "Company" }]
 
   const handleSelect = (value: string) => {
-    setRole(value);
-  };
+    setRole(value)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setDebugInfo("Form submitted");
-    
+    e.preventDefault()
+    setDebugInfo("Form submitted")
+    setFieldErrors({})
+
     if (!validateForm()) {
-      setDebugInfo("Form validation failed: " + formError);
-      return;
+      setDebugInfo("Form validation failed: " + formError)
+      return
     }
-    
+
     const userData = {
       email,
       password,
       confirm_password: confirmPassword,
-      role: role
-    };
-    
-    setDebugInfo("Attempting to register with data: " + JSON.stringify({
-      ...userData,
-      password: "********", // Don"t log actual password
-      confirm_password: "********"
-    }));
-    
-    try {
-      setDebugInfo("Calling register function...");
-      const result = await register(userData, "student");
-      setDebugInfo("Register function completed. Result: " + JSON.stringify(result));
-    } catch (err: any) {
-      setDebugInfo("Error in registration: " + (err.message || JSON.stringify(err)));
-      // Error should be handled in the auth context, but we"ll also show it here
-      setFormError(err.message || "Registration failed");
+      role: role,
+      userType: "student", // Adding userType as seen in the error logs
     }
-  };
 
-  const handleTestConnection = () => {
-    if (typeof register !== "function") {
-      setDebugInfo("Register function is not available: " + typeof register);
-    } else {
-      setDebugInfo("Register function is available");
+    setDebugInfo(
+      "Attempting to register with data: " +
+        JSON.stringify({
+          ...userData,
+          password: "********", // Don't log actual password
+          confirm_password: "********",
+        }),
+    )
+
+    try {
+      setDebugInfo("Calling register function...")
+      const result = await register(userData, "student")
+      setDebugInfo("Register function completed. Result: " + JSON.stringify(result))
+    } catch (err: any) {
+      setDebugInfo("Error in registration: " + (err.message || JSON.stringify(err)))
+
+      // Handle structured validation errors from backend
+      if (err.message && typeof err.message === "object") {
+        setFieldErrors(err.message)
+
+        // Set a general error message based on the first field error
+        const firstErrorField = Object.keys(err.message)[0]
+        if (firstErrorField && err.message[firstErrorField][0]) {
+          setFormError(`${firstErrorField}: ${err.message[firstErrorField][0]}`)
+        } else {
+          setFormError("Registration failed. Please check your information.")
+        }
+      } else {
+        // Handle general error
+        setFormError(err.message || "Registration failed")
+      }
     }
-  };
+  }
 
   return (
-    <form className="mt-[12.96px] flex flex-col justify-start" onSubmit={handleSubmit}>
-
+    <form className="mt-[12.96px] flex flex-col justify-start w-full max-w-md" onSubmit={handleSubmit}>
       {(formError || error) && (
         <FormAlert
           message={(formError || error) ?? ""}
@@ -113,100 +135,15 @@ export default function StudentRegisterForm() {
           duration={5000}
           onClose={() => {
             if (formError) {
-              setFormError("");
+              setFormError("")
             } else {
-              clearError();
+              clearError()
             }
           }}
         />
       )}
 
-      {/* {debugInfo && (
-        <div className="mb-4 p-3 bg-gray-100 text-gray-700 rounded-md">
-          <strong>Debug Info:</strong> {debugInfo}
-        </div>
-      )} */}
-
-      {/* <div className="grid grid-cols-2 gap-4 mb-6">
-        <div>
-          <Label2
-            text="First Name"
-            className="text-start font-sans text-[13px] font-medium text-Gold0"
-          />
-          <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
-          
-            <input
-              id="firstName"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="font-sans text-[16px] placeholder-Gray1 outline-none"
-              placeholder="Enter your First Name"
-              required
-            />
-          </div>
-        </div>
-        <div>
-          <Label2
-            text="Last Name"
-            className="text-start font-sans text-[13px] font-medium text-Gold0"
-          />
-          <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
-          
-            <input
-              id="lastName"
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="font-sans text-[16px] placeholder-Gray1 outline-none"
-              placeholder="Enter your Last Name"
-              required
-            />
-          </div>
-        </div>
-      </div> */}
-
-      {/* New Username field */}
-      {/* <div className="mb-6">
-        <Label2 text="Username"></Label2>
-        <div className="relative">
-          <Image
-            src="/Images/Icons/userIcon.png" 
-            alt="Username"
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
-            onError={(e) => {
-              // Fallback if icon doesn"t exist
-              (e.target as HTMLImageElement).style.display = "none";
-            }}
-            width={20}
-            height={20}
-          />
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full bg-white py-3 pl-12 pr-4 border border-gray-300 rounded-lg"
-            placeholder="Choose a username"
-            required
-          />
-        </div>
-      </div> */}
-      <Label2
-        text="Role"
-        className="text-start font-sans text-[13px] font-medium text-Gold0"
-      />
-      {/* <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
-        <input
-          placeholder="Are you a student or company?"
-          className="font-sans text-[16px] placeholder-Gray1 outline-none"
-          id="role"
-          type="text"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          required
-        />
-      </div> */}
+      <Label2 text="Role" className="text-start font-sans text-[13px] font-medium text-Gold0" />
 
       <SelectDropDown
         options={options}
@@ -215,33 +152,8 @@ export default function StudentRegisterForm() {
         text="Are you a student or company?"
       />
 
-      {/* <div className="mb-6">
-        <Label2 text="Email"></Label2>
-        <div className="relative">
-          <Image
-            src="/Images/Icons/emailIcon.png" 
-            alt="Email" 
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
-            width={20}
-            height={20}
-          />
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-white py-3 pl-12 pr-4 border border-gray-300 rounded-lg"
-            placeholder="Enter your email"
-            required
-          />
-        </div>
-      </div> */}
-      <Label2
-        text="Email"
-        className="text-start font-sans text-[13px] font-medium text-Gold0"
-      />
+      <Label2 text="Email" className="text-start font-sans text-[13px] font-medium text-Gold0" />
       <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
-        {/* <Image src={emailIcon} alt="Phone" className="mr-[8px] w-[22.18px] h-[17.31px]" /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -266,40 +178,9 @@ export default function StudentRegisterForm() {
           required
         />
       </div>
+      {fieldErrors.email && <p className="mt-1 text-sm text-red-600">{fieldErrors.email[0]}</p>}
 
-      {/* <div className="mb-6">
-        <Label2 text="Password"></Label2>
-        <div className="relative">
-          <Image
-            src="/Images/Icons/passwordIcon.png" 
-            alt="Password" 
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
-            width={20}
-            height={20}
-          />
-          <input
-            id="password"
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-white py-3 pl-12 pr-12 border border-gray-300 rounded-lg"
-            placeholder="Enter your password"
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500"
-          >
-            {showPassword ? "Hide" : "Show"}
-          </button>
-        </div>
-      </div> */}
-
-      <Label2
-        text="Password"
-        className="text-start font-sans text-[13px] font-medium text-Blue4"
-      />
+      <Label2 text="Password" className="text-start font-sans text-[13px] font-medium text-Blue4 mt-4" />
       <div className="width-[100%] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -327,47 +208,20 @@ export default function StudentRegisterForm() {
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className=" right top-2/2 transform -translate-y-2/2 text-gray-500"
+          className="right top-2/2 transform -translate-y-2/2 text-gray-500"
         >
           {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
       </div>
+      {fieldErrors.password && <p className="mt-1 text-sm text-red-600">{fieldErrors.password[0]}</p>}
 
-      {/* <div className="mb-6">
-        <Label2 text="Confirm Password"></Label2>
-        <div className="relative">
-          <Image
-            src="/Images/Icons/passwordIcon.png" 
-            alt="Confirm Password" 
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" 
-            width={20}
-            height={20}
-          />
-          <input
-            id="confirmPassword"
-            type={showConfirmPassword ? "text" : "password"}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full bg-white py-3 pl-12 pr-12 border border-gray-300 rounded-lg"
-            placeholder="Confirm your password"
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500"
-          >
-            {showConfirmPassword ? "Hide" : "Show"}
-          </button>
-        </div>
-      </div> */}
+      {/* Password strength hint */}
+      <p className="mt-1 text-xs text-gray-500">
+        Use a strong password with at least 8 characters, including numbers and special characters.
+      </p>
 
-      <Label2
-        text="Confirm Password"
-        className="text-start font-sans text-[13px] font-medium text-Blue4"
-      />
+      <Label2 text="Confirm Password" className="text-start font-sans text-[13px] font-medium text-Blue4 mt-4" />
       <div className="width-[100%] mb-[36px] mt-[8px] flex flex-row items-center border-b-[2px] border-Gold3 px-[4.91px] py-[4.91px]">
-        {/* <Image src={passwordIcon} alt="password" className="mr-[8px] w-[16px] h-[20px]" /> */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -383,63 +237,40 @@ export default function StudentRegisterForm() {
           />
         </svg>
         <input
+          placeholder="Confirm password"
+          className="w-full font-sans text-[16px] placeholder-Gray1 outline-none"
           id="confirmPassword"
           type={showConfirmPassword ? "text" : "password"}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-full font-sans text-[16px] placeholder-Gray1 outline-none"
-          placeholder="Confirm your password"
           required
         />
         <button
           type="button"
           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          className="right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500"
+          className="right top-2/2 transform -translate-y-2/2 text-gray-500"
         >
-          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
       </div>
+      {fieldErrors.confirm_password && <p className="mt-1 text-sm text-red-600">{fieldErrors.confirm_password[0]}</p>}
 
-      {/* <Button1 
-        type="submit" 
-        disabled={loading}
-        className="w-full"
-      >
-        {loading ? "Registering..." : "Register"}
-      </Button1> */}
-      <Button1
-        text="Register"
-        loading={loading}
-        disabled={loading}
-        type="submit"
-      />
-      
-      {/* <button
-        type="button"
-        onClick={handleTestConnection}
-        className="mt-2 w-full py-2 bg-gray-200 text-gray-700 rounded"
-      >
-        Test Auth Context
-      </button> */}
+      <div className="flex flex-col items-center justify-center">
+        <Button1
+          text={loading ? "Processing..." : "Register"}
+          className="w-full rounded-md bg-Gold0 py-2 font-sans text-[16px] font-medium text-white shadow-md hover:bg-Gold1 focus:outline-none"
+          disabled={loading}
+          type="submit"
+        />
 
-      {/* <div className="mt-4 text-center">
-        <p className="text-gray-600">
-          Already have an account?{" "}
-          <Link 
-            href="/UsersAuthentication/StudentAuth/StudentAuthPage/StudentLogin"
-            className="text-blue-600 hover:underline"
-          >
-            Login
-          </Link>
-        </p>
-      </div> */}
-
-      {/* <Button1
-        text="Register"
-        loading={loading}
-        disabled={loading}
-        type="submit"
-      /> */}
+        {/* Debug information - remove in production */}
+        {debugInfo && process.env.NODE_ENV === "development" && (
+          <div className="mt-4 border border-gray-300 p-2 text-xs text-gray-600">
+            <strong>Debug Info:</strong>
+            <pre>{debugInfo}</pre>
+          </div>
+        )}
+      </div>
     </form>
-  );
+  )
 }

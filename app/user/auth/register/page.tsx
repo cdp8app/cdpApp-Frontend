@@ -1,4 +1,4 @@
-import StudentRegisterForm from "./form";
+import StudentRegisterForm from "./form"
 
 export default function StudentRegisterPage() {
   return (
@@ -8,5 +8,5 @@ export default function StudentRegisterPage() {
         <StudentRegisterForm />
       </div>
     </div>
-  );
+  )
 }

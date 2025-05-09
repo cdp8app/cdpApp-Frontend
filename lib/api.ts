@@ -1,7 +1,8 @@
 // lib/api.ts
 import axios from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com";
+// Use relative URL for API calls to avoid CORS issues
+const API_BASE_URL = "/api/proxy";
 
 // Create axios instance with base configuration
 const api = axios.create({
@@ -15,9 +16,11 @@ const api = axios.create({
 // Request interceptor for adding auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("authToken"); // Using "authToken" key from main branch
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("authToken"); // Using "authToken" key from main branch
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
@@ -31,9 +34,11 @@ api.interceptors.response.use(
     const { response } = error;
     // Handle authentication errors
     if (response && response.status === 401) {
-      localStorage.removeItem("authToken");
-      // Redirect to login if needed
-      window.location.href = "/UsersAuthentication/StudentAuth/StudentAuthPage";
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("authToken");
+        // Redirect to login if needed
+        window.location.href = "/UsersAuthentication/StudentAuth/StudentAuthPage";
+      }
     }
     return Promise.reject(error);
   },
@@ -50,7 +55,9 @@ export const getAuthHeader = (): Record<string, string> => {
 
 // Server-side fetch function for SSR/SSG components that can't use axios
 export async function serverFetch(endpoint: string, options: RequestInit = {}) {
-  const url = `${API_BASE_URL}${endpoint}`;
+  // For server-side requests, use the full URL
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com";
+  const url = `${apiUrl}${endpoint}`;
   
   const defaultOptions: RequestInit = {
     headers: {
