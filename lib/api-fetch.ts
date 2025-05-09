@@ -1,7 +1,10 @@
 // Alternative API client using native fetch
 const apiFetch = {
   get: async (url: string, options = {}) => {
-    const response = await fetch(`https://careerxhub.onrender.com${url}`, {
+    // Use relative URL for API calls to avoid CORS issues
+    const apiUrl = url.startsWith("/api") ? url : `/api/proxy${url}`;
+    
+    const response = await fetch(apiUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -19,7 +22,10 @@ const apiFetch = {
   },
   
   post: async (url: string, data: any, options = {}) => {
-    const response = await fetch(`https://careerxhub.onrender.com${url}`, {
+    // Use relative URL for API calls to avoid CORS issues
+    const apiUrl = url.startsWith("/api") ? url : `/api/proxy${url}`;
+    
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,4 +52,3 @@ function getAuthHeader() {
 }
   
 export default apiFetch;
-  

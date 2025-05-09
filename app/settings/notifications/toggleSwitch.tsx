@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 
-const ToggleSwitch: React.FC = () => {
-  const [isOn, setIsOn] = useState(false);
+interface ToggleSwitchProps {
+  isOn: boolean;
+  onToggle: () => void;
+}
 
-  const toggleSwitch = () => {
-    setIsOn(!isOn);
-  };
-
+const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ isOn, onToggle }) => {
   return (
     <div
-      className={`w-[36px] h-[20px] flex items-center bg-Gray2 rounded-[999px] p-1 cursor-pointer ${isOn ? "bg-PriGold" : "bg-Gray2"}`}
-      onClick={toggleSwitch}
+      className={`w-[36px] h-[20px] flex items-center rounded-[999px] p-1 cursor-pointer ${isOn ? "bg-PriGold" : "bg-Gray2"}`}
+      onClick={onToggle}
     >
       <div
         className={`bg-Gold3 w-[16px] h-[16px] rounded-full shadow-md transform duration-300 ease-in-out ${isOn ? "translate-x-[12px]" : ""}`}

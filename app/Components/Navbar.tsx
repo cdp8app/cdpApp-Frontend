@@ -1,6 +1,7 @@
 import React from "react";
 import "../../app/globals.css";
 import Link from "next/link";
+import NotificationBell from "./NotificationBell";
 
 interface Navbar1Props {
   userType: "student" | "company";
@@ -10,7 +11,6 @@ export default function Navbar1({ userType }: Navbar1Props) {
   const studentLinks = [
     { name: "Home", href: "/student/homepage" },
     { name: "Dashboard", href: "/student/dashboard" },
-    { name: "Notifications", href: "/student/notifications" },
     { name: "Messages", href: "/messaging" },
     { name: "Settings", href: "/settings" },
   ];
@@ -36,6 +36,8 @@ export default function Navbar1({ userType }: Navbar1Props) {
           {link.name}
         </Link>
       ))}
+      {/* Notification Bell */}
+      <NotificationBell />
       <div className="bg-White h-[36px] w-[36px] rounded-[18px]"></div>
     </div>
   );
