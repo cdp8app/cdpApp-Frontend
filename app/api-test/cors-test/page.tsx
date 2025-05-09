@@ -270,13 +270,13 @@ export default function CorsTestPage() {
             <li>
               <strong>Direct API Call:</strong> Makes a request directly to the external API at 
               <code className="mx-1 px-1 bg-gray-200 rounded">https://careerxhub.onrender.com/api/user/register/</code>. 
-              This should fail with a CORS error because the browser blocks cross-origin requests that don't have the proper CORS headers.
+              This should fail with a CORS error because the browser blocks cross-origin requests that don&apos;t have the proper CORS headers.
             </li>
             <li>
               <strong>Proxy API Call:</strong> Makes a request to our Next.js API route at 
               <code className="mx-1 px-1 bg-gray-200 rounded">/api/proxy/register</code>, 
               which forwards the request to the external API. This should succeed because the request is made from the server, 
-              which isn't subject to the same CORS restrictions as the browser.
+              which isn&apos;t subject to the same CORS restrictions as the browser.
             </li>
           </ul>
         </div>

@@ -132,7 +132,7 @@ export default function StudentProfilePage() {
 
         // Set other profile data as needed (e.g., name, profile picture)
       } catch (error) {
-        console.error("Failed to fetch profile", error);
+        setFormError(`Failed to fetch profile ${error}`);
       }
     };
   

@@ -14,7 +14,6 @@ export default function StudentLoginPage() {
     setMounted(true);
     if (typeof window !== "undefined") {
       const storedUserType = localStorage.getItem("userType");
-      console.log("Stored user type:", storedUserType);
       if (storedUserType === "student" || storedUserType === "company") {
         setUserType(storedUserType);
       } else {
@@ -33,7 +32,7 @@ export default function StudentLoginPage() {
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/* Use regular img tag to troubleshoot */}
-        <img 
+        <Image 
           src="/Images/Logo3.png" 
           alt="CDP Logo" 
           className="mx-auto h-12 w-auto"

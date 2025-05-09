@@ -14,7 +14,7 @@ export default function MessagingNotFound() {
         <CardContent className="flex flex-col items-center justify-center py-6">
           <MessageSquare className="h-16 w-16 text-muted-foreground mb-4" />
           <p className="text-center text-muted-foreground">
-            The messaging feature you're looking for is not available or is still under development.
+            The messaging feature you&apos;re looking for is not available or is still under development.
           </p>
         </CardContent>
         <CardFooter>

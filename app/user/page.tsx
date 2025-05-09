@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 
@@ -32,6 +32,14 @@ const BestDescribes = () => {
       router.push("/user/auth");
     }
   };
+
+  useEffect(() => {
+    const authError = localStorage.getItem("authError");
+    if (authError) {
+      setFormError(authError);
+      localStorage.removeItem("authError");
+    }
+  }, []);
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">

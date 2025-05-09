@@ -2,16 +2,23 @@
 
 import { useState } from "react";
 
-type StarRatingProps = {
-  totalStars?: number;
+interface StarRatingProps {
   defaultValue?: number;
-};
+  totalStars?: number;
+  onChange?: (value: number) => void;
+}
 
 const StarRating: React.FC<StarRatingProps> = ({
   totalStars = 5,
-  defaultValue = 0
+  defaultValue = 0,
+  onChange
 }) => {
   const [rating, setRating] = useState<number>(defaultValue);
+
+  const handleClick = (value: number) => {
+    setRating(value);
+    onChange?.(value); // Notify parent if onChange is provided
+  };
 
   return (
     <div className="flex space-x-1 justify-self-center">
@@ -21,13 +28,12 @@ const StarRating: React.FC<StarRatingProps> = ({
 
         return (
           <svg
+            key={starValue}
             xmlns="http://www.w3.org/2000/svg"
             fill={isFilled ? "#facc15" : "rgba(181, 181, 181, 0.40)"}
-            key={starValue}
-            onClick={() => setRating(starValue)}
+            onClick={() => handleClick(starValue)}
             viewBox="0 0 24 24"
             strokeWidth="1.5"
-            // stroke="currentColor"
             className="size-9 cursor-pointer"
           >
             <path
@@ -41,5 +47,6 @@ const StarRating: React.FC<StarRatingProps> = ({
     </div>
   );
 };
+
 
 export default StarRating;

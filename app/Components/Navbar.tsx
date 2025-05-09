@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../../app/globals.css";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
+import { CldImage } from "next-cloudinary";
 import NotificationBell from "./NotificationBell";
 
 interface Navbar1Props {
@@ -46,6 +48,7 @@ export default function Navbar1({ userType }: Navbar1Props) {
   ];
 
   const links = userType === "student" ? studentLinks : companyLinks;
+  const { user } = useAuth();
 
   // Toggle menu
   const toggleMenu = () => {
@@ -66,6 +69,18 @@ export default function Navbar1({ userType }: Navbar1Props) {
               {link.name}
             </Link>
           ))}
+          <div className="h-[36px] w-[36px] rounded-[18px] overflow-hidden bg-White">
+            {user?.profile_picture ? (
+              <CldImage
+                width="36"
+                height="36"
+                src={user?.profile_picture}
+                alt="Description of my image"
+              />
+            ) : (
+              <div className="bg-White h-[36px] w-[36px] rounded-[18px]"></div>
+            )}
+          </div>
         </div>
         <div className="flex items-center space-x-4">
           <NotificationBell />
@@ -115,6 +130,18 @@ export default function Navbar1({ userType }: Navbar1Props) {
               {link.name}
             </Link>
           ))}
+          <div className="h-[36px] w-[36px] rounded-[18px] overflow-hidden bg-White">
+            {user?.profile_picture ? (
+              <CldImage
+                width="36"
+                height="36"
+                src={user?.profile_picture}
+                alt="Description of my image"
+              />
+            ) : (
+              <div className="bg-White h-[36px] w-[36px] rounded-[18px]"></div>
+            )}
+          </div>
         </div>
       )}
     </nav>

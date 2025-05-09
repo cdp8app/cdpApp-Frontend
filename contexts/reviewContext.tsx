@@ -116,7 +116,6 @@ export const ReviewProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
 
       setReviews(data);
-      router.push("/company/review");
     } catch (err: any) {
       setError(err.message);
     } finally {

@@ -42,10 +42,8 @@ export default function SetUpJobForm() {
         deadline: duration,
         jobType,
       };
-      console.log("Before submitting: ", jobData);
 
       await createJob(jobData);
-      console.log("After submitting: ", jobData);
     } catch (err: any) {
       setFormError(err.message || "Failed to create job.");
     }

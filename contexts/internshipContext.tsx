@@ -25,6 +25,7 @@ export interface Internship {
 //     endDate: string;
 //   status: string;
 company_details?: {
+  id: string;
   company_name?: string;
   company_industry?: string;
   profile_picture?: string;

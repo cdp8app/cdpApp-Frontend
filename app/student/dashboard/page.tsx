@@ -19,7 +19,9 @@ export default function Dashboard() {
   const { getStudentOffers } = useOfferContext();
   const [internships, setInternships] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
   const [applications, setApplications] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
-  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]);  
+  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]); 
+  
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     const fetchData  = async () => {
@@ -38,7 +40,7 @@ export default function Dashboard() {
           setOffers((fetchOffers as any).results);
         }
       } catch (error) {
-        console.error("Failed to fetch jobs", error);
+        setFormError(`Failed to fetch jobs ${error}`);
       }
     };
     fetchData ();
@@ -69,8 +71,8 @@ export default function Dashboard() {
               <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] overflow-hidden bg-White">
                 {user?.profile_picture ? (
                   <CldImage
-                    width="120"
-                    height="120"
+                    width="134"
+                    height="134"
                     src={user?.profile_picture}
                     alt="Description of my image"
                   />
@@ -120,7 +122,7 @@ export default function Dashboard() {
                 </Link>
               </div>
               <div className="flex flex-row justify-between">
-                <div className="w-[32%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39]">
+                <div className="w-[32%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Green1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Green1">
@@ -131,7 +133,7 @@ export default function Dashboard() {
                     {completedInternships}
                   </p>
                 </div>
-                <div className="bg-Yellow2 w-[32%] rounded-[11.62px] px-[22.29px] py-[21.39]">
+                <div className="bg-Yellow2 w-[32%] rounded-[11.62px] px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="bg-Yellow1 mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px]"></div>
                     <h1 className="text-Yellow1 font-sans text-[16px]/[120%]">
@@ -142,7 +144,7 @@ export default function Dashboard() {
                     {openOngoingInternships}
                   </p>
                 </div>
-                <div className="w-[32%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39]">
+                <div className="w-[32%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Red1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Red1">
@@ -182,7 +184,7 @@ export default function Dashboard() {
                 </Link>
               </div>
               <div className="flex flex-row justify-between">
-                <div className="w-[24%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Green1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Green1">
@@ -193,7 +195,7 @@ export default function Dashboard() {
                     {approvedApplications}
                   </p>
                 </div>
-                <div className="bg-BlueB1 w-[24%] rounded-[11.62px] bg-opacity-15 px-[22.29px] py-[21.39]">
+                <div className="bg-BlueB1 w-[24%] rounded-[11.62px] bg-opacity-15 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="bg-BlueB1 mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px]"></div>
                     <h1 className="text-BlueB1 font-sans text-[16px]/[120%]">
@@ -204,7 +206,7 @@ export default function Dashboard() {
                     {interviewApplications}
                   </p>
                 </div>
-                <div className="bg-Yellow2 w-[24%] rounded-[11.62px] px-[22.29px] py-[21.39]">
+                <div className="bg-Yellow2 w-[24%] rounded-[11.62px] px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="bg-Yellow1 mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px]"></div>
                     <h1 className="text-Yellow1 font-sans text-[16px]/[120%]">
@@ -215,7 +217,7 @@ export default function Dashboard() {
                     {pendingApplications}
                   </p>
                 </div>
-                <div className="w-[24%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Red1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Red1">
@@ -255,7 +257,7 @@ export default function Dashboard() {
                 </Link>
               </div>
               <div className="flex flex-row justify-between">
-                <div className="w-[24%] rounded-[11.62px] bg-Gray2 bg-opacity-30 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Gray2 bg-opacity-30 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Gold1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Gold1">
@@ -266,7 +268,7 @@ export default function Dashboard() {
                     {allOffers}
                   </p>
                 </div>
-                <div className="w-[24%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Green2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Green1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Green1">
@@ -277,7 +279,7 @@ export default function Dashboard() {
                     {acceptedOffers}
                   </p>
                 </div>
-                <div className="bg-Yellow2 w-[24%] rounded-[11.62px] px-[22.29px] py-[21.39]">
+                <div className="bg-Yellow2 w-[24%] rounded-[11.62px] px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="bg-Yellow1 mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px]"></div>
                     <h1 className="text-Yellow1 font-sans text-[16px]/[120%]">
@@ -288,7 +290,7 @@ export default function Dashboard() {
                     {pendingOffers}
                   </p>
                 </div>
-                <div className="w-[24%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39]">
+                <div className="w-[24%] rounded-[11.62px] bg-Red2 px-[22.29px] py-[21.39px]">
                   <div className="mb-[6px] flex flex-row items-center">
                     <div className="mr-[5px] h-[8.37px] w-[8.37px] rounded-[4.18px] bg-Red1"></div>
                     <h1 className="font-sans text-[16px]/[120%] text-Red1">
