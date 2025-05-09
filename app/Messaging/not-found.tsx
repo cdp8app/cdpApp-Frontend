@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { Button } from "@/app/Components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/app/Components/ui/card"
-import { MessageSquare } from "lucide-react"
+import Link from "next/link";
+import { Button } from "@/app/Components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/app/Components/ui/card";
+import { MessageSquare } from "lucide-react";
 
 export default function MessagingNotFound() {
   return (
@@ -24,5 +24,5 @@ export default function MessagingNotFound() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

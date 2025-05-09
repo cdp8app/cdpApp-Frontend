@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { useAuth } from "@/contexts/AuthContext"
-import FormAlert from "@/app/Components/FormAlert"
+import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import FormAlert from "@/app/Components/FormAlert";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardFooter,
-} from "@/app/Components/ui/card"
-import { Button } from "@/app/Components/ui/button"
-import { Input } from "@/app/Components/ui/input"
+} from "@/app/Components/ui/card";
+import { Button } from "@/app/Components/ui/button";
+import { Input } from "@/app/Components/ui/input";
 import {
   MessageSquare,
   Send,
@@ -24,10 +24,10 @@ import {
   User,
   Calendar,
   ChevronLeft,
-} from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/app/Components/ui/avatar"
-import { Badge } from "@/app/Components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/Components/ui/tabs"
+} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/Components/ui/avatar";
+import { Badge } from "@/app/Components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/Components/ui/tabs";
 
 // Types based on the API structure
 interface Conversation {
@@ -60,71 +60,71 @@ interface Message {
 }
 
 export default function MessagingPage() {
-  const { user, isAuthenticated, loading: authLoading, getValidToken } = useAuth()
-  const [loading, setLoading] = useState(true)
-  const [conversations, setConversations] = useState<Conversation[]>([])
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
-  const [newMessage, setNewMessage] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const [unreadCount, setUnreadCount] = useState(0)
-  const [retryCount, setRetryCount] = useState(0)
+  const { user, isAuthenticated, loading: authLoading, getValidToken } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [retryCount, setRetryCount] = useState(0);
   const [backendStatus, setBackendStatus] = useState<"connecting" | "connected" | "error" | "unauthorized">(
     "connecting",
-  )
-  const [sendingMessage, setSendingMessage] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [showMobileConversations, setShowMobileConversations] = useState(true)
-  const [activeTab, setActiveTab] = useState("all")
+  );
+  const [sendingMessage, setSendingMessage] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showMobileConversations, setShowMobileConversations] = useState(true);
+  const [activeTab, setActiveTab] = useState("all");
 
   // Fetch conversations
   useEffect(() => {
     const fetchConversations = async () => {
-      if (!isAuthenticated) return
+      if (!isAuthenticated) return;
 
       try {
-        setLoading(true)
-        setError(null)
+        setLoading(true);
+        setError(null);
 
         // Get a valid token first
-        const token = await getValidToken()
+        const token = await getValidToken();
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
           "Cache-Control": "no-cache",
-        }
+        };
 
         if (token) {
-          headers["Authorization"] = `Bearer ${token}`
+          headers["Authorization"] = `Bearer ${token}`;
         }
 
         // Use regular fetch with the token
         const response = await fetch("/api/proxy/chat/messages/conversations/", {
           headers,
-        })
+        });
 
         if (response.status === 401) {
-          console.log("Unauthorized access to conversations - using mock data")
-          setBackendStatus("unauthorized")
-          throw new Error("Unauthorized: Please check your login status")
+          console.log("Unauthorized access to conversations - using mock data");
+          setBackendStatus("unauthorized");
+          throw new Error("Unauthorized: Please check your login status");
         }
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch conversations: ${response.status} ${response.statusText}`)
+          throw new Error(`Failed to fetch conversations: ${response.status} ${response.statusText}`);
         }
 
-        const data = await response.json()
-        setConversations(data)
-        setBackendStatus("connected")
+        const data = await response.json();
+        setConversations(data);
+        setBackendStatus("connected");
       } catch (err) {
-        console.error("Error fetching conversations:", err)
+        console.error("Error fetching conversations:", err);
 
         if (err instanceof Error && err.message.includes("Unauthorized")) {
-          setError("Authentication error. Using mock data instead.")
-          setBackendStatus("unauthorized")
+          setError("Authentication error. Using mock data instead.");
+          setBackendStatus("unauthorized");
         } else {
-          setError("Failed to load conversations. Using mock data instead.")
-          setBackendStatus("error")
+          setError("Failed to load conversations. Using mock data instead.");
+          setBackendStatus("error");
         }
 
         // Set mock conversations if fetch fails
@@ -181,71 +181,71 @@ export default function MessagingPage() {
             },
             unread_count: 0,
           },
-        ])
+        ]);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchConversations()
-  }, [isAuthenticated, retryCount, getValidToken])
+    fetchConversations();
+  }, [isAuthenticated, retryCount, getValidToken]);
 
   // Fetch unread count
   useEffect(() => {
     const fetchUnreadCount = async () => {
-      if (!isAuthenticated) return
+      if (!isAuthenticated) return;
 
       try {
         // Get a valid token first
-        const token = await getValidToken()
+        const token = await getValidToken();
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
           "Cache-Control": "no-cache",
-        }
+        };
 
         if (token) {
-          headers["Authorization"] = `Bearer ${token}`
+          headers["Authorization"] = `Bearer ${token}`;
         }
 
         // Use regular fetch with the token
         const response = await fetch("/api/proxy/chat/messages/unread_count/", {
           headers,
-        })
+        });
 
         if (response.ok) {
-          const data = await response.json()
-          setUnreadCount(data.count || 0)
+          const data = await response.json();
+          setUnreadCount(data.count || 0);
         }
       } catch (err) {
-        console.error("Error fetching unread count:", err)
+        console.error("Error fetching unread count:", err);
       }
-    }
+    };
 
-    fetchUnreadCount()
+    fetchUnreadCount();
 
     // Set up polling for unread count
-    const interval = setInterval(fetchUnreadCount, 30000) // every 30 seconds
-    return () => clearInterval(interval)
-  }, [isAuthenticated, getValidToken])
+    const interval = setInterval(fetchUnreadCount, 30000); // every 30 seconds
+    return () => clearInterval(interval);
+  }, [isAuthenticated, getValidToken]);
 
   // Fetch messages for selected conversation
   useEffect(() => {
     const fetchMessages = async () => {
-      if (!isAuthenticated || !selectedConversation) return
+      if (!isAuthenticated || !selectedConversation) return;
 
       try {
-        setLoading(true)
-        setError(null)
+        setLoading(true);
+        setError(null);
 
         // Get a valid token first
-        const token = await getValidToken()
+        const token = await getValidToken();
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
           "Cache-Control": "no-cache",
-        }
+        };
 
         if (token) {
-          headers["Authorization"] = `Bearer ${token}`
+          headers["Authorization"] = `Bearer ${token}`;
         }
 
         // Use regular fetch with the token
@@ -254,62 +254,62 @@ export default function MessagingPage() {
           {
             headers,
           },
-        )
+        );
 
         if (response.status === 401) {
-          console.log("Unauthorized access to messages - using mock data")
-          setBackendStatus("unauthorized")
-          throw new Error("Unauthorized: Please check your login status")
+          console.log("Unauthorized access to messages - using mock data");
+          setBackendStatus("unauthorized");
+          throw new Error("Unauthorized: Please check your login status");
         }
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch messages: ${response.status} ${response.statusText}`)
+          throw new Error(`Failed to fetch messages: ${response.status} ${response.statusText}`);
         }
 
-        const data = await response.json()
-        setMessages(data)
+        const data = await response.json();
+        setMessages(data);
 
         // Mark messages as read
-        markMessagesAsRead(data)
+        markMessagesAsRead(data);
         
         // On mobile, hide conversations list when a conversation is selected
         if (window.innerWidth < 768) {
-          setShowMobileConversations(false)
+          setShowMobileConversations(false);
         }
       } catch (err) {
-        console.error("Error fetching messages:", err)
+        console.error("Error fetching messages:", err);
 
         // Generate mock messages for the selected conversation
-        const mockMessages = generateMockMessages(selectedConversation)
-        setMessages(mockMessages)
+        const mockMessages = generateMockMessages(selectedConversation);
+        setMessages(mockMessages);
 
         if (err instanceof Error && err.message.includes("Unauthorized")) {
-          setError("Authentication error. Using mock messages.")
+          setError("Authentication error. Using mock messages.");
         } else {
-          setError("Failed to load messages. Using mock data instead.")
+          setError("Failed to load messages. Using mock data instead.");
         }
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchMessages()
-  }, [isAuthenticated, selectedConversation, getValidToken])
+    fetchMessages();
+  }, [isAuthenticated, selectedConversation, getValidToken]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages])
+  }, [messages]);
 
   // Generate mock messages for a conversation
   const generateMockMessages = (conversationId: string): Message[] => {
-    const conversation = conversations.find((c) => c.id === conversationId)
-    if (!conversation) return []
+    const conversation = conversations.find((c) => c.id === conversationId);
+    if (!conversation) return [];
 
-    const recipientName = conversation.recipient.name
-    const recipientId = conversation.recipient.id
+    const recipientName = conversation.recipient.name;
+    const recipientId = conversation.recipient.id;
 
     // Generate more realistic mock conversations based on context
     if (recipientId.includes("system-1")) {
@@ -317,7 +317,7 @@ export default function MessagingPage() {
       return [
         {
           id: `${conversationId}-1`,
-          content: `Hello! Welcome to Career Services. How can we assist with your career planning today?`,
+          content: "Hello! Welcome to Career Services. How can we assist with your career planning today?",
           sender: {
             id: recipientId,
             name: recipientName,
@@ -357,7 +357,7 @@ export default function MessagingPage() {
           timestamp: new Date(Date.now() - 3400000).toISOString(),
           is_read: true,
         },
-      ]
+      ];
     } else if (recipientId.includes("company")) {
       // Company conversation
       return [
@@ -417,7 +417,7 @@ export default function MessagingPage() {
           timestamp: new Date(Date.now() - 230000000).toISOString(),
           is_read: true,
         },
-      ]
+      ];
     } else {
       // Default conversation
       return [
@@ -463,23 +463,23 @@ export default function MessagingPage() {
           timestamp: new Date(Date.now() - 3400000).toISOString(),
           is_read: true,
         },
-      ]
+      ];
     }
-  }
+  };
 
   const markMessagesAsRead = async (messages: Message[]) => {
-    if (!isAuthenticated) return
+    if (!isAuthenticated) return;
 
     try {
       // Find unread messages that are not from the current user
-      const unreadMessages = messages.filter((msg) => !msg.is_read && msg.sender.id !== user?.id)
+      const unreadMessages = messages.filter((msg) => !msg.is_read && msg.sender.id !== user?.id);
 
       // Get a valid token first
-      const token = await getValidToken()
+      const token = await getValidToken();
 
       // Skip if no token or in mock mode
       if (!token || backendStatus === "unauthorized" || backendStatus === "error") {
-        return
+        return;
       }
 
       // Mark each unread message as read
@@ -491,9 +491,9 @@ export default function MessagingPage() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          })
+          });
         } catch (err) {
-          console.error(`Error marking message ${message.id} as read:`, err)
+          console.error(`Error marking message ${message.id} as read:`, err);
           // Continue with other messages even if one fails
         }
       }
@@ -506,26 +506,26 @@ export default function MessagingPage() {
             "Cache-Control": "no-cache",
             Authorization: `Bearer ${token}`,
           },
-        })
+        });
 
         if (response.ok) {
-          const data = await response.json()
-          setUnreadCount(data.count || 0)
+          const data = await response.json();
+          setUnreadCount(data.count || 0);
         }
       }
     } catch (err) {
-      console.error("Error marking messages as read:", err)
+      console.error("Error marking messages as read:", err);
     }
-  }
+  };
 
   const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (!newMessage.trim() || !selectedConversation || sendingMessage) return
+    if (!newMessage.trim() || !selectedConversation || sendingMessage) return;
 
     // Get the recipient ID from the selected conversation
-    const conversation = conversations.find((c) => c.id === selectedConversation)
-    if (!conversation) return
+    const conversation = conversations.find((c) => c.id === selectedConversation);
+    if (!conversation) return;
 
     // Optimistically add message to UI
     const tempMessage: any = {
@@ -539,21 +539,21 @@ export default function MessagingPage() {
       timestamp: new Date().toISOString(),
       is_read: true,
       isTemp: true, // Flag to identify temporary messages
-    }
+    };
 
-    setMessages((prev) => [...prev, tempMessage])
-    setNewMessage("")
-    setSendingMessage(true)
+    setMessages((prev) => [...prev, tempMessage]);
+    setNewMessage("");
+    setSendingMessage(true);
 
     try {
       // Get a valid token first
-      const token = await getValidToken()
+      const token = await getValidToken();
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
-      }
+      };
 
       if (token) {
-        headers["Authorization"] = `Bearer ${token}`
+        headers["Authorization"] = `Bearer ${token}`;
       }
 
       // Use regular fetch with the token
@@ -564,23 +564,23 @@ export default function MessagingPage() {
           content: newMessage,
           recipient_id: conversation.recipient.id,
         }),
-      })
+      });
 
       if (response.status === 401) {
-        console.log("Unauthorized when sending message - using mock response")
-        setBackendStatus("unauthorized")
+        console.log("Unauthorized when sending message - using mock response");
+        setBackendStatus("unauthorized");
 
         // In case of 401, we'll still keep the message in the UI
         // but update it to look like a real message instead of temp
         setMessages((prev) =>
           prev.map((msg) => (msg.id === tempMessage.id ? { ...msg, id: `mock-${Date.now()}`, isTemp: false } : msg)),
-        )
+        );
 
         // Add a mock response from the recipient after a delay
         setTimeout(() => {
           const mockResponse = {
             id: `mock-response-${Date.now()}`,
-            content: `I've received your message. This is a mock response since the backend is unavailable.`,
+            content: "I've received your message. This is a mock response since the backend is unavailable.",
             sender: conversation.recipient,
             recipient: {
               id: user?.id || "user-1",
@@ -588,82 +588,82 @@ export default function MessagingPage() {
             },
             timestamp: new Date().toISOString(),
             is_read: true,
-          }
-          setMessages((prev) => [...prev, mockResponse])
-        }, 1000)
+          };
+          setMessages((prev) => [...prev, mockResponse]);
+        }, 1000);
 
-        return
+        return;
       }
 
       if (!response.ok) {
-        throw new Error(`Failed to send message: ${response.status} ${response.statusText}`)
+        throw new Error(`Failed to send message: ${response.status} ${response.statusText}`);
       }
 
       // Replace the temp message with the real one from the response
-      const data = await response.json()
-      setMessages((prev) => prev.map((msg) => (msg.id === tempMessage.id ? data : msg)))
+      const data = await response.json();
+      setMessages((prev) => prev.map((msg) => (msg.id === tempMessage.id ? data : msg)));
     } catch (err) {
-      console.error("Error sending message:", err)
+      console.error("Error sending message:", err);
 
       if (backendStatus !== "unauthorized") {
-        setError("Failed to send message to the server. Message saved locally.")
+        setError("Failed to send message to the server. Message saved locally.");
 
         // Keep the message in the UI but mark it as a mock message
         setMessages((prev) =>
           prev.map((msg) => (msg.id === tempMessage.id ? { ...msg, id: `mock-${Date.now()}`, isTemp: false } : msg)),
-        )
+        );
       }
     } finally {
-      setSendingMessage(false)
+      setSendingMessage(false);
     }
-  }
+  };
 
   const refreshConversations = async () => {
-    setRetryCount((prev) => prev + 1)
-  }
+    setRetryCount((prev) => prev + 1);
+  };
 
   const formatTime = (timestamp: string) => {
-    const date = new Date(timestamp)
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-  }
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
 
   const formatDate = (timestamp: string) => {
-    const date = new Date(timestamp)
-    const today = new Date()
-    const yesterday = new Date(today)
-    yesterday.setDate(yesterday.getDate() - 1)
+    const date = new Date(timestamp);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
 
     if (date.toDateString() === today.toDateString()) {
-      return "Today"
+      return "Today";
     } else if (date.toDateString() === yesterday.toDateString()) {
-      return "Yesterday"
+      return "Yesterday";
     } else {
-      return date.toLocaleDateString()
+      return date.toLocaleDateString();
     }
-  }
+  };
 
   // Filter conversations based on search term and active tab
   const filteredConversations = conversations.filter((conversation) => {
-    const matchesSearch = conversation.recipient.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch = conversation.recipient.name.toLowerCase().includes(searchTerm.toLowerCase());
     
     if (activeTab === "all") {
-      return matchesSearch
+      return matchesSearch;
     } else if (activeTab === "unread") {
-      return matchesSearch && conversation.unread_count > 0
+      return matchesSearch && conversation.unread_count > 0;
     }
     
-    return matchesSearch
-  })
+    return matchesSearch;
+  });
 
   // Get initials from name
   const getInitials = (name: string) => {
     return name
-      .split(' ')
+      .split(" ")
       .map(word => word[0])
-      .join('')
+      .join("")
       .toUpperCase()
-      .substring(0, 2)
-  }
+      .substring(0, 2);
+  };
 
   if (authLoading) {
     return (
@@ -675,7 +675,7 @@ export default function MessagingPage() {
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   if (!isAuthenticated) {
@@ -696,7 +696,7 @@ export default function MessagingPage() {
           </CardFooter>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
@@ -793,9 +793,9 @@ export default function MessagingPage() {
                         selectedConversation === conversation.id ? "bg-Gold3/10 border-l-4 border-Gold0" : ""
                       }`}
                       onClick={() => {
-                        setSelectedConversation(conversation.id)
+                        setSelectedConversation(conversation.id);
                         if (window.innerWidth < 768) {
-                          setShowMobileConversations(false)
+                          setShowMobileConversations(false);
                         }
                       }}
                     >
@@ -971,18 +971,18 @@ export default function MessagingPage() {
                                         {conversations.find(
                                           (c) => c.id === selectedConversation
                                         )?.recipient.avatar ? (
-                                          <AvatarImage
-                                            src={
-                                              conversations.find((c) => c.id === selectedConversation)?.recipient
-                                                .avatar || ""
-                                            }
-                                            alt={message.sender.name}
-                                          />
-                                        ) : (
-                                          <AvatarFallback className="bg-Gold3 text-PriGold text-xs">
-                                            {getInitials(message.sender.name)}
-                                          </AvatarFallback>
-                                        )}
+                                            <AvatarImage
+                                              src={
+                                                conversations.find((c) => c.id === selectedConversation)?.recipient
+                                                  .avatar || ""
+                                              }
+                                              alt={message.sender.name}
+                                            />
+                                          ) : (
+                                            <AvatarFallback className="bg-Gold3 text-PriGold text-xs">
+                                              {getInitials(message.sender.name)}
+                                            </AvatarFallback>
+                                          )}
                                       </Avatar>
                                     )}
                                     <div
@@ -1052,5 +1052,5 @@ export default function MessagingPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

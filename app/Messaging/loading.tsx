@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react";
 
 export default function MessagingLoading() {
   return (
@@ -8,5 +8,5 @@ export default function MessagingLoading() {
         <p className="mt-4 text-center text-muted-foreground">Loading messages...</p>
       </div>
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 // Mock data for messages by conversation
 const MOCK_MESSAGES = {
@@ -122,38 +122,38 @@ const MOCK_MESSAGES = {
       is_read: false,
     },
   ],
-}
+};
 
 export async function GET(request: NextRequest) {
   try {
-    console.log("Handling GET request to /api/proxy/chat/messages/conversation_messages/")
+    console.log("Handling GET request to /api/proxy/chat/messages/conversation_messages/");
 
     // Get conversation ID from query parameters
-    const { searchParams } = new URL(request.url)
-    const conversationId = searchParams.get("conversation_id")
+    const { searchParams } = new URL(request.url);
+    const conversationId = searchParams.get("conversation_id");
 
     if (!conversationId) {
-      return NextResponse.json({ error: "conversation_id is required" }, { status: 400 })
+      return NextResponse.json({ error: "conversation_id is required" }, { status: 400 });
     }
 
-    console.log(`Fetching messages for conversation: ${conversationId}`)
+    console.log(`Fetching messages for conversation: ${conversationId}`);
 
     // Check if authorization header is present
-    const authHeader = request.headers.get("authorization")
-    console.log(authHeader ? "Using provided authorization header" : "No authorization header found")
+    const authHeader = request.headers.get("authorization");
+    console.log(authHeader ? "Using provided authorization header" : "No authorization header found");
 
     // If no auth header, return mock data immediately
     if (!authHeader) {
-      console.log("No authorization header provided - returning mock data")
-      const mockData = MOCK_MESSAGES[conversationId as keyof typeof MOCK_MESSAGES] || []
-      return NextResponse.json(mockData)
+      console.log("No authorization header provided - returning mock data");
+      const mockData = MOCK_MESSAGES[conversationId as keyof typeof MOCK_MESSAGES] || [];
+      return NextResponse.json(mockData);
     }
 
     // First try to get data from the real backend
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "")
-    const url = `${baseUrl}/api/chat/messages/conversation_messages/?conversation_id=${conversationId}`
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "");
+    const url = `${baseUrl}/api/chat/messages/conversation_messages/?conversation_id=${conversationId}`;
 
-    console.log(`Attempting to fetch from backend: ${url}`)
+    console.log(`Attempting to fetch from backend: ${url}`);
 
     try {
       const response = await fetch(url, {
@@ -165,58 +165,58 @@ export async function GET(request: NextRequest) {
           "Accept-Encoding": "identity",
         },
         cache: "no-store",
-      })
+      });
 
       // If unauthorized, return a 401 with a clear error message
       if (response.status === 401) {
-        console.log("Received 401 Unauthorized from backend")
+        console.log("Received 401 Unauthorized from backend");
         return NextResponse.json(
           {
             error: "Unauthorized",
             message: "Authentication required. Please log in again.",
           },
           { status: 401 },
-        )
+        );
       }
 
       if (!response.ok) {
-        throw new Error(`Backend returned status ${response.status}`)
+        throw new Error(`Backend returned status ${response.status}`);
       }
 
       // Try to get the response as text first to avoid decoding issues
-      const responseText = await response.text()
+      const responseText = await response.text();
 
       try {
         // Then parse it as JSON
-        const data = JSON.parse(responseText)
-        console.log("Successfully fetched real data from backend")
-        return NextResponse.json(data)
+        const data = JSON.parse(responseText);
+        console.log("Successfully fetched real data from backend");
+        return NextResponse.json(data);
       } catch (jsonError) {
-        console.error("Error parsing JSON response:", jsonError)
-        throw new Error("Invalid JSON response from backend")
+        console.error("Error parsing JSON response:", jsonError);
+        throw new Error("Invalid JSON response from backend");
       }
     } catch (error) {
-      console.log(`Error fetching from backend: ${error instanceof Error ? error.message : "Unknown error"}`)
+      console.log(`Error fetching from backend: ${error instanceof Error ? error.message : "Unknown error"}`);
 
       // Return mock data as fallback
-      const mockData = MOCK_MESSAGES[conversationId as keyof typeof MOCK_MESSAGES] || []
-      console.log(`Returning ${mockData.length} mock messages for conversation ${conversationId}`)
-      return NextResponse.json(mockData)
+      const mockData = MOCK_MESSAGES[conversationId as keyof typeof MOCK_MESSAGES] || [];
+      console.log(`Returning ${mockData.length} mock messages for conversation ${conversationId}`);
+      return NextResponse.json(mockData);
     }
   } catch (error) {
-    console.error("Error in conversation_messages endpoint:", error)
+    console.error("Error in conversation_messages endpoint:", error);
 
     // Get conversation ID from query parameters for fallback
     try {
-      const { searchParams } = new URL(request.url)
-      const conversationId = searchParams.get("conversation_id") || "1"
+      const { searchParams } = new URL(request.url);
+      const conversationId = searchParams.get("conversation_id") || "1";
 
       // Return mock data even in case of error
-      const mockData = MOCK_MESSAGES[conversationId as keyof typeof MOCK_MESSAGES] || []
-      return NextResponse.json(mockData)
+      const mockData = MOCK_MESSAGES[conversationId as keyof typeof MOCK_MESSAGES] || [];
+      return NextResponse.json(mockData);
     } catch (e) {
       // If all else fails, return an empty array
-      return NextResponse.json([])
+      return NextResponse.json([]);
     }
   }
 }

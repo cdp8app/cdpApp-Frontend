@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
 
 // Mock data for messages
 const MOCK_MESSAGES = {
@@ -65,18 +65,18 @@ const MOCK_MESSAGES = {
       isRead: false,
     },
   ],
-}
+};
 
 export async function GET(request: Request, { params }: { params: { conversationId: string } }) {
   try {
-    const conversationId = params.conversationId
-    console.log(`Handling GET request to /api/proxy/messaging/conversations/${conversationId}/messages`)
+    const conversationId = params.conversationId;
+    console.log(`Handling GET request to /api/proxy/messaging/conversations/${conversationId}/messages`);
 
     // First try to get data from the real backend
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "")
-    const url = `${baseUrl}/api/chat/conversations/${conversationId}/messages`
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "");
+    const url = `${baseUrl}/api/chat/conversations/${conversationId}/messages`;
 
-    console.log(`Attempting to fetch from backend: ${url}`)
+    console.log(`Attempting to fetch from backend: ${url}`);
 
     try {
       const response = await fetch(url, {
@@ -85,51 +85,51 @@ export async function GET(request: Request, { params }: { params: { conversation
           "Content-Type": "application/json",
         },
         cache: "no-store",
-      })
+      });
 
       if (response.ok) {
-        const data = await response.json()
-        console.log("Successfully fetched real data from backend")
-        return NextResponse.json(data)
+        const data = await response.json();
+        console.log("Successfully fetched real data from backend");
+        return NextResponse.json(data);
       }
 
-      console.log(`Backend returned status ${response.status}, falling back to mock data`)
+      console.log(`Backend returned status ${response.status}, falling back to mock data`);
     } catch (error) {
-      console.log(`Error fetching from backend: ${error instanceof Error ? error.message : "Unknown error"}`)
+      console.log(`Error fetching from backend: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 
     // If we get here, either the backend request failed or returned an error
     // Return mock data instead
-    const messages = MOCK_MESSAGES[conversationId as keyof typeof MOCK_MESSAGES] || []
-    console.log(`Returning ${messages.length} mock messages for conversation ${conversationId}`)
-    return NextResponse.json(messages)
+    const messages = MOCK_MESSAGES[conversationId as keyof typeof MOCK_MESSAGES] || [];
+    console.log(`Returning ${messages.length} mock messages for conversation ${conversationId}`);
+    return NextResponse.json(messages);
   } catch (error) {
-    console.error("Error in messages endpoint:", error)
+    console.error("Error in messages endpoint:", error);
     return NextResponse.json(
       { error: "Failed to fetch messages", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 },
-    )
+    );
   }
 }
 
 export async function POST(request: Request, { params }: { params: { conversationId: string } }) {
   try {
-    const conversationId = params.conversationId
-    console.log(`Handling POST request to /api/proxy/messaging/conversations/${conversationId}/messages`)
+    const conversationId = params.conversationId;
+    console.log(`Handling POST request to /api/proxy/messaging/conversations/${conversationId}/messages`);
 
     // Parse the request body
-    const body = await request.json()
-    const { content } = body
+    const body = await request.json();
+    const { content } = body;
 
     if (!content) {
-      return NextResponse.json({ error: "Message content is required" }, { status: 400 })
+      return NextResponse.json({ error: "Message content is required" }, { status: 400 });
     }
 
     // First try to send to the real backend
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "")
-    const url = `${baseUrl}/api/chat/conversations/${conversationId}/messages`
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "");
+    const url = `${baseUrl}/api/chat/conversations/${conversationId}/messages`;
 
-    console.log(`Attempting to send message to backend: ${url}`)
+    console.log(`Attempting to send message to backend: ${url}`);
 
     try {
       const response = await fetch(url, {
@@ -138,17 +138,17 @@ export async function POST(request: Request, { params }: { params: { conversatio
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ content }),
-      })
+      });
 
       if (response.ok) {
-        const data = await response.json()
-        console.log("Successfully sent message to backend")
-        return NextResponse.json(data)
+        const data = await response.json();
+        console.log("Successfully sent message to backend");
+        return NextResponse.json(data);
       }
 
-      console.log(`Backend returned status ${response.status}, returning mock response`)
+      console.log(`Backend returned status ${response.status}, returning mock response`);
     } catch (error) {
-      console.log(`Error sending to backend: ${error instanceof Error ? error.message : "Unknown error"}`)
+      console.log(`Error sending to backend: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 
     // If we get here, either the backend request failed or returned an error
@@ -160,15 +160,15 @@ export async function POST(request: Request, { params }: { params: { conversatio
       timestamp: new Date().toISOString(),
       isRead: true,
       conversationId,
-    }
+    };
 
-    console.log("Returning mock message response")
-    return NextResponse.json(mockResponse)
+    console.log("Returning mock message response");
+    return NextResponse.json(mockResponse);
   } catch (error) {
-    console.error("Error in send message endpoint:", error)
+    console.error("Error in send message endpoint:", error);
     return NextResponse.json(
       { error: "Failed to send message", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 },
-    )
+    );
   }
 }

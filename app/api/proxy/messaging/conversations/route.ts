@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 // Define types for better type safety
 interface Recipient {
@@ -61,7 +61,7 @@ const MOCK_CONVERSATIONS: Conversation[] = [
     },
     unread_count: 2
   }
-]
+];
 
 /**
  * GET handler for /api/proxy/messaging/conversations
@@ -71,35 +71,35 @@ const MOCK_CONVERSATIONS: Conversation[] = [
 export async function GET(request: NextRequest) {
   try {
     // Log the request
-    console.log("Handling GET request to /api/proxy/messaging/conversations")
+    console.log("Handling GET request to /api/proxy/messaging/conversations");
 
     // Get the base URL from environment variables
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "")
-    const url = `${baseUrl}/api/chat/conversations`
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "");
+    const url = `${baseUrl}/api/chat/conversations`;
 
-    console.log(`Attempting to fetch from backend: ${url}`)
+    console.log(`Attempting to fetch from backend: ${url}`);
 
     // Get authentication token from request headers
-    const authHeader = request.headers.get("authorization")
+    const authHeader = request.headers.get("authorization");
     
     try {
       // Prepare headers with authentication
       const headers = new Headers({
         "Content-Type": "application/json"
-      })
+      });
       
       // Add authorization header if present
       if (authHeader) {
-        console.log("Using provided authorization header")
-        headers.set("Authorization", authHeader)
+        console.log("Using provided authorization header");
+        headers.set("Authorization", authHeader);
       } else {
-        console.log("No authorization header provided, request may fail")
+        console.log("No authorization header provided, request may fail");
       }
 
       // Forward cookies if present
-      const cookie = request.headers.get("cookie")
+      const cookie = request.headers.get("cookie");
       if (cookie) {
-        headers.set("Cookie", cookie)
+        headers.set("Cookie", cookie);
       }
 
       // Make the request to the backend API
@@ -108,41 +108,41 @@ export async function GET(request: NextRequest) {
         headers,
         cache: "no-store",
         credentials: "include"
-      })
+      });
 
       // If the request was successful, return the data
       if (response.ok) {
-        const data = await response.json()
-        console.log("Successfully fetched real data from backend")
-        return NextResponse.json(data)
+        const data = await response.json();
+        console.log("Successfully fetched real data from backend");
+        return NextResponse.json(data);
       }
 
       // Handle different error cases
       if (response.status === 401) {
-        console.log("Authentication failed (401 Unauthorized), falling back to mock data")
+        console.log("Authentication failed (401 Unauthorized), falling back to mock data");
         // You could also return an auth error, but for now we'll fall back to mock data
         // return NextResponse.json({ error: "Authentication required" }, { status: 401 })
       } else if (response.status === 403) {
-        console.log("Permission denied (403 Forbidden), falling back to mock data")
+        console.log("Permission denied (403 Forbidden), falling back to mock data");
       } else if (response.status === 404) {
-        console.log("Resource not found (404 Not Found), falling back to mock data")
+        console.log("Resource not found (404 Not Found), falling back to mock data");
       } else {
-        console.log(`Backend returned status ${response.status}, falling back to mock data`)
+        console.log(`Backend returned status ${response.status}, falling back to mock data`);
       }
     } catch (error) {
-      console.log(`Error fetching from backend: ${error instanceof Error ? error.message : "Unknown error"}`)
+      console.log(`Error fetching from backend: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 
     // If we get here, either the backend request failed or returned an error
     // Return mock data instead
-    console.log("Returning mock conversation data")
-    return NextResponse.json(MOCK_CONVERSATIONS)
+    console.log("Returning mock conversation data");
+    return NextResponse.json(MOCK_CONVERSATIONS);
   } catch (error) {
-    console.error("Error in conversations endpoint:", error)
+    console.error("Error in conversations endpoint:", error);
     return NextResponse.json(
       { error: "Failed to fetch conversations", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -151,26 +151,26 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    console.log("Handling POST request to /api/proxy/messaging/conversations")
+    console.log("Handling POST request to /api/proxy/messaging/conversations");
 
     // Get the request body
-    const body = await request.json()
+    const body = await request.json();
     
     // Get the base URL from environment variables
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "")
-    const url = `${baseUrl}/api/chat/conversations`
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "");
+    const url = `${baseUrl}/api/chat/conversations`;
 
     // Get authentication token from request headers
-    const authHeader = request.headers.get("authorization")
+    const authHeader = request.headers.get("authorization");
     
     // Prepare headers with authentication
     const headers = new Headers({
       "Content-Type": "application/json"
-    })
+    });
     
     // Add authorization header if present
     if (authHeader) {
-      headers.set("Authorization", authHeader)
+      headers.set("Authorization", authHeader);
     }
 
     try {
@@ -180,27 +180,27 @@ export async function POST(request: NextRequest) {
         headers,
         body: JSON.stringify(body),
         credentials: "include"
-      })
+      });
 
       // If the request was successful, return the data
       if (response.ok) {
-        const data = await response.json()
-        console.log("Successfully created new conversation")
-        return NextResponse.json(data)
+        const data = await response.json();
+        console.log("Successfully created new conversation");
+        return NextResponse.json(data);
       }
 
       // Handle error cases
       if (response.status === 401) {
-        return NextResponse.json({ error: "Authentication required" }, { status: 401 })
+        return NextResponse.json({ error: "Authentication required" }, { status: 401 });
       } else {
-        const errorData = await response.json().catch(() => ({ message: "Unknown error" }))
+        const errorData = await response.json().catch(() => ({ message: "Unknown error" }));
         return NextResponse.json(
           { error: "Failed to create conversation", details: errorData },
           { status: response.status }
-        )
+        );
       }
     } catch (error) {
-      console.error("Error creating conversation:", error)
+      console.error("Error creating conversation:", error);
       
       // Return a mock response for testing
       const mockNewConversation: Conversation = {
@@ -211,15 +211,15 @@ export async function POST(request: NextRequest) {
           avatar: "/placeholder.svg?height=40&width=40&query=NC"
         },
         unread_count: 0
-      }
+      };
       
-      return NextResponse.json(mockNewConversation)
+      return NextResponse.json(mockNewConversation);
     }
   } catch (error) {
-    console.error("Error in POST conversations endpoint:", error)
+    console.error("Error in POST conversations endpoint:", error);
     return NextResponse.json(
       { error: "Failed to create conversation", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
-    )
+    );
   }
 }

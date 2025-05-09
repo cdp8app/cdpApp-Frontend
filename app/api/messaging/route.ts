@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server";
 
 // Mock data for development until backend is ready
 const MOCK_CONVERSATIONS = [
@@ -29,7 +29,7 @@ const MOCK_CONVERSATIONS = [
     lastMessageTime: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
     unreadCount: 1
   }
-]
+];
 
 const MOCK_MESSAGES = {
   "1": [
@@ -110,63 +110,63 @@ const MOCK_MESSAGES = {
       read: false
     }
   ]
-}
+};
 
 // Helper function to proxy requests to the backend chat API
 async function proxyToBackend(request: NextRequest, path: string, method: string) {
   try {
     // Get the base API URL from environment variables
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "")
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "");
     
     // Map frontend paths to backend paths
-    let backendPath = path
+    let backendPath = path;
     
     // Handle specific path mappings
-    if (path === '' || path === '/') {
-      backendPath = '/messages'
-    } else if (path === '/conversations') {
-      backendPath = '/messages/conversations'
-    } else if (path.startsWith('/conversations/')) {
-      const conversationId = path.split('/').pop()
-      backendPath = `/messages/conversations/${conversationId}`
-    } else if (path === '/unread/count') {
-      backendPath = '/messages/unread/count'
-    } else if (!path.startsWith('/messages')) {
+    if (path === "" || path === "/") {
+      backendPath = "/messages";
+    } else if (path === "/conversations") {
+      backendPath = "/messages/conversations";
+    } else if (path.startsWith("/conversations/")) {
+      const conversationId = path.split("/").pop();
+      backendPath = `/messages/conversations/${conversationId}`;
+    } else if (path === "/unread/count") {
+      backendPath = "/messages/unread/count";
+    } else if (!path.startsWith("/messages")) {
       // If path doesn't start with /messages, add it
-      backendPath = `/messages${path}`
+      backendPath = `/messages${path}`;
     }
     
     // Construct the full URL - Using the chat API endpoint
-    const url = `${baseUrl}/api/chat${backendPath}`
+    const url = `${baseUrl}/api/chat${backendPath}`;
     
-    console.log(`Proxying ${method} request to backend: ${url}`)
+    console.log(`Proxying ${method} request to backend: ${url}`);
     
     // Get request body for non-GET requests
-    let body = null
+    let body = null;
     if (method !== "GET" && request.body) {
-      body = await request.text()
-      console.log(`Request body: ${body.substring(0, 200)}${body.length > 200 ? "..." : ""}`)
+      body = await request.text();
+      console.log(`Request body: ${body.substring(0, 200)}${body.length > 200 ? "..." : ""}`);
     }
     
     // Forward headers from the original request
-    const headers = new Headers()
+    const headers = new Headers();
     request.headers.forEach((value, key) => {
       // Skip host header to avoid CORS issues
       if (key.toLowerCase() !== "host") {
-        headers.append(key, value)
+        headers.append(key, value);
       }
-    })
+    });
     
     // Set content type if not already set
     if (!headers.has("Content-Type") && body) {
-      headers.set("Content-Type", "application/json")
+      headers.set("Content-Type", "application/json");
     }
     
     // Add authorization header if available
-    if (typeof localStorage !== 'undefined') {
-      const token = localStorage.getItem("authToken")
+    if (typeof localStorage !== "undefined") {
+      const token = localStorage.getItem("authToken");
       if (token) {
-        headers.set("Authorization", `Bearer ${token}`)
+        headers.set("Authorization", `Bearer ${token}`);
       }
     }
     
@@ -176,27 +176,27 @@ async function proxyToBackend(request: NextRequest, path: string, method: string
       headers,
       body,
       credentials: "include",
-    })
+    });
     
     // Get response data
-    const responseData = await response.text()
-    console.log(`Response status: ${response.status} ${response.statusText}`)
-    console.log(`Response data: ${responseData.substring(0, 200)}${responseData.length > 200 ? "..." : ""}`)
+    const responseData = await response.text();
+    console.log(`Response status: ${response.status} ${response.statusText}`);
+    console.log(`Response data: ${responseData.substring(0, 200)}${responseData.length > 200 ? "..." : ""}`);
     
     // Create headers for the response
-    const responseHeaders = new Headers()
+    const responseHeaders = new Headers();
     response.headers.forEach((value, key) => {
-      responseHeaders.append(key, value)
-    })
+      responseHeaders.append(key, value);
+    });
     
     // Return the response
     return new NextResponse(responseData, {
       status: response.status,
       statusText: response.statusText,
       headers: responseHeaders,
-    })
+    });
   } catch (error) {
-    console.error("API Proxy Error:", error)
+    console.error("API Proxy Error:", error);
     return NextResponse.json(
       {
         error: "Failed to proxy request to backend API",
@@ -204,91 +204,91 @@ async function proxyToBackend(request: NextRequest, path: string, method: string
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
-    )
+    );
   }
 }
 
 export async function GET(request: NextRequest) {
   // Get the path from the URL
-  const url = new URL(request.url)
-  const path = url.pathname.replace('/api/messaging', '')
+  const url = new URL(request.url);
+  const path = url.pathname.replace("/api/messaging", "");
   
-  console.log(`Handling GET request for messaging path: ${path}`)
+  console.log(`Handling GET request for messaging path: ${path}`);
   
   // Check if we should use the backend API or mock data
-  const useBackendApi = process.env.USE_BACKEND_CHAT_API === 'true'
+  const useBackendApi = process.env.USE_BACKEND_CHAT_API === "true";
   
   if (useBackendApi) {
     // Proxy the request to the backend chat API
-    return proxyToBackend(request, path, "GET")
+    return proxyToBackend(request, path, "GET");
   }
   
   // Otherwise use mock data
   try {
     // Handle different messaging endpoints
-    if (path === '' || path === '/') {
+    if (path === "" || path === "/") {
       // Return all conversations
-      return NextResponse.json(MOCK_CONVERSATIONS, { status: 200 })
+      return NextResponse.json(MOCK_CONVERSATIONS, { status: 200 });
     } 
-    else if (path === '/conversations') {
+    else if (path === "/conversations") {
       // Return all conversations
-      return NextResponse.json(MOCK_CONVERSATIONS, { status: 200 })
+      return NextResponse.json(MOCK_CONVERSATIONS, { status: 200 });
     }
-    else if (path.startsWith('/conversations/')) {
+    else if (path.startsWith("/conversations/")) {
       // Extract conversation ID
-      const conversationId = path.split('/').pop()
+      const conversationId = path.split("/").pop();
       
       if (conversationId && MOCK_MESSAGES[conversationId]) {
-        return NextResponse.json(MOCK_MESSAGES[conversationId], { status: 200 })
+        return NextResponse.json(MOCK_MESSAGES[conversationId], { status: 200 });
       } else {
-        return NextResponse.json({ error: 'Conversation not found' }, { status: 404 })
+        return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
       }
     }
-    else if (path === '/unread/count') {
+    else if (path === "/unread/count") {
       // Calculate unread count
       const unreadCount = MOCK_CONVERSATIONS.reduce(
         (total, conversation) => total + conversation.unreadCount, 
         0
-      )
-      return NextResponse.json({ count: unreadCount }, { status: 200 })
+      );
+      return NextResponse.json({ count: unreadCount }, { status: 200 });
     }
     else {
-      return NextResponse.json({ error: 'Endpoint not found' }, { status: 404 })
+      return NextResponse.json({ error: "Endpoint not found" }, { status: 404 });
     }
   } catch (error) {
-    console.error("API Error:", error)
+    console.error("API Error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
-    )
+    );
   }
 }
 
 export async function POST(request: NextRequest) {
-  const url = new URL(request.url)
-  const path = url.pathname.replace('/api/messaging', '')
+  const url = new URL(request.url);
+  const path = url.pathname.replace("/api/messaging", "");
   
-  console.log(`Handling POST request for messaging path: ${path}`)
+  console.log(`Handling POST request for messaging path: ${path}`);
   
   // Check if we should use the backend API or mock data
-  const useBackendApi = process.env.USE_BACKEND_CHAT_API === 'true'
+  const useBackendApi = process.env.USE_BACKEND_CHAT_API === "true";
   
   if (useBackendApi) {
     // Proxy the request to the backend chat API
-    return proxyToBackend(request, path, "POST")
+    return proxyToBackend(request, path, "POST");
   }
   
   // Otherwise use mock data
   try {
     // Parse the request body
-    const body = await request.json()
+    const body = await request.json();
     
-    if (path === '' || path === '/') {
+    if (path === "" || path === "/") {
       // Handle sending a new message
-      const { receiverId, content } = body
+      const { receiverId, content } = body;
       
       if (!receiverId || !content) {
-        return NextResponse.json({ error: 'receiverId and content are required' }, { status: 400 })
+        return NextResponse.json({ error: "receiverId and content are required" }, { status: 400 });
       }
       
       // Create a new message
@@ -299,56 +299,56 @@ export async function POST(request: NextRequest) {
         content,
         timestamp: new Date().toISOString(),
         read: false
-      }
+      };
       
-      return NextResponse.json(newMessage, { status: 201 })
+      return NextResponse.json(newMessage, { status: 201 });
     }
-    else if (path.startsWith('/messages/')) {
+    else if (path.startsWith("/messages/")) {
       // Handle other message operations
-      return NextResponse.json({ error: 'Not implemented yet' }, { status: 501 })
+      return NextResponse.json({ error: "Not implemented yet" }, { status: 501 });
     }
     else {
-      return NextResponse.json({ error: 'Endpoint not found' }, { status: 404 })
+      return NextResponse.json({ error: "Endpoint not found" }, { status: 404 });
     }
   } catch (error) {
-    console.error("API Error:", error)
+    console.error("API Error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
-    )
+    );
   }
 }
 
 export async function PATCH(request: NextRequest) {
-  const url = new URL(request.url)
-  const path = url.pathname.replace('/api/messaging', '')
+  const url = new URL(request.url);
+  const path = url.pathname.replace("/api/messaging", "");
   
-  console.log(`Handling PATCH request for messaging path: ${path}`)
+  console.log(`Handling PATCH request for messaging path: ${path}`);
   
   // Check if we should use the backend API or mock data
-  const useBackendApi = process.env.USE_BACKEND_CHAT_API === 'true'
+  const useBackendApi = process.env.USE_BACKEND_CHAT_API === "true";
   
   if (useBackendApi) {
     // Proxy the request to the backend chat API
-    return proxyToBackend(request, path, "PATCH")
+    return proxyToBackend(request, path, "PATCH");
   }
   
   // Otherwise use mock data
   try {
     if (path.match(/\/messages\/[\w-]+\/read$/)) {
       // Handle marking a message as read
-      const messageId = path.split('/')[2]
+      const messageId = path.split("/")[2];
       
-      return NextResponse.json({ success: true, messageId }, { status: 200 })
+      return NextResponse.json({ success: true, messageId }, { status: 200 });
     }
     else {
-      return NextResponse.json({ error: 'Endpoint not found' }, { status: 404 })
+      return NextResponse.json({ error: "Endpoint not found" }, { status: 404 });
     }
   } catch (error) {
-    console.error("API Error:", error)
+    console.error("API Error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
-    )
+    );
   }
 }

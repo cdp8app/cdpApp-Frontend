@@ -119,7 +119,7 @@ export const getConversations = async (): Promise<Conversation[]> => {
   try {
     console.log("Fetching conversations");
     // Use the API to fetch conversations
-    const response = await api.get('/messaging/conversations');
+    const response = await api.get("/messaging/conversations");
     console.log("Conversations response:", response.data);
     return response.data;
   } catch (error) {
@@ -149,7 +149,7 @@ export const sendMessage = async (receiverId: string, content: string): Promise<
   try {
     console.log(`Sending message to ${receiverId}: ${content}`);
     // Use the API to send a message
-    const response = await api.post('/messaging/messages', { receiverId, content });
+    const response = await api.post("/messaging/messages", { receiverId, content });
     console.log("Send message response:", response.data);
     return response.data;
   } catch (error) {
@@ -184,7 +184,7 @@ export const getUnreadCount = async (): Promise<number> => {
   try {
     console.log("Fetching unread count");
     // Use the API to get unread count
-    const response = await api.get('/messaging/messages/unread/count');
+    const response = await api.get("/messaging/messages/unread/count");
     console.log("Unread count response:", response.data);
     return response.data.count;
   } catch (error) {

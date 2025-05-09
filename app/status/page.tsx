@@ -1,39 +1,39 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/app/Components/ui/card"
-import { Button } from "@/app/Components/ui/button"
-import { Loader2, RefreshCw, CheckCircle, XCircle } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/app/Components/ui/card";
+import { Button } from "@/app/Components/ui/button";
+import { Loader2, RefreshCw, CheckCircle, XCircle } from "lucide-react";
 
 export default function StatusPage() {
-  const [loading, setLoading] = useState(true)
-  const [status, setStatus] = useState<any>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const checkStatus = async () => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
-      const response = await fetch("/api/status")
+      const response = await fetch("/api/status");
 
       if (!response.ok) {
-        throw new Error(`Failed to check status: ${response.status} ${response.statusText}`)
+        throw new Error(`Failed to check status: ${response.status} ${response.statusText}`);
       }
 
-      const data = await response.json()
-      setStatus(data)
+      const data = await response.json();
+      setStatus(data);
     } catch (err) {
-      console.error("Error checking status:", err)
-      setError(err instanceof Error ? err.message : "Unknown error")
+      console.error("Error checking status:", err);
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    checkStatus()
-  }, [])
+    checkStatus();
+  }, []);
 
   return (
     <div className="container py-8">
@@ -114,5 +114,5 @@ export default function StatusPage() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

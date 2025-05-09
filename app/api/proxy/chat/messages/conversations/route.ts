@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 // Mock data for conversations
 const MOCK_CONVERSATIONS = [
@@ -39,21 +39,21 @@ const MOCK_CONVERSATIONS = [
     },
     unread_count: 2,
   },
-]
+];
 
 export async function GET(request: NextRequest) {
   try {
-    console.log("Handling GET request to /api/proxy/chat/messages/conversations/")
+    console.log("Handling GET request to /api/proxy/chat/messages/conversations/");
 
     // Check if authorization header is present
-    const authHeader = request.headers.get("authorization")
-    console.log(authHeader ? "Using provided authorization header" : "No authorization header found")
+    const authHeader = request.headers.get("authorization");
+    console.log(authHeader ? "Using provided authorization header" : "No authorization header found");
 
     // First try to get data from the real backend
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "")
-    const url = `${baseUrl}/api/chat/messages/conversations/`
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "");
+    const url = `${baseUrl}/api/chat/messages/conversations/`;
 
-    console.log(`Attempting to fetch from backend: ${url}`)
+    console.log(`Attempting to fetch from backend: ${url}`);
 
     try {
       const response = await fetch(url, {
@@ -63,28 +63,28 @@ export async function GET(request: NextRequest) {
           ...(authHeader ? { Authorization: authHeader } : {}),
         },
         cache: "no-store",
-      })
+      });
 
       if (response.ok) {
-        const data = await response.json()
-        console.log("Successfully fetched real data from backend")
-        return NextResponse.json(data)
+        const data = await response.json();
+        console.log("Successfully fetched real data from backend");
+        return NextResponse.json(data);
       }
 
-      console.log(`Backend returned status ${response.status}, falling back to mock data`)
+      console.log(`Backend returned status ${response.status}, falling back to mock data`);
     } catch (error) {
-      console.log(`Error fetching from backend: ${error instanceof Error ? error.message : "Unknown error"}`)
+      console.log(`Error fetching from backend: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 
     // If we get here, either the backend request failed or returned an error
     // Return mock data instead
-    console.log("Returning mock conversation data")
-    return NextResponse.json(MOCK_CONVERSATIONS)
+    console.log("Returning mock conversation data");
+    return NextResponse.json(MOCK_CONVERSATIONS);
   } catch (error) {
-    console.error("Error in conversations endpoint:", error)
+    console.error("Error in conversations endpoint:", error);
 
     // Even if there's an error, return mock data to prevent UI from breaking
-    console.log("Returning mock data after error")
-    return NextResponse.json(MOCK_CONVERSATIONS)
+    console.log("Returning mock data after error");
+    return NextResponse.json(MOCK_CONVERSATIONS);
   }
 }
