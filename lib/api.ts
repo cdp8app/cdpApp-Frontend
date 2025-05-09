@@ -22,6 +22,10 @@ api.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
+    
+    // Log the request for debugging
+    console.log(`API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
+    
     return config;
   },
   (error) => Promise.reject(error),
@@ -29,7 +33,10 @@ api.interceptors.request.use(
 
 // Response interceptor for handling common errors
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(`API Response: ${response.status} ${response.statusText}`);
+    return response;
+  },
   (error) => {
     const { response } = error;
     // Handle authentication errors
@@ -40,6 +47,8 @@ api.interceptors.response.use(
         window.location.href = "/UsersAuthentication/StudentAuth/StudentAuthPage";
       }
     }
+    
+    console.error("API Error:", error.message, response?.status, response?.data);
     return Promise.reject(error);
   },
 );
@@ -76,6 +85,7 @@ export async function serverFetch(endpoint: string, options: RequestInit = {}) {
     },
   };
   
+  console.log(`Server fetch: ${url}`);
   const response = await fetch(url, mergedOptions);
   
   if (!response.ok) {

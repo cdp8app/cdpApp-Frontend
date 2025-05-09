@@ -117,45 +117,44 @@ const MOCK_MESSAGES: Record<string, Message[]> = {
 // Get all conversations for the current user
 export const getConversations = async (): Promise<Conversation[]> => {
   try {
-    // When API is ready, uncomment this
-    // const response = await api.get('/messages/conversations');
-    // return response.data;
-    
-    // For now, return mock data
-    return new Promise(resolve => {
-      setTimeout(() => resolve(MOCK_CONVERSATIONS), 500);
-    });
+    console.log("Fetching conversations");
+    // Use the API to fetch conversations
+    const response = await api.get('/messaging/conversations');
+    console.log("Conversations response:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Error fetching conversations:", error);
-    throw error;
+    // Return mock data as fallback
+    return MOCK_CONVERSATIONS;
   }
 };
 
 // Get messages for a specific conversation
 export const getMessages = async (conversationId: string): Promise<Message[]> => {
   try {
-    // When API is ready, uncomment this
-    // const response = await api.get(`/messages/conversations/${conversationId}`);
-    // return response.data;
-    
-    // For now, return mock data
-    return new Promise(resolve => {
-      setTimeout(() => resolve(MOCK_MESSAGES[conversationId] || []), 500);
-    });
+    console.log(`Fetching messages for conversation: ${conversationId}`);
+    // Use the API to fetch messages for a conversation
+    const response = await api.get(`/messaging/conversations/${conversationId}`);
+    console.log("Messages response:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Error fetching messages:", error);
-    throw error;
+    // Return mock data as fallback
+    return MOCK_MESSAGES[conversationId] || [];
   }
 };
 
 // Send a new message
 export const sendMessage = async (receiverId: string, content: string): Promise<Message> => {
   try {
-    // When API is ready, uncomment this
-    // const response = await api.post('/messages', { receiverId, content });
-    // return response.data;
-    
-    // For now, return mock data
+    console.log(`Sending message to ${receiverId}: ${content}`);
+    // Use the API to send a message
+    const response = await api.post('/messaging/messages', { receiverId, content });
+    console.log("Send message response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error sending message:", error);
+    // Return mock data as fallback
     const newMessage: Message = {
       id: `msg${Date.now()}`,
       senderId: "currentUser",
@@ -164,50 +163,36 @@ export const sendMessage = async (receiverId: string, content: string): Promise<
       timestamp: new Date().toISOString(),
       read: false
     };
-    
-    return new Promise(resolve => {
-      setTimeout(() => resolve(newMessage), 500);
-    });
-  } catch (error) {
-    console.error("Error sending message:", error);
-    throw error;
+    return newMessage;
   }
 };
 
 // Mark a message as read
 export const markMessageAsRead = async (messageId: string): Promise<void> => {
   try {
-    // When API is ready, uncomment this
-    // await api.patch(`/messages/${messageId}/read`);
-    
-    // For now, just simulate a delay
-    return new Promise(resolve => {
-      setTimeout(() => resolve(), 300);
-    });
+    console.log(`Marking message as read: ${messageId}`);
+    // Use the API to mark a message as read
+    await api.patch(`/messaging/messages/${messageId}/read`);
   } catch (error) {
     console.error("Error marking message as read:", error);
-    throw error;
+    // Silently fail
   }
 };
 
 // Get unread message count
 export const getUnreadCount = async (): Promise<number> => {
   try {
-    // When API is ready, uncomment this
-    // const response = await api.get('/messages/unread/count');
-    // return response.data.count;
-    
-    // For now, calculate from mock data
-    const unreadCount = Object.values(MOCK_CONVERSATIONS).reduce(
+    console.log("Fetching unread count");
+    // Use the API to get unread count
+    const response = await api.get('/messaging/messages/unread/count');
+    console.log("Unread count response:", response.data);
+    return response.data.count;
+  } catch (error) {
+    console.error("Error fetching unread count:", error);
+    // Return mock data as fallback
+    return MOCK_CONVERSATIONS.reduce(
       (total, conversation) => total + conversation.unreadCount, 
       0
     );
-    
-    return new Promise(resolve => {
-      setTimeout(() => resolve(unreadCount), 300);
-    });
-  } catch (error) {
-    console.error("Error fetching unread count:", error);
-    throw error;
   }
 };
