@@ -1,7 +1,7 @@
-"use client"
-import type React from "react"
-import { useEffect } from "react"
-import { XCircle } from "lucide-react"
+"use client";
+import type React from "react";
+import { useEffect } from "react";
+import { XCircle } from "lucide-react";
 
 interface FormAlertProps {
   message: string
@@ -14,14 +14,14 @@ const FormAlert: React.FC<FormAlertProps> = ({ message, type, duration = 0, onCl
   useEffect(() => {
     if (duration > 0) {
       const timer = setTimeout(() => {
-        onClose()
-      }, duration)
-      return () => clearTimeout(timer)
+        onClose();
+      }, duration);
+      return () => clearTimeout(timer);
     }
-  }, [duration, onClose])
+  }, [duration, onClose]);
 
-  const bgColor = type === "error" ? "bg-red-100" : "bg-green-100"
-  const textColor = type === "error" ? "text-red-700" : "text-green-700"
+  const bgColor = type === "error" ? "bg-red-100" : "bg-green-100";
+  const textColor = type === "error" ? "text-red-700" : "text-green-700";
 
   return (
     <div
@@ -35,7 +35,7 @@ const FormAlert: React.FC<FormAlertProps> = ({ message, type, duration = 0, onCl
         ×
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default FormAlert
+export default FormAlert;

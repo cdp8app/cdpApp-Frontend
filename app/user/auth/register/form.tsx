@@ -1,87 +1,87 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { Eye, EyeOff } from "lucide-react"
-import { useAuth } from "@/contexts/AuthContext"
+import { useState, useEffect } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
-import Button1 from "../../Components/Button1"
-import Label2 from "../../Components/Label2"
-import SelectDropDown from "@/app/Components/SelectDropdown"
-import FormAlert from "@/app/Components/FormAlert"
+import Button1 from "../../Components/Button1";
+import Label2 from "../../Components/Label2";
+import SelectDropDown from "@/app/Components/SelectDropdown";
+import FormAlert from "@/app/Components/FormAlert";
 
 export default function StudentRegisterForm() {
-  const [role, setRole] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [formError, setFormError] = useState("")
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
-  const [debugInfo, setDebugInfo] = useState("")
+  const [role, setRole] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [debugInfo, setDebugInfo] = useState("");
 
-  const { register, error, loading, clearError, fetchCsrfToken } = useAuth()
+  const { register, error, loading, clearError, fetchCsrfToken } = useAuth();
 
   // Fetch CSRF token when component mounts
   useEffect(() => {
     const initializeForm = async () => {
       try {
-        await fetchCsrfToken()
+        await fetchCsrfToken();
       } catch (error) {
-        console.error("Error fetching CSRF token:", error)
-        setFormError("Error fetching security token. Please refresh the page.")
+        console.error("Error fetching CSRF token:", error);
+        setFormError("Error fetching security token. Please refresh the page.");
       }
-    }
+    };
 
-    initializeForm()
-  }, [fetchCsrfToken])
+    initializeForm();
+  }, [fetchCsrfToken]);
 
   const validateForm = () => {
     if (!role) {
-      setFormError("Role is required")
-      return false
+      setFormError("Role is required");
+      return false;
     }
 
     if (!email) {
-      setFormError("Email is required")
-      return false
+      setFormError("Email is required");
+      return false;
     }
 
     if (!email.includes("@")) {
-      setFormError("Please enter a valid email address")
-      return false
+      setFormError("Please enter a valid email address");
+      return false;
     }
 
     if (password !== confirmPassword) {
-      setFormError("Passwords do not match")
-      return false
+      setFormError("Passwords do not match");
+      return false;
     }
 
     if (password.length < 8) {
-      setFormError("Password must be at least 8 characters long")
-      return false
+      setFormError("Password must be at least 8 characters long");
+      return false;
     }
 
-    setFormError("")
-    return true
-  }
+    setFormError("");
+    return true;
+  };
 
-  const options = [{ value: "Student" }, { value: "Company" }]
+  const options = [{ value: "Student" }, { value: "Company" }];
 
   const handleSelect = (value: string) => {
-    setRole(value)
-  }
+    setRole(value);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setDebugInfo("Form submitted")
-    setFieldErrors({})
+    e.preventDefault();
+    setDebugInfo("Form submitted");
+    setFieldErrors({});
 
     if (!validateForm()) {
-      setDebugInfo("Form validation failed: " + formError)
-      return
+      setDebugInfo("Form validation failed: " + formError);
+      return;
     }
 
     const userData = {
@@ -90,7 +90,7 @@ export default function StudentRegisterForm() {
       confirm_password: confirmPassword,
       role: role,
       userType: "student", // Adding userType as seen in the error logs
-    }
+    };
 
     setDebugInfo(
       "Attempting to register with data: " +
@@ -99,32 +99,32 @@ export default function StudentRegisterForm() {
           password: "********", // Don't log actual password
           confirm_password: "********",
         }),
-    )
+    );
 
     try {
-      setDebugInfo("Calling register function...")
-      const result = await register(userData, "student")
-      setDebugInfo("Register function completed. Result: " + JSON.stringify(result))
+      setDebugInfo("Calling register function...");
+      const result = await register(userData, "student");
+      setDebugInfo("Register function completed. Result: " + JSON.stringify(result));
     } catch (err: any) {
-      setDebugInfo("Error in registration: " + (err.message || JSON.stringify(err)))
+      setDebugInfo("Error in registration: " + (err.message || JSON.stringify(err)));
 
       // Handle structured validation errors from backend
       if (err.message && typeof err.message === "object") {
-        setFieldErrors(err.message)
+        setFieldErrors(err.message);
 
         // Set a general error message based on the first field error
-        const firstErrorField = Object.keys(err.message)[0]
+        const firstErrorField = Object.keys(err.message)[0];
         if (firstErrorField && err.message[firstErrorField][0]) {
-          setFormError(`${firstErrorField}: ${err.message[firstErrorField][0]}`)
+          setFormError(`${firstErrorField}: ${err.message[firstErrorField][0]}`);
         } else {
-          setFormError("Registration failed. Please check your information.")
+          setFormError("Registration failed. Please check your information.");
         }
       } else {
         // Handle general error
-        setFormError(err.message || "Registration failed")
+        setFormError(err.message || "Registration failed");
       }
     }
-  }
+  };
 
   return (
     <form className="mt-[12.96px] flex flex-col justify-start w-full max-w-md" onSubmit={handleSubmit}>
@@ -135,9 +135,9 @@ export default function StudentRegisterForm() {
           duration={5000}
           onClose={() => {
             if (formError) {
-              setFormError("")
+              setFormError("");
             } else {
-              clearError()
+              clearError();
             }
           }}
         />
@@ -272,5 +272,5 @@ export default function StudentRegisterForm() {
         )}
       </div>
     </form>
-  )
+  );
 }
