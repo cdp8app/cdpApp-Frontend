@@ -11,6 +11,7 @@ import Image from "next/image";
 import Label from "@/app/user/Components/Label";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import FormAlert from "@/app/Components/FormAlert";
 
 interface LoginFormProps {
   userType: "student" | "company" | null;
@@ -64,9 +65,18 @@ export default function LoginForm({ userType }: LoginFormProps) {
       </h2> */}
         
       {(formError || error) && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-center">
-          {formError || error}
-        </div>
+        <FormAlert
+          message={(formError || error) ?? ""}
+          type="error"
+          duration={5000}
+          onClose={() => {
+            if (formError) {
+              setFormError("");
+            } else {
+              clearError();
+            }
+          }}
+        />
       )}
         
       {/* <div className="mb-4">

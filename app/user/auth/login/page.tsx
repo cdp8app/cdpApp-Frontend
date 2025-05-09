@@ -13,7 +13,6 @@ export default function StudentLoginPage() {
   const [userType, setUserType] = useState<"student" | "company" | null>(null);
   useEffect(() => {
     const storedUserType = localStorage.getItem("userType");
-    console.log("Stored user type:", storedUserType);
     if (storedUserType === "student" || storedUserType === "company") {
       setUserType(storedUserType);
     }

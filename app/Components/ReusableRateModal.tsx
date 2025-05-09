@@ -19,7 +19,7 @@ interface ReusableRateModalProps {
   title?: string;
   subtitle?: string;
   viewProfileUrl?: string;
-  onSubmit: (rating: number, review: string, dateRange: [string, string]) => void;
+  onSubmit: (rating: number, review: string, fromDate: string, toDate: string) => void;
   submitText?: string;
   cancelText?: string;
   ratingTarget?: string;
@@ -149,7 +149,7 @@ const ReusableRateModal: React.FC<ReusableRateModalProps> = ({
               {cancelText}
             </button>
             <button
-              onClick={() => onSubmit(rating, review, [fromDate, toDate])}
+              onClick={() => onSubmit(rating, review, fromDate, toDate)}
               className="flex flex-row items-center rounded-[999px] bg-PriGold px-[80px] py-[18px] text-GoldenWhite"
             >
               {submitText}

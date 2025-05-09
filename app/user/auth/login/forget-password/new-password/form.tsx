@@ -7,6 +7,7 @@ import { useAuth } from "@/./contexts/AuthContext";
 import Label3 from "@/app/user/Components/Label3";
 import "../../../../../../app/globals.css";
 import Button2 from "@/app/user/Components/Button2";
+import FormAlert from "@/app/Components/FormAlert";
 
 export default function NewPasswordForm() {
   const router = useRouter();
@@ -76,9 +77,18 @@ export default function NewPasswordForm() {
       className=" flex flex-col justify-start"
     >
       {(formError || error) && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-center">
-          {formError || error}
-        </div>
+        <FormAlert
+          message={(formError || error) ?? ""}
+          type="error"
+          duration={5000}
+          onClose={() => {
+            if (formError) {
+              setFormError("");
+            } else {
+              clearError();
+            }
+          }}
+        />
       )}
       <Label3
         text="Password"

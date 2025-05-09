@@ -8,13 +8,15 @@ import Header1 from "../../../Components/Header1";
 import ResumeUploadButton3 from "../../../Components/ResumeUpload3";
 import { User, useAuth } from "@/contexts/AuthContext";
 import { CldImage } from "next-cloudinary";
+import FormAlert from "@/app/Components/FormAlert";
 
 export default function ViewStudentProfilePage() {
   const params = useParams();
   const router = useRouter();
-  const { getUserDetails } = useAuth();
+  const { getUserDetails, loading, error } = useAuth();
   const userId = Array.isArray(params.id) ? params.id[0] : params.id;
   const [user, setUser] = useState<User | null>(null);
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -32,6 +34,16 @@ export default function ViewStudentProfilePage() {
       <div className="p-[1%]">
         <Header1 />
         <div className="px-[6%]">
+          <FormAlert
+            message={(formError || error) ?? ""}
+            type="error"
+            duration={5000}
+            onClose={() => {
+              if (formError) {
+                setFormError("");
+              }
+            }}
+          />
           <div className="mb-[18px] border-b-[1px] border-Gold2">
             <button
               className="flex flex-row items-center py-[12px] font-sans text-[27px]/[120%] font-normal text-Gold1"

@@ -20,7 +20,8 @@ export default function CompanyDashboard() {
   const { getCompanyExtendOffers } = useOfferContext();
   const [jobs, setJobs] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
   const [applications, setApplications] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
-  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]);    
+  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]);  
+  const [formError, setFormError] = useState("");  
 
   useEffect(() => {
     const fetchData  = async () => {
@@ -39,7 +40,7 @@ export default function CompanyDashboard() {
           setOffers((fetchOffers as any).results);
         }
       } catch (error) {
-        console.error("Failed to fetch jobs", error);
+        setFormError(`Failed to fetch data ${error}`);
       }
     };
     fetchData ();

@@ -3,6 +3,7 @@ import "../../../../../app/globals.css";
 import { useState } from "react";
 import { useAuth } from "@/./contexts/AuthContext"; 
 import Button1 from "@/app/user/Components/Button1";
+import FormAlert from "@/app/Components/FormAlert";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -25,9 +26,18 @@ export default function ForgotPasswordForm() {
     <form className="flex justify-start" onSubmit={handleSubmit}>
       <div className="flex w-[100%] flex-col justify-center">
         {(formError || error) && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-center">
-            {formError || error}
-          </div>
+          <FormAlert
+            message={(formError || error) ?? ""}
+            type="error"
+            duration={5000}
+            onClose={() => {
+              if (formError) {
+                setFormError("");
+              } else {
+                clearError();
+              }
+            }}
+          />
         )}
         <div className=" flex w-[100%] flex-row items-center border-b-[2px] border-Blue3 px-[4.91px] py-[4.91px]">
           {/* <div className="mb-[121px] mt-[96px] flex w-[100%] flex-row items-center border-b-[2px] border-Blue3 px-[4.91px] py-[4.91px]"> */}

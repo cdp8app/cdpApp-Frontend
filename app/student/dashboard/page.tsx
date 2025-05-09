@@ -19,7 +19,9 @@ export default function Dashboard() {
   const { getStudentOffers } = useOfferContext();
   const [internships, setInternships] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
   const [applications, setApplications] = useState<{ title: string; status?: string; results?: any[] }[]>([]);
-  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]);  
+  const [offers, setOffers] = useState<{ title: string; status?: string; results?: any[] }[]>([]); 
+  
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     const fetchData  = async () => {
@@ -38,7 +40,7 @@ export default function Dashboard() {
           setOffers((fetchOffers as any).results);
         }
       } catch (error) {
-        console.error("Failed to fetch jobs", error);
+        setFormError(`Failed to fetch jobs ${error}`);
       }
     };
     fetchData ();
