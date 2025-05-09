@@ -10,6 +10,11 @@ import { StorageProvider } from "@/contexts/storageContext";
 import { OfferProvider } from "@/contexts/offerContext";
 import { ReviewProvider } from "@/contexts/reviewContext";
 import ClientWrapper from "@/app/Components/ClientWrapper";
+import { NotificationProvider } from "@/contexts/notificationContext";
+import { MessagingProvider } from "@/contexts/messagingContext";
+import NotificationToast from "./Components/NotificationToast";
+import NotificationDemo from "./Components/NotificationDemo";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,8 +46,14 @@ export default function RootLayout({
                 <StorageProvider>
                   <OfferProvider>
                     <ReviewProvider>
-                      <ClientWrapper>
-                        {children}
+                      <ClientWrapper>                      
+                        <NotificationProvider>
+                          <MessagingProvider>
+                            {children}
+                            <NotificationToast />
+                            <NotificationDemo />
+                          </MessagingProvider>
+                        </NotificationProvider>
                       </ClientWrapper>
                     </ReviewProvider>
                   </OfferProvider>

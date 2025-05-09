@@ -12,6 +12,8 @@ export default function StudentLoginPage() {
           className="mx-auto h-12 w-auto"
           src="/Images/Logo3.png"
           alt="CDP Logo"
+          width={150}  // Added required width property
+          height={48}  // Added required height property (h-12 is 48px)
         />
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Student Login

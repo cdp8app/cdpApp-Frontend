@@ -32,6 +32,29 @@ export default function SetUpStudentProfileForm() {
   const [formError, setFormError] = useState("");
   const { uploadFile } = useStorageContext();
 
+  // Add this near the top of your component, after the useState declarations
+  useEffect(() => {
+    // Check if user data is available
+    if (!user) {
+      console.log("User data not available in context");
+      
+      // Try to get user data from localStorage
+      const storedUser = localStorage.getItem("user");
+      const storedToken = localStorage.getItem("token");
+      
+      if (!storedUser || !storedToken) {
+        setFormError("User session not found. Please log in again.");
+        // Optionally redirect to login
+        // router.push("/user/auth/login");
+      } else {
+        console.log("Found user data in localStorage");
+      }
+    } else {
+      console.log("User data loaded from context:", user);
+    }
+  }, [user]);
+
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   
@@ -73,10 +96,10 @@ export default function SetUpStudentProfileForm() {
     e.preventDefault();
     setFormError("");
     clearError();
-
+  
     let profilePictureUrl = "";
     let resumeUrl = "";
-
+  
     if (profile_picture) {
       const uploadResult = await uploadFile(profile_picture);
       if (uploadResult && typeof uploadResult === "object" && uploadResult !== null && "file_url" in uploadResult) {
@@ -94,35 +117,64 @@ export default function SetUpStudentProfileForm() {
         setFormError("Failed to upload resume.");
       }
     }    
-
+  
     try {
-      if (!user?.id || !user?.email) {
-        setFormError("User ID or email is missing.");
-        return;
+      // Check if user data is available from context
+      if (!user) {
+        // Try to get user data from localStorage
+        const storedUser = localStorage.getItem("user");
+        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+        
+        if (!parsedUser || !parsedUser.id || !parsedUser.email) {
+          setFormError("User data not available. Please log in again.");
+          return;
+        }
+        
+        // Use the user data from localStorage
+        const userData = {
+          id: parsedUser.id,
+          email: parsedUser.email,
+          userType: "student" as UserType,
+          full_name,
+          phone_number,
+          bio,
+          intuition: institution,
+          course: course_of_study,
+          reg_num,
+          start_data: start_date,
+          end_data: end_date,
+          skills: skills.join(","),
+          profile_picture: profilePictureUrl || undefined,
+          resume: resumeUrl || undefined,
+        };
+        
+        await updateProfile(userData);
+      } else {
+        // Use the user data from context
+        const userData = {
+          id: user.id,
+          email: user.email,
+          userType: "student" as UserType,
+          full_name,
+          phone_number,
+          bio,
+          intuition: institution,
+          course: course_of_study,
+          reg_num,
+          start_data: start_date,
+          end_data: end_date,
+          skills: skills.join(","),
+          profile_picture: profilePictureUrl || undefined,
+          resume: resumeUrl || undefined,
+        };
+        
+        await updateProfile(userData);
       }
-
-      const userData = {
-        id: user.id,
-        email: user.email,
-        userType: "student" as UserType,
-        full_name,
-        phone_number,
-        bio,
-        intuition: institution,
-        course: course_of_study,
-        reg_num,
-        start_data: start_date,
-        end_data: end_date,
-        skills: skills.join(","),
-        profile_picture: profilePictureUrl || undefined,
-        resume: resumeUrl || undefined,
-      };
-
-      await updateProfile(userData);
     } catch (err: any) {
       setFormError(err.message || "Update profile failed.");
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col justify-start">

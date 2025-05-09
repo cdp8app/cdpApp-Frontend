@@ -1,4 +1,4 @@
-// app/api/proxy/register/route.ts
+// app/api/proxy/user/register/route.ts
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -12,21 +12,49 @@ export async function POST(request: Request) {
       email: body.email,
       password: body.password,
       confirm_password: body.confirm_password,
-      role: body.role || "Student" // Try different capitalization
+      role: body.role || "Student",
+      userType: body.userType
     };
     
     console.log("Proxying request to backend:", {
       ...payload,
       password: "[REDACTED]",
       confirm_password: "[REDACTED]"
-    });;
+    });
     
-    // Use the correct URL without "student" in the path
-    const response = await fetch("https://careerxhub.onrender.com/api/user/register/", {
+    // Use environment variable for API URL
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com/api";
+    
+    // First, get a CSRF token
+    let csrfToken = "";
+    try {
+      // Use absolute URL for CSRF token endpoint
+      const origin = request.headers.get("origin") || "";
+      const csrfResponse = await fetch(`${origin}/api/proxy/csrf-token`, {
+        method: "GET",
+        credentials: "include",
+      });
+      
+      if (csrfResponse.ok) {
+        const csrfData = await csrfResponse.json();
+        csrfToken = csrfData.csrfToken;
+      } else {
+        console.warn(`Failed to get CSRF token: ${csrfResponse.status} ${csrfResponse.statusText}`);
+      }
+    } catch (csrfError) {
+      console.error("Error fetching CSRF token:", csrfError);
+      // Continue without CSRF token as a fallback
+    }
+    
+    // Use the token in your request
+    const response = await fetch(`${apiUrl}/user/register/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+        "Referer": apiUrl, // Add Referer header
       },
+      credentials: "include", // Include cookies
       body: JSON.stringify(payload),
     });
     
