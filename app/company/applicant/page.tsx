@@ -119,7 +119,7 @@ export default function CompanyJobApplicant() {
                         </p>
                       </div>
                       <p className="mb-[10px] mt-[4px] w-[98%] font-sans text-[12px]/[120%] font-normal text-Gray1">
-                        {application.description.slice(0,100)}...
+                        {application.description ? `${application.description.slice(0,100)}...` : "No description provided"}
                       </p>
 
                       <button

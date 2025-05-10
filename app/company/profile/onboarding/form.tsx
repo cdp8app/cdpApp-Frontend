@@ -39,8 +39,9 @@ export default function SetUpCompanyProfileForm({ step, setStep }: SetUpCompanyP
   const [company_twitter, setCompanyTwitter] = useState<string>("");
   const [company_instagram, setInstagram ] = useState<string>("");
   const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const { uploadFile } = useStorageContext();
-  const [setLoading] = useState("");
 
   const handleIndustrySelect = (value: string) => {
     setIndustry((prev) => [...prev, value]);
@@ -62,24 +63,47 @@ export default function SetUpCompanyProfileForm({ step, setStep }: SetUpCompanyP
       
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submission started");
     setFormError("");
     clearError();
-    // setLoading(true);
+    setIsSubmitting(true);
+    setSuccessMessage("");
 
-    let profilePictureUrl = "";
-
-    if (profile_picture) {
-      const uploadResult = await uploadFile(profile_picture);
-      if (uploadResult && typeof uploadResult === "object" && uploadResult !== null && "file_url" in uploadResult) {
-        profilePictureUrl = uploadResult.file_url;
-      } else {
-        setFormError("Failed to upload profile picture.");
-      }
-    }
-      
     try {
+      // Validate required fields
+      const requiredFields = [
+        { value: company_name, name: "Company name" },
+        { value: company_industry.length > 0, name: "Industry" },
+        { value: company_description, name: "Company description" }
+      ];
+
+      for (const field of requiredFields) {
+        if (!field.value) {
+          setFormError(`${field.name} is required`);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      console.log("Validation passed, preparing to update profile");
+      let profilePictureUrl = "";
+
+      if (profile_picture) {
+        console.log("Uploading profile picture");
+        const uploadResult = await uploadFile(profile_picture);
+        if (uploadResult && typeof uploadResult === "object" && uploadResult !== null && "file_url" in uploadResult) {
+          profilePictureUrl = uploadResult.file_url;
+          console.log("Profile picture uploaded successfully:", profilePictureUrl);
+        } else {
+          setFormError("Failed to upload profile picture.");
+          setIsSubmitting(false);
+          return;
+        }
+      }
+        
       if (!user?.id || !user?.email) {
         setFormError("User ID or email is missing.");
+        setIsSubmitting(false);
         return;
       }   
       
@@ -105,10 +129,41 @@ export default function SetUpCompanyProfileForm({ step, setStep }: SetUpCompanyP
         profile_picture: profilePictureUrl || undefined,
       };
       
-      await updateProfile(userData);
+      console.log("Preparing user data for submission:", userData);
+      
+      try {
+        // Update profile using the context function
+        await updateProfile(userData);
+        
+        // Update localStorage to ensure the data persists
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          try {
+            const parsedUser = JSON.parse(storedUser);
+            const updatedUser = { ...parsedUser, ...userData };
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+            console.log("Updated user data in localStorage:", updatedUser);
+          } catch (e) {
+            console.error("Error updating localStorage:", e);
+          }
+        }
+        
+        setSuccessMessage("Profile created successfully!");
+        
+        // Redirect to dashboard after a short delay
+        setTimeout(() => {
+          router.push("/company/dashboard");
+        }, 1500);
+      } catch (err: any) {
+        console.error("Error in profile update:", err);
+        throw err;
+      }
     } catch (err: any) {
+      console.error("Error in profile update:", err);
       // Form-specific errors are set here
       setFormError(err.message || "Update profile failed.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -134,6 +189,15 @@ export default function SetUpCompanyProfileForm({ step, setStep }: SetUpCompanyP
               clearError();
             }
           }}
+        />
+      )}
+
+      {successMessage && (
+        <FormAlert
+          message={successMessage}
+          type="success"
+          duration={5000}
+          onClose={() => setSuccessMessage("")}
         />
       )}
       
@@ -170,10 +234,11 @@ export default function SetUpCompanyProfileForm({ step, setStep }: SetUpCompanyP
             />
           </div>
           <input
-            placeholder="Enter your company name"
+            placeholder="Enter your company name*"
             value={company_name}
             onChange={(e) => setCompanyName(e.target.value)}
             className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
+            required
           />
           <input
             placeholder="Company registration number"
@@ -187,12 +252,12 @@ export default function SetUpCompanyProfileForm({ step, setStep }: SetUpCompanyP
             </h1>
           </div>
           <SkillsButton options={industryOptions} selectedSkills={company_industry} onSelect={handleIndustrySelect} text="Type or select your business sector*" />
-          <input
-            placeholder="Tell us a little bit about the company (Note: Applicants will be able to 
-see this information when the apply for internships)*"
+          <textarea
+            placeholder="Tell us a little bit about the company (Note: Applicants will be able to see this information when they apply for internships)*"
             value={company_description}
             onChange={(e) => setDescription(e.target.value)}
             className="mb-[12px] h-[100px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
+            required
           />
 
           <div className="mb-[12px] flex justify-start border-b-2 border-Gray1">
@@ -213,7 +278,7 @@ see this information when the apply for internships)*"
             className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
           />
           <input
-            placeholder="State"
+            placeholder="City"
             value={company_city}
             onChange={(e) => setCity(e.target.value)}
             className="mb-[12px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
@@ -225,9 +290,23 @@ see this information when the apply for internships)*"
             className="mb-[80px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
           />
 
-          <Button3 text="Proceed" className="text-[16px] font-normal" type="button" onClick={() => {
-            setStep(2);
-          }} />
+          <div className="flex flex-row space-x-4">
+            <Button3 
+              text="Proceed" 
+              className="text-[16px] font-normal flex-1" 
+              type="button" 
+              onClick={() => {
+                setStep(2);
+              }} 
+            />
+            <button 
+              type="submit" 
+              className="text-[16px] font-normal flex-1 bg-PriGold text-white rounded-[999px] px-[30px] py-[18px]"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Creating..." : "Create Profile"}
+            </button>
+          </div>
         </div>
       )}
       {step === 2 && (
@@ -255,7 +334,7 @@ see this information when the apply for internships)*"
           Company Size
             </h1>
           </div>
-          <SkillsButton options={options} selectedSkills={company_size} onSelect={handleSizeSelect} text="Type or Select your skills (You can select up to 5)" />
+          <SkillsButton options={options} selectedSkills={company_size} onSelect={handleSizeSelect} text="Select your company size" />
 
           <div className="mb-[12px] flex justify-start border-b-2 border-Gray1">
             <h1 className="p-[10px] font-sans text-[21px]/[120%] text-Gray1">
@@ -286,7 +365,23 @@ see this information when the apply for internships)*"
             onChange={(e) => setInstagram(e.target.value)}
             className="mb-[80px] w-[100%] rounded-[12px] border-[1px] border-Gold3 bg-GoldenWhite px-[18px] py-[20px] font-sans text-[16px]/[120%] placeholder-Gray1 caret-PriGold outline-none focus:border-[2px] focus:border-PriGold focus:outline-none"
           />
-          <Button3 text="Create Profile" className="text-[16px] font-normal" type="submit" loading={loading} disabled={loading} />
+          
+          <div className="flex flex-row space-x-4">
+            <button 
+              type="button"
+              onClick={() => setStep(1)}
+              className="text-[16px] font-normal flex-1 border-2 border-PriGold text-PriGold bg-transparent rounded-[999px] px-[30px] py-[18px]"
+            >
+              Back
+            </button>
+            <button 
+              type="submit" 
+              className="text-[16px] font-normal flex-1 bg-PriGold text-white rounded-[999px] px-[30px] py-[18px]"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Creating..." : "Create Profile"}
+            </button>
+          </div>
         </div>
       )}
 

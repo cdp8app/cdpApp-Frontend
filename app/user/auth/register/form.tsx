@@ -29,9 +29,11 @@ export default function StudentRegisterForm() {
     const initializeForm = async () => {
       try {
         await fetchCsrfToken();
+        setDebugInfo("CSRF token fetched successfully");
       } catch (error) {
         console.error("Error fetching CSRF token:", error);
         setFormError("Error fetching security token. Please refresh the page.");
+        setDebugInfo("Error fetching CSRF token: " + (error instanceof Error ? error.message : String(error)));
       }
     };
 

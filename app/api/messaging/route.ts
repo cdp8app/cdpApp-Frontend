@@ -141,6 +141,30 @@ async function proxyToBackend(request: NextRequest, path: string, method: string
     
     console.log(`Proxying ${method} request to backend: ${url}`);
     
+    // First, get a CSRF token if this is a non-GET request
+    let csrfToken = "";
+    let csrfCookies = "";
+    
+    if (method !== "GET") {
+      // Get a CSRF token by making a GET request to the login page
+      console.log("Fetching CSRF token for chat API request");
+      const csrfResponse = await fetch(`${baseUrl}/api/user/login/`, {
+        method: "GET",
+        credentials: "include",
+      });
+      
+      // Extract the CSRF token from the cookie
+      csrfCookies = csrfResponse.headers.get("set-cookie") || "";
+      
+      if (csrfCookies) {
+        const csrfCookie = csrfCookies.split(";").find(cookie => cookie.trim().startsWith("csrftoken="));
+        if (csrfCookie) {
+          csrfToken = csrfCookie.split("=")[1];
+          console.log("Extracted CSRF token for chat API:", csrfToken);
+        }
+      }
+    }
+    
     // Get request body for non-GET requests
     let body = null;
     if (method !== "GET" && request.body) {
@@ -162,12 +186,14 @@ async function proxyToBackend(request: NextRequest, path: string, method: string
       headers.set("Content-Type", "application/json");
     }
     
-    // Add authorization header if available
-    if (typeof localStorage !== "undefined") {
-      const token = localStorage.getItem("authToken");
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
+    // Add CSRF token header for non-GET requests
+    if (method !== "GET" && csrfToken) {
+      headers.set("X-CSRFToken", csrfToken);
+    }
+    
+    // Add cookies from CSRF request if available
+    if (csrfCookies) {
+      headers.set("Cookie", csrfCookies);
     }
     
     // Make the request to the backend API

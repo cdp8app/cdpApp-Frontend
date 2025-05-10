@@ -1,7 +1,7 @@
 // app/UsersAuthentication/Components/LoginForm.tsx
 "use client";
 import "../../../../app/globals.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/./contexts/AuthContext"; 
 import Button1 from "../../Components/Button1";
 import Image from "next/image";
@@ -12,9 +12,10 @@ import FormAlert from "@/app/Components/FormAlert";
 
 interface LoginFormProps {
   userType: "student" | "company" | null;
+  redirectPath?: string | null;
 }
 
-export default function LoginForm({ userType }: LoginFormProps) {
+export default function LoginForm({ userType, redirectPath }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -23,6 +24,23 @@ export default function LoginForm({ userType }: LoginFormProps) {
   const router = useRouter();
   
   const { login, loading, error, clearError } = useAuth();
+
+  // Fetch CSRF token on component mount
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        await fetch("/api/proxy/csrf-cookie", {
+          method: "GET",
+          credentials: "include",
+        });
+        console.log("CSRF cookie fetched for login");
+      } catch (err) {
+        console.warn("Failed to fetch CSRF cookie:", err);
+      }
+    };
+    
+    fetchCsrfToken();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +71,15 @@ export default function LoginForm({ userType }: LoginFormProps) {
       await login(email, password, userType);
       console.log("Login request sent successfully");
       
-      // Note: The redirect is handled inside the login function in AuthContext
+      // Handle redirect after successful login
+      if (redirectPath) {
+        console.log(`Redirecting to: ${redirectPath}`);
+        localStorage.removeItem("redirectAfterLogin"); // Clear stored redirect
+        router.push(redirectPath);
+      } else {
+        // Default redirect based on user type
+        router.push(userType === "student" ? "/student/dashboard" : "/company/dashboard");
+      }
     } catch (err: any) {
       console.error("Login error:", err);
       
@@ -82,6 +108,12 @@ export default function LoginForm({ userType }: LoginFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="mt-[12.96px] flex flex-col justify-start">
+      {redirectPath && (
+        <div className="bg-blue-50 text-blue-600 p-2 rounded mb-4 text-sm">
+          You'll be redirected after login
+        </div>
+      )}
+      
       {(formError || error) && (
         <FormAlert
           message={(formError || error) ?? ""}
