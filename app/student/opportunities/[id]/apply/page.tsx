@@ -4,11 +4,11 @@ import type React from "react";
 
 import { use, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/app/Components/ui/card";
+import { Button } from "@/app/Components/ui/button";
+import { Textarea } from "@/app/Components/ui/textarea";
 import { AlertCircle, ArrowLeft, Upload, FileText, Building, MapPin } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/app/Components/ui/alert";
 import Link from "next/link";
 import AuthRedirect from "@/app/Components/AuthRedirect";
 
