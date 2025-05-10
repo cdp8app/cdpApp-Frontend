@@ -1,22 +1,22 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, context: { params: { path: string[] } }) {
-  const pathSegments = context.params.path;
+export async function GET(request: NextRequest) {
+  const pathSegments = request.nextUrl.pathname.split("/").slice(3);
   return handleRequest(request, pathSegments, "GET");
 }
 
-export async function POST(request: NextRequest, context: { params: { path: string[] } }) {
-  const pathSegments = context.params.path;
+export async function POST(request: NextRequest) {
+  const pathSegments = request.nextUrl.pathname.split("/").slice(3);
   return handleRequest(request, pathSegments, "POST");
 }
 
-export async function PUT(request: NextRequest, context: { params: { path: string[] } }) {
-  const pathSegments = context.params.path;
+export async function PUT(request: NextRequest) {
+  const pathSegments = request.nextUrl.pathname.split("/").slice(3);
   return handleRequest(request, pathSegments, "PUT");
 }
 
-export async function DELETE(request: NextRequest, context: { params: { path: string[] } }) {
-  const pathSegments = context.params.path;
+export async function DELETE(request: NextRequest) {
+  const pathSegments = request.nextUrl.pathname.split("/").slice(3);
   return handleRequest(request, pathSegments, "DELETE");
 }
 
