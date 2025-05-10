@@ -125,6 +125,7 @@ export const getConversations = async (): Promise<Conversation[]> => {
   } catch (error) {
     console.error("Error fetching conversations:", error);
     // Return mock data as fallback
+    console.log("Returning mock conversations data");
     return MOCK_CONVERSATIONS;
   }
 };
@@ -140,6 +141,7 @@ export const getMessages = async (conversationId: string): Promise<Message[]> =>
   } catch (error) {
     console.error("Error fetching messages:", error);
     // Return mock data as fallback
+    console.log("Returning mock messages data");
     return MOCK_MESSAGES[conversationId] || [];
   }
 };
@@ -155,6 +157,7 @@ export const sendMessage = async (receiverId: string, content: string): Promise<
   } catch (error) {
     console.error("Error sending message:", error);
     // Return mock data as fallback
+    console.log("Creating mock message response");
     const newMessage: Message = {
       id: `msg${Date.now()}`,
       senderId: "currentUser",
@@ -190,6 +193,7 @@ export const getUnreadCount = async (): Promise<number> => {
   } catch (error) {
     console.error("Error fetching unread count:", error);
     // Return mock data as fallback
+    console.log("Returning mock unread count");
     return MOCK_CONVERSATIONS.reduce(
       (total, conversation) => total + conversation.unreadCount, 
       0

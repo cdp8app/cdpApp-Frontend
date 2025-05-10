@@ -1,46 +1,71 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export async function PUT(request: NextRequest) {
   try {
-    // Get the activation code from the request body
+    // Parse the request body
     const body = await request.json();
-    const { code, email } = body;
+    const { token, email } = body;
 
-    if (!code) {
-      return NextResponse.json({ message: "Activation code is required" }, { status: 400 });
+    // Validate required fields
+    if (!token || !email) {
+      return NextResponse.json(
+        { message: "Token and email are required" },
+        { status: 400 }
+      );
     }
 
-    // Forward the request to your backend API
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "");
-    const response = await fetch(`${baseUrl}/api/user/activate/`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code, email }),
-    });
+    console.log(`Activating account for email: ${email} with token: ${token}`);
 
-    // Get the response from the backend
-    const responseText = await response.text();
-    let data;
+    // Forward the request to the backend
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com";
+    const url = `${baseUrl}/api/user/activate/`;
 
     try {
-      // Try to parse as JSON
-      data = JSON.parse(responseText);
-    } catch (e) {
-      // If not valid JSON, return as text
-      return new NextResponse(responseText, {
-        status: response.status,
+      // IMPORTANT: The backend expects "code" instead of "token"
+      const response = await fetch(url, {
+        method: "PUT",
         headers: {
-          "Content-Type": "text/plain",
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ 
+          code: token,  // Rename token to code for the backend
+          email 
+        }),
       });
-    }
 
-    // Return the response with the appropriate status code
-    return NextResponse.json(data, { status: response.status });
+      // Get the response as text first
+      const responseText = await response.text();
+      console.log("Raw activation response:", responseText);
+
+      // Try to parse as JSON
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (error) {
+        // If not valid JSON, return the raw text with appropriate status
+        return new NextResponse(responseText, {
+          status: response.status,
+          headers: {
+            "Content-Type": "text/plain",
+          },
+        });
+      }
+
+      // Return the JSON response
+      return NextResponse.json(data, { status: response.status });
+    } catch (error) {
+      console.error("Error forwarding activation request:", error);
+      throw error;
+    }
   } catch (error) {
-    console.error("Error activating user account:", error);
-    return NextResponse.json({ message: "An error occurred while activating the account" }, { status: 500 });
+    console.error("Error in account activation:", error);
+    return NextResponse.json(
+      {
+        message: "An error occurred during account activation",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
   }
 }

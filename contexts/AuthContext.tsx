@@ -331,7 +331,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       await fetchCsrfCookie();
 
       // Step 2: Attempt login via proxy
-      const response = await fetch("/api/proxy/user/login", {
+      const response = await fetch("/api/proxy/user/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

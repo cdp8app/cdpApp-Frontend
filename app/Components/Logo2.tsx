@@ -8,8 +8,8 @@ export default function LogoComponent() {
     <div className="mb-0 flex">
       <Image
         src={Logo2Image}
-        alt="Logo2"
-        className=""
+        alt="Logo1"
+        className="h-[75px] w-[75px]"
       />
     </div>
   );

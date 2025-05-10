@@ -1,256 +1,349 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { CldImage } from "next-cloudinary";
 
-import Header1 from "@/app/Components/Header1";
-import Button7 from "@/app/user/Components/Button7";
-import Footer1 from "@/app/Components/Footer1";
-import Logout from "@/app/user/auth/logout/page";
+import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useApplicationContext } from "@/contexts/applicationContext";
-import { Job } from "@/contexts/jobContext";
+import Header1 from "@/app/Components/Header1";
+import Footer1 from "@/app/Components/Footer1";
 import FormAlert from "@/app/Components/FormAlert";
 
-export default function StudentApplicationStatus() {
-  const params = useParams();
+export default function ApplicationDetailPage({ params }: { params: any }) {
   const router = useRouter();
-
-  const applicationId = Array.isArray(params.id) ? params.id[0] : params.id;
-  const [application, setApplication] = useState<{ job?: { title: string; location?: string; description?: string; requirements?: string; deadline?: string; company?: { id: string; company_name: string; company_industry?: string; profile_picture: string }; };  status?: string } | null>(null);
   const { getApplicationsById, updateApplication, loading, error } = useApplicationContext();
-
+  const [application, setApplication] = useState<any>(null);
   const [formError, setFormError] = useState("");
 
-  useEffect(() => {
-    const fetchApplicationDetails = async () => {
-      if (applicationId) {
-        const application = await getApplicationsById(applicationId);
-        if (application) {
-          setApplication({
-            ...application,
-            job: typeof application.job === "string" ? JSON.parse(application.job) : application.job,
-          });
-        }
-      }
-    };
-      
-    fetchApplicationDetails();
-  }, []);
+  // Use a ref to store the ID to avoid re-renders
+  const idRef = useRef<string>("");
 
-  return (
-    <div className="flex flex-col">
-      <div className="p-[2%]">
-        <Header1 />
-        {loading ? (
-          <div className="flex items-center justify-center my-[120px]">
+  // Extract ID safely without directly accessing params.id
+  useEffect(() => {
+    // Safely extract the ID without directly accessing params.id
+    if (params) {
+      // Convert params to a regular object to avoid direct property access
+      const paramsObj = { ...params };
+      if (paramsObj.id) {
+        idRef.current = String(paramsObj.id);
+        fetchApplication(idRef.current);
+      }
+    }
+  }, []); // Empty dependency array to run only once
+
+  // Separate function to fetch application data
+  const fetchApplication = async (id: string) => {
+    if (!id) return;
+
+    try {
+      const data = await getApplicationsById(id);
+      if (data) {
+        setApplication(data);
+      }
+    } catch (err: any) {
+      setFormError(`Failed to fetch application: ${err.message || err}`);
+    }
+  };
+
+  const handleWithdraw = async () => {
+    if (!idRef.current) return;
+    if (!confirm("Are you sure you want to withdraw this application?")) {
+      return;
+    }
+
+    try {
+      await updateApplication(idRef.current, { ...application, status: "withdrawn" });
+      // Update local state
+      setApplication((prev: any) => (prev ? { ...prev, status: "withdrawn" } : null));
+    } catch (err: any) {
+      setFormError(`Failed to withdraw application: ${err.message || err}`);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <div className="mb-[100px] p-[1.5%]">
+          <Header1 />
+          <div className="flex items-center justify-center mt-[60px]">
             <p className="text-Gold1 font-sans text-[20px]/[120%]">Loading...</p>
           </div>
-        ) : (
-          <>
-            <div className="mb-[80px] flex w-[100%] flex-row justify-between rounded-[30px]">
-              <div className="flex w-[20%] flex-col items-center space-y-[200px] py-[1%]">
-                <div className="flex flex-col items-center justify-center">
-                  <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] overflow-hidden bg-White">
-                    {application?.job?.company?.profile_picture ? (
-                      <CldImage
-                        width="134"
-                        height="134"
-                        src={application?.job?.company?.profile_picture}
-                        alt="Description of my image"
-                      />
-                    ) : (
-                      <div className="mb-[16px] h-[134px] w-[134px] rounded-[67px] bg-Red1"></div>
+        </div>
+        <Footer1 />
+      </div>
+    );
+  }
+
+  if (error || formError) {
+    return (
+      <div>
+        <div className="mb-[100px] p-[1.5%]">
+          <Header1 />
+          <div className="px-[4%]">
+            <FormAlert
+              message={(error || formError) ?? ""}
+              type="error"
+              duration={5000}
+              onClose={() => {
+                if (formError) {
+                  setFormError("");
+                }
+              }}
+            />
+            <button
+              className="mt-4 flex flex-row items-center py-[12px] font-sans text-[16px]/[120%] font-normal text-Gold1"
+              onClick={() => router.back()}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1"
+                stroke="currentColor"
+                className="size-6 mr-2"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+              </svg>
+              Go Back
+            </button>
+          </div>
+        </div>
+        <Footer1 />
+      </div>
+    );
+  }
+
+  if (!application) {
+    return (
+      <div>
+        <div className="mb-[100px] p-[1.5%]">
+          <Header1 />
+          <div className="px-[4%]">
+            <div className="mt-4 text-center">
+              <p className="text-red-500 font-sans text-[18px]/[120%]">Application not found</p>
+              <button
+                className="mt-4 flex flex-row items-center mx-auto py-[12px] font-sans text-[16px]/[120%] font-normal text-Gold1"
+                onClick={() => router.push("/student/applications")}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1"
+                  stroke="currentColor"
+                  className="size-6 mr-2"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+                Back to Applications
+              </button>
+            </div>
+          </div>
+        </div>
+        <Footer1 />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="mb-[100px] p-[1.5%]">
+        <Header1 />
+        <div className="px-[4%]">
+          <div className="mb-[18px] border-b-[1px] border-Gold2">
+            <button
+              className="flex flex-row items-center py-[12px] font-sans text-[27px]/[120%] font-normal text-Gold1"
+              onClick={() => router.back()}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1"
+                stroke="currentColor"
+                className="size-8"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+              </svg>
+              Application Details
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2">
+              <div className="rounded-[18px] bg-GoldenWhite p-6 shadow-custom2">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h2 className="font-sans text-[24px]/[120%] font-medium">{application.job?.title}</h2>
+                    <p className="font-sans text-[16px]/[120%] text-Gray2 mt-1">
+                      {application.job?.company?.company_name}
+                    </p>
+                  </div>
+                  <div
+                    className={`flex flex-row items-center rounded-[8px] px-[16px] py-[8px] ${
+                      application.status === "accepted"
+                        ? "bg-Green2"
+                        : application.status === "rejected"
+                          ? "bg-Red2"
+                          : application.status === "interview"
+                            ? "bg-BlueB2"
+                            : "bg-Yellow2"
+                    }`}
+                  >
+                    <div
+                      className={`mr-[5px] h-[8px] w-[8px] rounded-[4px] ${
+                        application.status === "accepted"
+                          ? "bg-Green1"
+                          : application.status === "rejected"
+                            ? "bg-Red1"
+                            : application.status === "interview"
+                              ? "bg-BlueB1"
+                              : "bg-Yellow1"
+                      }`}
+                    ></div>
+                    <p
+                      className={`font-sans text-[12px]/[120%] font-normal ${
+                        application.status === "accepted"
+                          ? "text-Green1"
+                          : application.status === "rejected"
+                            ? "text-Red1"
+                            : application.status === "interview"
+                              ? "text-BlueB1"
+                              : "text-Yellow1"
+                      }`}
+                    >
+                      {(application.status ?? "").charAt(0).toUpperCase() + (application.status ?? "").slice(1)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-sans text-[18px]/[120%] font-medium mb-2">Job Description</h3>
+                    <p className="font-sans text-[14px]/[150%] text-Gray2 whitespace-pre-line">
+                      {application.job?.description || "No description available"}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="font-sans text-[18px]/[120%] font-medium mb-2">Your Application</h3>
+
+                    {application.cover_letter && (
+                      <div className="mb-4">
+                        <h4 className="font-sans text-[16px]/[120%] font-medium mb-1">Cover Letter</h4>
+                        <p className="font-sans text-[14px]/[150%] text-Gray2 whitespace-pre-line p-3 bg-White rounded-md">
+                          {application.cover_letter}
+                        </p>
+                      </div>
+                    )}
+
+                    {application.skills && (
+                      <div className="mb-4">
+                        <h4 className="font-sans text-[16px]/[120%] font-medium mb-1">Skills</h4>
+                        <p className="font-sans text-[14px]/[150%] text-Gray2 whitespace-pre-line p-3 bg-White rounded-md">
+                          {application.skills}
+                        </p>
+                      </div>
+                    )}
+
+                    {application.experience && (
+                      <div className="mb-4">
+                        <h4 className="font-sans text-[16px]/[120%] font-medium mb-1">Experience</h4>
+                        <p className="font-sans text-[14px]/[150%] text-Gray2 whitespace-pre-line p-3 bg-White rounded-md">
+                          {application.experience}
+                        </p>
+                      </div>
                     )}
                   </div>
-                  <h1 className="mb-[6px] text-center font-sans text-[27px]/[120%] font-bold">
-                    {application?.job?.company?.company_name}
-                  </h1>
-                  <h1 className="mb-[21px] font-sans text-[12px]/[120%] font-normal text-Gray2">
-                    {application?.job?.company?.company_industry}
-                  </h1>
-                  <Button7
-                    text="View Profile"
-                    className="text-[12px]/[120%] font-normal"
-                    onClick={() => {
-                      router.push(`/company/profile/${application?.job?.company?.id}`);
-                    }}
-                  />
-                </div>
-                <Logout/>
-              </div>
-              <div className="w-[75%]">
-                {(formError || error) && (
-                  <FormAlert
-                    message={(formError || error) ?? ""}
-                    type="error"
-                    duration={5000}
-                    onClose={() => {
-                      if (formError) {
-                        setFormError("");
-                      }
-                    }}
-                  />
-                )}
-                {/* <h1 className="mb-[21px] font-sans text-[36px]/[120%] text-Gold1">
-              Application status
-                </h1> */}
-                <button
-                  className="flex flex-row items-center py-[12px] font-sans text-[36px]/[120%] font-normal text-Gold1"
-                  onClick={() => router.back()}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="size-8"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15.75 19.5 8.25 12l7.5-7.5"
-                    />
-                  </svg>
-                  Application status
-                </button>
-                {application?.status === "pending" && (
-                  <div className="flex w-[111px] flex-row items-center rounded-[8px] bg-Yellow2 px-[16px] py-[8px]">
-                    <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Yellow1"></div>
-                    <p className="font-sans text-[16px]/[120%] font-normal text-Yellow1">
-                Pending
-                    </p>
-                  </div>
-                )}
-                {application?.status === "rejected" && (
-                  <div className="flex w-[115px] flex-row items-center rounded-[8px] bg-Red2 px-[16px] py-[8px]">
-                    <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Red1"></div>
-                    <p className="font-sans text-[16px]/[120%] font-normal text-Red1">
-                Rejected
-                    </p>
-                  </div>
-                )}
-                {application?.status === "accepted" && (
-                  <div className="flex w-[123px] flex-row items-center rounded-[8px] bg-Green2 px-[16px] py-[8px]">
-                    <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-Green1"></div>
-                    <p className="font-sans text-[16px]/[120%] font-normal text-Green1">
-                Accepted
-                    </p>
-                  </div>
-                )}
-                {application?.status === "interview" && (
-                  <div className="flex w-[123px] flex-row items-center rounded-[8px] bg-BlueB1 bg-opacity-15 px-[16px] py-[8px]">
-                    <div className="mr-[5px] h-[8px] w-[8px] rounded-[4px] bg-BlueB1"></div>
-                    <p className="font-sans text-[16px]/[120%] font-normal text-BlueB1">
-                Interview
-                    </p>
-                  </div>
-                )}
 
-                {application?.status === "pending" && (
-                  <button onClick={() => router.back()} className="mt-[21px] rounded-[999px] border-[2px] border-PriGold px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-PriGold">
-              Return to applications
-                  </button>
-                )}
-                {application?.status === "interview" && (
-                  <button className="mt-[21px] rounded-[999px] border-[2px] border-PriGold px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-PriGold">
-              Interview Schedule
-                  </button>
-                )}
-                {application?.status === "rejected" && (
-                  <button className="mt-[21px] rounded-[999px] border-[2px] border-PriGold px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-PriGold">
-              Interview Schedule
-                  </button>
-                )}
-                {application?.status === "accepted" && (
-                  <button className="mt-[21px] rounded-[999px] border-[2px] border-PriGold px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-PriGold">
-              Start Internship
-                  </button>
-                )}
-
-                <div className="mt-[21px] flex w-[80%] flex-col">
-                  <div>
-                    <h1 className="font-sans text-[16px]/[120%] text-Gold1">
-                  ROLE:
-                    </h1>
-                    <p className="font-sans text-[16px]/[120%] text-Black2">
-                      {application?.job?.title}
-                    </p>
-                  </div>
-                  <div className="mt-[21px]">
-                    <h1 className="font-sans text-[16px]/[120%] text-Gold1">
-                  LOCATION:
-                    </h1>
-                    <p className="font-sans text-[16px]/[120%] text-Black2">
-                      {application?.job?.location}
-                    </p>
-                  </div>
-                  <div className="mt-[21px]">
-                    <h1 className="font-sans text-[16px]/[120%] text-Gold1">
-                  DESCRIPTION:
-                    </h1>
-                    <p className="font-sans text-[16px]/[120%] text-Black2">
-                      {application?.job?.description}
-                    </p>
-                  </div>
-                  <div className="mt-[21px]">
-                    <h1 className="font-sans text-[16px]/[120%] text-Gold1">
-                  REQUIREMENTS:
-                    </h1>
-                    <p className="font-sans text-[16px]/[120%] text-Black2">
-                      {application?.job?.requirements}
-                    </p>
-                  </div>
-                  <div className="mt-[21px]">
-                    <h1 className="font-sans text-[16px]/[120%] text-Gold1">
-                  DURATION:
-                    </h1>
-                    <p className="font-sans text-[16px]/[120%] text-Black2">
-                      {application?.job?.deadline}
-                    </p>
-                  </div>
+                  {application.status !== "withdrawn" && (
+                    <div className="mt-6">
+                      <button
+                        onClick={handleWithdraw}
+                        className="rounded-[999px] border-[2px] border-Red1 px-[20px] py-[10px] font-sans text-[14px]/[100%] font-normal text-Red1 hover:bg-red-50"
+                      >
+                        Withdraw Application
+                      </button>
+                    </div>
+                  )}
                 </div>
-                {application?.status === "rejected" && (
-                  <div onClick={() => router.back()} className="mt-[21px] flex flex-row">
-                    <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
-                Return to applications
-                    </button>
-                  </div>
-                )}
-                {application?.status === "pending" && (
-                  <div className="mt-[21px] flex flex-row">
-                    <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
-                Cancel application
-                    </button>
-                    <button onClick={() => router.back()} className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
-                Return to applications
-                    </button>
-                  </div>
-                )}
-                {application?.status === "accepted" && (
-                  <div className="mt-[21px] flex flex-row">
-                    <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
-                End Internship
-                    </button>
-                    <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
-                Start Internship
-                    </button>
-                  </div>
-                )}
-                {application?.status === "interview" && (
-                  <div className="mt-[21px] flex flex-row">
-                    <button className="mr-[18px] rounded-[999px] border-[2px] border-Red1 px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-Red1">
-                Decline interview
-                    </button>
-                    <button className="rounded-[999px] bg-gradient-to-r px-[80px] py-[18px] font-sans text-[16px]/[120%] font-normal text-GoldenWhite">
-                Interview schedule
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
-          </>
-        )}
+
+            <div>
+              <div className="rounded-[18px] bg-GoldenWhite p-6 shadow-custom2">
+                <h3 className="font-sans text-[18px]/[120%] font-medium mb-4">Application Documents</h3>
+
+                {application.resume ? (
+                  <a
+                    href={application.resume}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center p-3 bg-White rounded-md hover:bg-gray-50 transition-colors mb-3"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="size-5 mr-2 text-Gold1"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                      />
+                    </svg>
+                    <span className="font-sans text-[14px]/[120%]">View Resume</span>
+                  </a>
+                ) : (
+                  <div className="p-3 bg-White rounded-md text-Gray2 font-sans text-[14px]/[120%] mb-3">
+                    No resume attached
+                  </div>
+                )}
+
+                <div className="mt-6">
+                  <h3 className="font-sans text-[18px]/[120%] font-medium mb-4">Application Timeline</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-start">
+                      <div className="bg-Gold1 rounded-full h-4 w-4 mt-1 mr-3"></div>
+                      <div>
+                        <p className="font-sans text-[14px]/[120%] font-medium">Applied</p>
+                        <p className="font-sans text-[12px]/[120%] text-Gray2">
+                          {new Date(application.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    {application.status !== "pending" && (
+                      <div className="flex items-start">
+                        <div
+                          className={`rounded-full h-4 w-4 mt-1 mr-3 ${
+                            application.status === "accepted"
+                              ? "bg-Green1"
+                              : application.status === "rejected"
+                                ? "bg-Red1"
+                                : application.status === "interview"
+                                  ? "bg-BlueB1"
+                                  : application.status === "withdrawn"
+                                    ? "bg-Gray2"
+                                    : "bg-Yellow1"
+                          }`}
+                        ></div>
+                        <div>
+                          <p className="font-sans text-[14px]/[120%] font-medium">
+                            {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
+                          </p>
+                          <p className="font-sans text-[12px]/[120%] text-Gray2">
+                            {new Date(application.updatedAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <Footer1 />
     </div>

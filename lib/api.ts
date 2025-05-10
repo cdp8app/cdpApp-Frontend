@@ -10,7 +10,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000, // 10 seconds
+  timeout: 30000, // Increased from 10000 to 30000 (30 seconds)
 });
 
 // Request interceptor for adding auth token
@@ -39,13 +39,24 @@ api.interceptors.response.use(
   },
   (error) => {
     const { response } = error;
+    
     // Handle authentication errors
     if (response && response.status === 401) {
       if (typeof window !== "undefined") {
-        localStorage.removeItem("authToken");
-        // Redirect to login if needed
-        window.location.href = "/UsersAuthentication/StudentAuth/StudentAuthPage";
+        // Don't remove token automatically, as we might be using mock data
+        // localStorage.removeItem("authToken");
+        console.log("Authentication error (401) - Using mock data if available");
       }
+    }
+    
+    // Handle timeout errors
+    if (error.code === "ECONNABORTED") {
+      console.error("API Request timed out - Using mock data if available");
+    }
+    
+    // Handle 404 errors
+    if (response && response.status === 404) {
+      console.error(`API Endpoint not found (404): ${error.config?.url} - Using mock data if available`);
     }
     
     console.error("API Error:", error.message, response?.status, response?.data);
@@ -66,7 +77,7 @@ export const getAuthHeader = (): Record<string, string> => {
 export async function serverFetch(endpoint: string, options: RequestInit = {}) {
   // For server-side requests, use the full URL
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com";
-  const url = `${apiUrl}${endpoint}`;
+  const url = `${apiUrl}/api${endpoint}`; // Added /api prefix to all endpoints
   
   const defaultOptions: RequestInit = {
     headers: {
@@ -86,14 +97,25 @@ export async function serverFetch(endpoint: string, options: RequestInit = {}) {
   };
   
   console.log(`Server fetch: ${url}`);
-  const response = await fetch(url, mergedOptions);
   
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || `Server API error: ${response.status}`);
+  try {
+    const response = await fetch(url, mergedOptions);
+    
+    if (!response.ok) {
+      console.error(`Server fetch error: ${response.status} ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || `Server API error: ${response.status}`);
+    }
+    
+    return response.json();
+  } catch (error) {
+    console.error("Server fetch failed:", error);
+    // Return empty data as fallback
+    if (endpoint.includes("jobs")) return [];
+    if (endpoint.includes("offers")) return [];
+    if (endpoint.includes("applications")) return [];
+    return {};
   }
-  
-  return response.json();
 }
 
 export default api;

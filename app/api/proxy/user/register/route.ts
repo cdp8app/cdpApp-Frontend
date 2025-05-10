@@ -1,82 +1,113 @@
-// app/api/proxy/user/register/route.ts
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // Get the request body
     const body = await request.json();
+    console.log("Registration request body:", {
+      ...body,
+      password: body.password ? "[REDACTED]" : undefined,
+      confirm_password: body.confirm_password ? "[REDACTED]" : undefined,
+    });
+
+    // Construct the backend URL
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com";
     
-    const payload = {
-      username: body.username,
-      first_name: body.first_name,
-      last_name: body.last_name,
-      email: body.email,
-      password: body.password,
-      confirm_password: body.confirm_password,
-      role: body.role || "Student",
-      userType: body.userType
-    };
-    
-    console.log("Proxying request to backend:", {
-      ...payload,
-      password: "[REDACTED]",
-      confirm_password: "[REDACTED]"
+    // First, get a CSRF token by making a GET request to the login page
+    console.log("Fetching CSRF token from login page");
+    const csrfResponse = await fetch(`${baseUrl}/api/user/login/`, {
+      method: "GET",
+      credentials: "include",
     });
     
-    // Use environment variable for API URL
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com/api";
-    
-    // First, get a CSRF token
+    // Extract the CSRF token from the cookie
+    const csrfCookies = csrfResponse.headers.get("set-cookie");
     let csrfToken = "";
-    try {
-      // Use absolute URL for CSRF token endpoint
-      const origin = request.headers.get("origin") || "";
-      const csrfResponse = await fetch(`${origin}/api/proxy/csrf-token`, {
-        method: "GET",
-        credentials: "include",
-      });
-      
-      if (csrfResponse.ok) {
-        const csrfData = await csrfResponse.json();
-        csrfToken = csrfData.csrfToken;
-      } else {
-        console.warn(`Failed to get CSRF token: ${csrfResponse.status} ${csrfResponse.statusText}`);
+    
+    if (csrfCookies) {
+      const csrfCookie = csrfCookies.split(";").find(cookie => cookie.trim().startsWith("csrftoken="));
+      if (csrfCookie) {
+        csrfToken = csrfCookie.split("=")[1];
+        console.log("Extracted CSRF token:", csrfToken);
       }
-    } catch (csrfError) {
-      console.error("Error fetching CSRF token:", csrfError);
-      // Continue without CSRF token as a fallback
     }
     
-    // Use the token in your request
-    const response = await fetch(`${apiUrl}/user/register/`, {
+    if (!csrfToken) {
+      console.warn("Could not extract CSRF token from login page");
+      // Use token from request if available
+      csrfToken = request.headers.get("X-CSRFToken") || body.csrfmiddlewaretoken || "";
+    }
+    
+    // Prepare headers for the registration request
+    const headers = new Headers();
+    headers.set("Content-Type", "application/json");
+    
+    // Set the CSRF token header
+    if (csrfToken) {
+      headers.set("X-CSRFToken", csrfToken);
+    }
+    
+    // Forward cookies from the CSRF response
+    if (csrfCookies) {
+      headers.set("Cookie", csrfCookies);
+    } else {
+      // Use cookies from the original request as fallback
+      const originalCookies = request.headers.get("cookie");
+      if (originalCookies) {
+        headers.set("Cookie", originalCookies);
+      }
+    }
+    
+    // Make the registration request to the backend
+    const url = `${baseUrl}/api/user/register/`;
+    console.log(`Making registration request to: ${url}`);
+    
+    const response = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrfToken,
-        "Referer": apiUrl, // Add Referer header
-      },
-      credentials: "include", // Include cookies
-      body: JSON.stringify(payload),
+      headers,
+      credentials: "include",
+      body: JSON.stringify(body),
     });
     
-    // Get the response data
+    // Get the response as text first
+    const responseText = await response.text();
+    console.log(`Registration response status: ${response.status}`);
+    console.log(`Raw response: ${responseText.substring(0, 200)}${responseText.length > 200 ? "..." : ""}`);
+    
+    // Try to parse as JSON
     let data;
     try {
-      const text = await response.text();
-      console.log("Raw response:", text);
-      data = text ? JSON.parse(text) : { message: "Empty response" };
-    } catch (e: any) {
-      data = { message: "Failed to parse response: " + e.message };
+      data = JSON.parse(responseText);
+    } catch (error) {
+      // If not valid JSON, return the raw text with appropriate status
+      return new NextResponse(responseText, {
+        status: response.status,
+        headers: {
+          "Content-Type": "text/plain",
+        },
+      });
     }
     
-    console.log("Backend response:", response.status, data);
+    // Forward any cookies from the response
+    const responseHeaders = new Headers();
+    const responseCookies = response.headers.get("set-cookie");
+    if (responseCookies) {
+      responseHeaders.set("set-cookie", responseCookies);
+    }
     
-    // Return the response to the client
-    return NextResponse.json(data, { status: response.status });
-  } catch (error: any) {
-    console.error("Proxy error:", error);
+    // Return the JSON response
+    return NextResponse.json(data, { 
+      status: response.status,
+      headers: responseHeaders
+    });
+  } catch (error) {
+    console.error("Error in user registration:", error);
     return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
+      {
+        message: "An error occurred during registration",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }

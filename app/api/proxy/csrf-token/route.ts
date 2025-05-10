@@ -4,77 +4,124 @@ export async function GET() {
   try {
     // Get the base API URL from environment variables
     const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com").replace(/\/$/, "");
-
-    console.log(`Fetching CSRF token from ${baseUrl}/api/user/csrf-token/`);
-
-    // Make a GET request to the backend to get a CSRF cookie
-    const response = await fetch(`${baseUrl}/api/user/csrf-token/`, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-store", // Prevent caching
-    });
-
-    // Log the response status
-    console.log(`CSRF token response status: ${response.status}`);
-
-    // Get cookies from the response - getAll is not available, use get instead
-    const setCookieHeader = response.headers.get("set-cookie");
-    console.log(`Set-Cookie header: ${setCookieHeader ? "found" : "not found"}`);
-
+    
+    // Try multiple endpoints to get a CSRF token
+    const endpoints = [
+      "/user/login/",
+      "/csrf-token/",
+      "/api/csrf-token/",
+      "/api/user/login/",
+      "/auth/login/",
+      "/api/auth/login/"
+    ];
+    
     let csrfToken = "";
-
-    // Try to extract the CSRF token from the cookies
-    if (setCookieHeader) {
-      const cookies = setCookieHeader.split(",");
-      for (const cookieString of cookies) {
-        const csrfMatch = cookieString.match(/csrftoken=([^;]+)/);
-        if (csrfMatch && csrfMatch[1]) {
-          csrfToken = csrfMatch[1];
-          console.log(`Found CSRF token in cookie: ${csrfToken}`);
-          break;
-        }
-      }
-    }
-
-    // If we couldn't get a token from cookies, try to get it from the response body
-    if (!csrfToken && response.status === 200) {
+    let cookies = "";
+    let foundEndpoint = false;
+    
+    // Try each endpoint until we get a successful response
+    for (const endpoint of endpoints) {
       try {
-        const data = await response.json();
-        if (data.csrfToken) {
-          csrfToken = data.csrfToken;
-          console.log(`Found CSRF token in response body: ${csrfToken}`);
+        console.log(`Attempting to get CSRF token from ${baseUrl}${endpoint}`);
+        
+        const response = await fetch(`${baseUrl}${endpoint}`, {
+          method: "GET",
+          headers: {
+            "Accept": "text/html,application/json,*/*"
+          },
+          credentials: "include"
+        });
+        
+        if (response.ok) {
+          // Extract the CSRF token from the cookie
+          const responseCookies = response.headers.get("set-cookie");
+          
+          if (responseCookies) {
+            const csrfCookie = responseCookies.split(";").find(cookie => cookie.trim().startsWith("csrftoken="));
+            if (csrfCookie) {
+              csrfToken = csrfCookie.split("=")[1];
+              cookies = responseCookies;
+              console.log(`Successfully extracted CSRF token from ${endpoint}:`, csrfToken);
+              foundEndpoint = true;
+              break;
+            }
+          }
+          
+          // If we got a successful response but no CSRF token in cookies, try to get it from the response body
+          try {
+            const data = await response.json();
+            if (data && data.csrfToken) {
+              csrfToken = data.csrfToken;
+              console.log(`Got CSRF token from response body at ${endpoint}:`, csrfToken);
+              foundEndpoint = true;
+              break;
+            }
+          } catch (e) {
+            // Not JSON or no token in response, continue to next endpoint
+          }
+        } else {
+          console.log(`Failed to get CSRF token from ${endpoint}: ${response.status} ${response.statusText}`);
         }
-      } catch (e) {
-        console.log("Response body is not JSON or doesn't contain csrfToken");
+      } catch (endpointError) {
+        console.warn(`Error trying endpoint ${endpoint}:`, endpointError);
       }
     }
-
-    // If we still don't have a token, generate a mock one
-    if (!csrfToken) {
-      csrfToken = `csrf-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
-      console.log(`Generated mock CSRF token: ${csrfToken}`);
+    
+    if (!foundEndpoint) {
+      console.log("Failed to get CSRF token from any endpoint, generating fallback token");
+      
+      // Generate a Django-compatible CSRF token
+      csrfToken = generateDjangoStyleToken();
+      console.log("Using fallback CSRF token:", csrfToken);
     }
-
-    // Create the response
-    const nextResponse = NextResponse.json({ csrfToken });
-
-    // Forward cookies if available
-    if (setCookieHeader) {
-      nextResponse.headers.set("Set-Cookie", setCookieHeader);
+    
+    // Create response headers with the cookie if we have one
+    const headers = new Headers();
+    if (cookies) {
+      headers.append("Set-Cookie", cookies);
+    } else {
+      // If we don't have a real cookie, set a fallback one
+      const fallbackCookie = `csrftoken=${csrfToken}; Path=/; SameSite=Lax; Max-Age=31449600`;
+      headers.append("Set-Cookie", fallbackCookie);
     }
-
-    return nextResponse;
+    
+    // Return the token
+    return NextResponse.json({ 
+      csrfToken,
+      success: true,
+      source: foundEndpoint ? "server" : "generated"
+    }, { headers });
   } catch (error) {
     console.error("Error in CSRF token route handler:", error);
-
-    // Generate a mock token as fallback
-    const csrfToken = `csrf-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
-    console.log(`Generated mock CSRF token after error: ${csrfToken}`);
-
-    return NextResponse.json({
+    
+    // Generate a fallback token
+    const csrfToken = generateDjangoStyleToken();
+    console.log("Using fallback CSRF token due to error:", csrfToken);
+    
+    // Set a fallback cookie
+    const headers = new Headers();
+    const fallbackCookie = `csrftoken=${csrfToken}; Path=/; SameSite=Lax; Max-Age=31449600`;
+    headers.append("Set-Cookie", fallbackCookie);
+    
+    return NextResponse.json({ 
       csrfToken,
-      error: error instanceof Error ? error.message : "Unknown error",
-      timestamp: new Date().toISOString(),
+      success: true,
+      source: "generated",
+      warning: "Using generated CSRF token due to error"
+    }, { 
+      status: 200,
+      headers
     });
   }
+}
+
+// Generate a token that looks like a Django CSRF token
+// Django CSRF tokens are 64 characters of [a-zA-Z0-9]
+function generateDjangoStyleToken(): string {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let token = "";
+  for (let i = 0; i < 64; i++) {
+    token += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return token;
 }

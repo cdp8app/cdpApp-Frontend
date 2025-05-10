@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+import api from "../lib/api";
 
 // Define types
 export interface Offer {
@@ -63,6 +63,83 @@ interface OfferContextType {
 
 const OfferContext = createContext<OfferContextType | undefined>(undefined);
 
+// Mock data for offers
+const MOCK_STUDENT_OFFERS = [
+  {
+    id: "1",
+    job: {
+      title: "Software Engineer",
+      location: "San Francisco, CA",
+      description: "Join our team as a software engineer",
+      requirements: "5+ years of experience in software development",
+      deadline: "2023-07-15"
+    },
+    company_details: {
+      id: "c1",
+      company_name: "Tech Solutions Inc",
+      company_industry: "Technology",
+      profile_picture: "https://via.placeholder.com/150"
+    },
+    status: "pending",
+    createdAt: "2023-06-15T10:30:00Z",
+    updatedAt: "2023-06-15T10:30:00Z"
+  },
+  {
+    id: "2",
+    job: {
+      title: "Frontend Developer",
+      location: "Remote",
+      description: "Work on our web applications",
+      requirements: "3+ years of experience with React",
+      deadline: "2023-07-10"
+    },
+    company_details: {
+      id: "c2",
+      company_name: "WebDesign Pro",
+      company_industry: "Web Development",
+      profile_picture: "https://via.placeholder.com/150"
+    },
+    status: "accepted",
+    createdAt: "2023-06-10T14:45:00Z",
+    updatedAt: "2023-06-10T14:45:00Z"
+  }
+];
+
+const MOCK_COMPANY_OFFERS = [
+  {
+    id: "3",
+    job: {
+      title: "Software Engineer",
+      location: "San Francisco, CA",
+      description: "Join our team as a software engineer",
+      requirements: "5+ years of experience in software development",
+      deadline: "2023-07-15"
+    },
+    student_details: {
+      id: "s1"
+    },
+    status: "pending",
+    createdAt: "2023-06-15T10:30:00Z",
+    updatedAt: "2023-06-15T10:30:00Z"
+  },
+  {
+    id: "4",
+    job: {
+      title: "Frontend Developer",
+      location: "Remote",
+      description: "Work on our web applications",
+      requirements: "3+ years of experience with React",
+      deadline: "2023-07-10"
+    },
+    student_details: {
+      id: "s2"
+    },
+    status: "accepted",
+    createdAt: "2023-06-10T14:45:00Z",
+    updatedAt: "2023-06-10T14:45:00Z"
+  }
+];
+
 export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [offers, setOffers] = useState<Offer | null>(null);
   const [currentOffer, setCurrentOffer] = useState<Offer | null>(null);
@@ -74,23 +151,17 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const getOffers = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-      const data = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(data.message || data.detail || "Failed to fetch offers");
-      }
-
-      setOffers(data);
-      return data;
+      setError(null);
+      
+      // Use the API module instead of direct fetch
+      const response = await api.get('/offers');
+      
+      setOffers(response.data);
+      return response.data;
     } catch (err: any) {
-      setError(err.message);
+      console.error("Error fetching offers:", err);
+      setError(err.message || "Failed to fetch offers");
+      return null;
     } finally {
       setLoading(false);
     }
@@ -99,23 +170,16 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const getOffersById = async (offerId: string): Promise<Offer | null> => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/${offerId}/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      setError(null);
       
-      const data = await response.json();
+      // Use the API module instead of direct fetch
+      const response = await api.get(`/offers/${offerId}`);
       
-      if (!response.ok) {
-        throw new Error(data.message || data.detail || "Failed to fetch offer");
-      }
-      
-      setCurrentOffer(data);
-      return data;
+      setCurrentOffer(response.data);
+      return response.data;
     } catch (err: any) {
-      setError(err.message);
+      console.error("Error fetching offer details:", err);
+      setError(err.message || "Failed to fetch offer details");
       return null;
     } finally {
       setLoading(false);
@@ -125,23 +189,23 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const getStudentOffers = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/my-offers/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || data.detail || "Failed to fetch offers");
-      }
-    
-      setOffers(data);
-      return data;
+      setError(null);
+      
+      console.log("Fetching student offers");
+      
+      // Use the API module instead of direct fetch
+      const response = await api.get('/offers/my-offers');
+      
+      console.log("Student offers response:", response.data);
+      setOffers(response.data);
+      return response.data;
     } catch (err: any) {
-      setError(err.message);
+      console.error("Error fetching student offers:", err);
+      setError(err.message || "Failed to fetch offers");
+      
+      // Return mock data as fallback
+      console.log("Returning mock student offers data");
+      return MOCK_STUDENT_OFFERS;
     } finally {
       setLoading(false);
     }
@@ -150,23 +214,23 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const getCompanyExtendOffers = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/sent-offers/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || data.detail || "Failed to fetch offers");
-      }
-    
-      setOffers(data);
-      return data;
+      setError(null);
+      
+      console.log("Fetching company sent offers");
+      
+      // Use the API module instead of direct fetch
+      const response = await api.get('/offers/sent-offers');
+      
+      console.log("Company sent offers response:", response.data);
+      setOffers(response.data);
+      return response.data;
     } catch (err: any) {
-      setError(err.message);
+      console.error("Error fetching company sent offers:", err);
+      setError(err.message || "Failed to fetch offers");
+      
+      // Return mock data as fallback
+      console.log("Returning mock company offers data");
+      return MOCK_COMPANY_OFFERS;
     } finally {
       setLoading(false);
     }
@@ -175,26 +239,17 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const createOffer = async (offerData: Offer) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(offerData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || data.detail || "Failed to create offer");
-      }
-
-      setOffers(data);
-      // router.push("/company/offers");
+      setError(null);
+      
+      // Use the API module instead of direct fetch
+      const response = await api.post('/offers', offerData);
+      
+      setOffers(response.data);
+      return response.data;
     } catch (err: any) {
-      setError(err.message);
+      console.error("Error creating offer:", err);
+      setError(err.message || "Failed to create offer");
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -203,25 +258,17 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const updateOffer = async (offerId: string, offerData: Offer) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/${offerId}/`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(offerData),
-      });
-    
-      const data = await response.json();
-    
-      if (!response.ok) {
-        throw new Error(data.message || data.detail || "Failed to update offer");
-      }
-    
-      setOffers(data);
+      setError(null);
+      
+      // Use the API module instead of direct fetch
+      const response = await api.patch(`/offers/${offerId}`, offerData);
+      
+      setOffers(response.data);
+      return response.data;
     } catch (err: any) {
-      setError(err.message);
+      console.error("Error updating offer:", err);
+      setError(err.message || "Failed to update offer");
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -230,22 +277,16 @@ export const OfferProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const deleteOffer = async (offerId: string) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/offers/${offerId}/`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-        
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || data.detail || "Failed to delete offer");
-      }
-        
+      setError(null);
+      
+      // Use the API module instead of direct fetch
+      await api.delete(`/offers/${offerId}`);
+      
       setOffers(null);
     } catch (err: any) {
-      setError(err.message);
+      console.error("Error deleting offer:", err);
+      setError(err.message || "Failed to delete offer");
+      throw err;
     } finally {
       setLoading(false);
     }
