@@ -19,10 +19,14 @@ const MOCK_APPLICATION = {
   notes: "Followed up with HR on 2023-05-15",
 };
 
+function extractIdFromUrl(request: NextRequest): string {
+  return request.nextUrl.pathname.split("/").pop() || "";
+}
+
 // GET /api/proxy/applications/{id}/ - Get a specific application
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest) {
   try {
-    const id = params.id;
+    const id = extractIdFromUrl(request);
     console.log(`Handling GET request to /api/proxy/applications/${id}`);
 
     // Check if authorization header is present
@@ -71,9 +75,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT /api/proxy/applications/{id}/ - Update a specific application
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest) {
   try {
-    const id = params.id;
+    const id = extractIdFromUrl(request);
     console.log(`Handling PUT request to /api/proxy/applications/${id}`);
 
     // Check if authorization header is present
@@ -132,9 +136,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PATCH /api/proxy/applications/{id}/ - Partially update a specific application
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest) {
   try {
-    const id = params.id;
+    const id = extractIdFromUrl(request);
     console.log(`Handling PATCH request to /api/proxy/applications/${id}`);
 
     // Check if authorization header is present
@@ -193,9 +197,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 }
 
 // DELETE /api/proxy/applications/{id}/ - Delete a specific application
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest) {
   try {
-    const id = params.id;
+    const id = extractIdFromUrl(request);
     console.log(`Handling DELETE request to /api/proxy/applications/${id}`);
 
     // Check if authorization header is present
