@@ -22,8 +22,7 @@ interface Opportunity {
 }
 
 export default function ApplyPage({ params }: { params: { id: string } }) {
-  const unwrappedParams = use(params);
-  const opportunityId = unwrappedParams.id;
+  const opportunityId = params.id;
   const router = useRouter();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);

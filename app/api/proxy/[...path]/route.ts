@@ -1,22 +1,22 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { path: string[] } }) {
-  const pathSegments = params.path;
+export async function GET(request: NextRequest, context: { params: { path: string[] } }) {
+  const pathSegments = context.params.path;
   return handleRequest(request, pathSegments, "GET");
 }
 
-export async function POST(request: NextRequest, { params }: { params: { path: string[] } }) {
-  const pathSegments = params.path;
+export async function POST(request: NextRequest, context: { params: { path: string[] } }) {
+  const pathSegments = context.params.path;
   return handleRequest(request, pathSegments, "POST");
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { path: string[] } }) {
-  const pathSegments = params.path;
+export async function PUT(request: NextRequest, context: { params: { path: string[] } }) {
+  const pathSegments = context.params.path;
   return handleRequest(request, pathSegments, "PUT");
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { path: string[] } }) {
-  const pathSegments = params.path;
+export async function DELETE(request: NextRequest, context: { params: { path: string[] } }) {
+  const pathSegments = context.params.path;
   return handleRequest(request, pathSegments, "DELETE");
 }
 
@@ -212,7 +212,7 @@ async function handleRequest(request: NextRequest, pathSegments: string[], metho
         console.log("Backend login response:", response.status, jsonResponse);
       } catch (e) {
         console.error("Failed to parse response:", e);
-        jsonResponse = { message: `Failed to parse response: ${e.message}` };
+        jsonResponse = { message: `Failed to parse response: ${(e instanceof Error ? e.message : "Unknown error")}` };
       }
       
       // Return the response
