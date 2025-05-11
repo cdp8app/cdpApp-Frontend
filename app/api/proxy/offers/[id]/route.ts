@@ -19,20 +19,29 @@ const MOCK_OFFER = {
   expiration_date: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(), // 10 days from now
 };
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/offers/${params.id}/`, MOCK_OFFER);
+function extractIdFromRequest(request: NextRequest) {
+  const segments = request.nextUrl.pathname.split("/");
+  return segments[segments.length - 1];
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/offers/${params.id}/`, { ...MOCK_OFFER, ...(await request.json()) });
+export async function GET(request: NextRequest) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/offers/${id}/`, MOCK_OFFER);
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/offers/${params.id}/`, { ...MOCK_OFFER, ...(await request.json()) });
+export async function PUT(request: NextRequest) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/offers/${id}/`, { ...MOCK_OFFER, ...(await request.json()) });
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/offers/${params.id}/`, {
+export async function PATCH(request: NextRequest) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/offers/${id}/`, { ...MOCK_OFFER, ...(await request.json()) });
+}
+
+export async function DELETE(request: NextRequest) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/offers/${id}/`, {
     success: true,
     message: "Offer deleted successfully",
   });

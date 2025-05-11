@@ -7,7 +7,8 @@ const MOCK_INTERNSHIP = {
   title: "Frontend Development Intern",
   company: "Tech Solutions Inc.",
   location: "San Francisco, CA",
-  description: "Join our team for a summer internship focused on web development.",
+  description:
+    "Join our team for a summer internship focused on web development.",
   requirements: ["JavaScript", "React", "HTML/CSS"],
   start_date: "2023-06-01",
   end_date: "2023-08-31",
@@ -16,24 +17,51 @@ const MOCK_INTERNSHIP = {
   is_paid: true,
   salary: "$20/hour",
   created_at: "2023-04-01T12:00:00Z",
-  updated_at: "2023-04-01T12:00:00Z",
+  updated_at: "2023-04-01T12:00:00Z"
 };
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/internships/${params.id}/`, MOCK_INTERNSHIP);
+function extractIdFromRequest(request: NextRequest) {
+  const segments = request.nextUrl.pathname.split("/");
+  return segments[segments.length - 1];
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/internships/${params.id}/`, { ...MOCK_INTERNSHIP, ...(await request.json()) });
+export async function GET(
+  request: NextRequest
+) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(
+    request,
+    `/api/internships/${id}/`,
+    MOCK_INTERNSHIP
+  );
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/internships/${params.id}/`, { ...MOCK_INTERNSHIP, ...(await request.json()) });
+export async function PUT(
+  request: NextRequest
+) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/internships/${id}/`, {
+    ...MOCK_INTERNSHIP,
+    ...(await request.json())
+  });
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/internships/${params.id}/`, {
+export async function PATCH(
+  request: NextRequest
+) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/internships/${id}/`, {
+    ...MOCK_INTERNSHIP,
+    ...(await request.json())
+  });
+}
+
+export async function DELETE(
+  request: NextRequest
+) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/internships/${id}/`, {
     success: true,
-    message: "Internship deleted successfully",
+    message: "Internship deleted successfully"
   });
 }
