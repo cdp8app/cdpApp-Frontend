@@ -23,10 +23,9 @@ const MOCK_INTERNSHIP = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
 ) {
   try {
-    const internshipId = params.id;
+    const internshipId = request.nextUrl.pathname.split("/").pop();
     console.log(`Handling GET request to /api/proxy/internships/${internshipId}`);
     
     // Get JWT token from cookies
@@ -86,8 +85,8 @@ export async function GET(
     
     // Return mock data on error
     return NextResponse.json({
-      id: params.id,
-      title: `Mock Internship ${params.id}`,
+      id: "1",
+      title: "Mock Internship",
       description: "This is a mock internship description",
       requirements: "Mock requirements",
       location: "Remote",
