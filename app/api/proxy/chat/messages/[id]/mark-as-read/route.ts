@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+function extractIdFromUrl(request: NextRequest): string {
+  return request.nextUrl.pathname.split("/").pop() || "";
+}
+
+export async function POST(request: NextRequest) {
   try {
-    const id = params.id;
+    const id = extractIdFromUrl(request);
     console.log(`Proxying POST request to /chat/messages/${id}/mark-as-read/`);
 
     // Check if authorization header is present
