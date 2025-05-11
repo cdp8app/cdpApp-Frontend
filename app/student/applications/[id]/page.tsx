@@ -6,51 +6,44 @@ import { useApplicationContext } from "@/contexts/applicationContext";
 import Header1 from "@/app/Components/Header1";
 import Footer1 from "@/app/Components/Footer1";
 import FormAlert from "@/app/Components/FormAlert";
+import { use } from "react";
 
-export default function ApplicationDetailPage({ params }: { params: any }) {
+export default function ApplicationDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { getApplicationsById, updateApplication, loading, error } = useApplicationContext();
   const [application, setApplication] = useState<any>(null);
   const [formError, setFormError] = useState("");
+  
+  // Use React.use to unwrap params
+  const unwrappedParams = use(params);
+  const applicationId = unwrappedParams.id;
 
-  // Use a ref to store the ID to avoid re-renders
-  const idRef = useRef<string>("");
-
-  // Extract ID safely without directly accessing params.id
+  // Fetch application data
   useEffect(() => {
-    // Safely extract the ID without directly accessing params.id
-    if (params) {
-      // Convert params to a regular object to avoid direct property access
-      const paramsObj = { ...params };
-      if (paramsObj.id) {
-        idRef.current = String(paramsObj.id);
-        fetchApplication(idRef.current);
-      }
-    }
-  }, []); // Empty dependency array to run only once
+    const fetchApplication = async () => {
+      if (!applicationId) return;
 
-  // Separate function to fetch application data
-  const fetchApplication = async (id: string) => {
-    if (!id) return;
-
-    try {
-      const data = await getApplicationsById(id);
-      if (data) {
-        setApplication(data);
+      try {
+        const data = await getApplicationsById(applicationId);
+        if (data) {
+          setApplication(data);
+        }
+      } catch (err: any) {
+        setFormError(`Failed to fetch application: ${err.message || err}`);
       }
-    } catch (err: any) {
-      setFormError(`Failed to fetch application: ${err.message || err}`);
-    }
-  };
+    };
+
+    fetchApplication();
+  }, [applicationId, getApplicationsById]);
 
   const handleWithdraw = async () => {
-    if (!idRef.current) return;
+    if (!applicationId) return;
     if (!confirm("Are you sure you want to withdraw this application?")) {
       return;
     }
 
     try {
-      await updateApplication(idRef.current, { ...application, status: "withdrawn" });
+      await updateApplication(applicationId, { ...application, status: "withdrawn" });
       // Update local state
       setApplication((prev: any) => (prev ? { ...prev, status: "withdrawn" } : null));
     } catch (err: any) {

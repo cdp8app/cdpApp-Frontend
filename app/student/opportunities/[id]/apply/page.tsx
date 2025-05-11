@@ -2,13 +2,13 @@
 
 import type React from "react";
 
-import { use, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { AlertCircle, ArrowLeft, Upload, FileText, Building, MapPin } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/app/Components/ui/card";
+import { Button } from "@/app/Components/ui/button";
+import { Textarea } from "@/app/Components/ui/textarea";
+import { AlertCircle, ArrowLeft, Upload, FileText, Building, MapPin, CheckCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/app/Components/ui/alert";
 import Link from "next/link";
 import AuthRedirect from "@/app/Components/AuthRedirect";
 
@@ -21,9 +21,12 @@ interface Opportunity {
   description: string
 }
 
+// Allowed file types
+const ALLOWED_RESUME_TYPES = [".pdf", ".doc", ".docx"];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
 export default function ApplyPage({ params }: { params: { id: string } }) {
-  const unwrappedParams = use(params);
-  const opportunityId = unwrappedParams.id;
+  const opportunityId = params.id;
   const router = useRouter();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +35,7 @@ export default function ApplyPage({ params }: { params: { id: string } }) {
   const [resume, setResume] = useState<File | null>(null);
   const [coverLetterFile, setCoverLetterFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const resumeInputRef = useRef<HTMLInputElement>(null);
   const coverLetterInputRef = useRef<HTMLInputElement>(null);
 
@@ -57,57 +61,157 @@ export default function ApplyPage({ params }: { params: { id: string } }) {
     fetchOpportunity();
   }, [opportunityId]);
 
+  // Validate file type
+  const validateFileType = (file: File, allowedTypes: string[]) => {
+    const extension = file.name.split(".").pop()?.toLowerCase() || "";
+    return allowedTypes.includes(`.${extension}`);
+  };
+
+  // Handle resume file change
   const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setResume(e.target.files[0]);
+      const file = e.target.files[0];
+      
+      // Check file size
+      if (file.size > MAX_FILE_SIZE) {
+        setError("Resume file size must be less than 5MB");
+        return;
+      }
+      
+      // Check file type
+      if (!validateFileType(file, ALLOWED_RESUME_TYPES)) {
+        setError("Please upload a PDF, DOC, or DOCX file for your resume");
+        return;
+      }
+      
+      setResume(file);
+      setError(""); // Clear any previous errors
     }
   };
 
+  // Handle cover letter file change
   const handleCoverLetterFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setCoverLetterFile(e.target.files[0]);
+      const file = e.target.files[0];
+      
+      // Check file size
+      if (file.size > MAX_FILE_SIZE) {
+        setError("Cover letter file size must be less than 5MB");
+        return;
+      }
+      
+      // Check file type
+      if (!validateFileType(file, ALLOWED_RESUME_TYPES)) {
+        setError("Please upload a PDF, DOC, or DOCX file for your cover letter");
+        return;
+      }
+      
+      setCoverLetterFile(file);
+      setError(""); // Clear any previous errors
     }
+  };
+
+  // Form validation
+  const validateForm = () => {
+    if (!resume) {
+      setError("Please upload your resume");
+      return false;
+    }
+    
+    if (resume.size > MAX_FILE_SIZE) {
+      setError("Resume file size must be less than 5MB");
+      return false;
+    }
+    
+    if (coverLetterFile && coverLetterFile.size > MAX_FILE_SIZE) {
+      setError("Cover letter file size must be less than 5MB");
+      return false;
+    }
+    
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!resume) {
-      setError("Please upload your resume");
+    // Validate form before submission
+    if (!validateForm()) {
       return;
     }
 
     setIsSubmitting(true);
     setError("");
+    setShowSuccess(false);
 
     try {
-      // In a real implementation, you would upload the files to a storage service
-      // and then submit the application with the file URLs
-
-      // For now, we'll simulate the API call
+      // Create a FormData object to handle file uploads
       const formData = new FormData();
       formData.append("opportunity_id", opportunityId);
+      formData.append("job_id", opportunityId); // Add both formats for compatibility
       formData.append("resume", resume);
+      
       if (coverLetterFile) {
         formData.append("cover_letter_file", coverLetterFile);
       } else if (coverLetter) {
         formData.append("cover_letter_text", coverLetter);
+        formData.append("cover_letter", coverLetter); // Add both formats for compatibility
+      }
+
+      // Add additional fields that might be required by the API
+      formData.append("status", "pending");
+      
+      // Get CSRF token first
+      try {
+        await fetch("/api/proxy/csrf-cookie", {
+          method: "GET",
+          credentials: "include",
+        });
+      } catch (csrfError) {
+        console.warn("Failed to fetch CSRF token:", csrfError);
+        // Continue anyway, the submission might still work
       }
 
       const response = await fetch("/api/proxy/applications", {
         method: "POST",
         body: formData,
+        credentials: "include", // Include cookies for authentication
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit application");
+        const errorData = await response.text();
+        let errorMessage = "Failed to submit application";
+        
+        try {
+          const errorJson = JSON.parse(errorData);
+          errorMessage = errorJson.message || errorJson.error || errorJson.detail || errorMessage;
+        } catch (e) {
+          // Not JSON, use status code to determine error
+          if (response.status === 401 || response.status === 403) {
+            errorMessage = "Authentication required. Please log in again.";
+          } else if (response.status === 413) {
+            errorMessage = "File too large. Please upload a smaller file.";
+          } else if (response.status === 415) {
+            errorMessage = "File type not supported.";
+          } else {
+            errorMessage = `Failed to submit application: ${response.status}`;
+          }
+        }
+        
+        console.error("Application submission failed:", errorData);
+        throw new Error(errorMessage);
       }
 
-      // Redirect to success page or applications list
-      router.push("/student/applications?success=true");
-    } catch (error) {
+      const data = await response.json();
+      console.log("Application submitted successfully:", data);
+
+      // Show success message before redirecting
+      setShowSuccess(true);
+      setTimeout(() => {
+        router.push("/student/applications?success=true");
+      }, 2000);
+    } catch (error: any) {
       console.error("Error submitting application:", error);
-      setError("Failed to submit application. Please try again later.");
+      setError(error.message || "Failed to submit application. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
@@ -123,7 +227,7 @@ export default function ApplyPage({ params }: { params: { id: string } }) {
     );
   }
 
-  if (error) {
+  if (error && !opportunity) {
     return (
       <div className="container py-10">
         <Alert variant="destructive" className="mb-6">
@@ -173,6 +277,15 @@ export default function ApplyPage({ params }: { params: { id: string } }) {
               </CardHeader>
               <form onSubmit={handleSubmit}>
                 <CardContent className="space-y-6">
+                  {showSuccess && (
+                    <Alert className="bg-green-50 text-green-700 border-green-200">
+                      <div className="flex items-center">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        <AlertDescription>Application submitted successfully! Redirecting...</AlertDescription>
+                      </div>
+                    </Alert>
+                  )}
+                  
                   {error && (
                     <Alert variant="destructive">
                       <AlertCircle className="h-4 w-4" />
@@ -195,6 +308,9 @@ export default function ApplyPage({ params }: { params: { id: string } }) {
                           <div className="flex items-center">
                             <FileText className="h-5 w-5 text-blue-500 mr-2" />
                             <span>{resume.name}</span>
+                            <span className="ml-2 text-xs text-gray-500">
+                              ({(resume.size / (1024 * 1024)).toFixed(2)} MB)
+                            </span>
                           </div>
                           <Button
                             type="button"
@@ -208,7 +324,7 @@ export default function ApplyPage({ params }: { params: { id: string } }) {
                       ) : (
                         <div className="text-center">
                           <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                          <p className="text-sm text-muted-foreground mb-2">Upload your resume (PDF, DOC, DOCX)</p>
+                          <p className="text-sm text-muted-foreground mb-2">Upload your resume (PDF, DOC, DOCX, max 5MB)</p>
                           <Button type="button" onClick={() => resumeInputRef.current?.click()}>
                             Select File
                           </Button>
@@ -243,6 +359,9 @@ export default function ApplyPage({ params }: { params: { id: string } }) {
                             <div className="flex items-center">
                               <FileText className="h-5 w-5 text-blue-500 mr-2" />
                               <span>{coverLetterFile.name}</span>
+                              <span className="ml-2 text-xs text-gray-500">
+                                ({(coverLetterFile.size / (1024 * 1024)).toFixed(2)} MB)
+                              </span>
                             </div>
                             <Button
                               type="button"
@@ -261,11 +380,9 @@ export default function ApplyPage({ params }: { params: { id: string } }) {
                         ) : (
                           <div className="text-center">
                             <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                            <p className="text-sm text-muted-foreground mb-2">
-                              Upload your cover letter (PDF, DOC, DOCX)
-                            </p>
-                            <Button
-                              type="button"
+                            <p className="text-sm text-muted-foreground mb-2">Upload your cover letter (PDF, DOC, DOCX, max 5MB)</p>
+                            <Button 
+                              type="button" 
                               variant="outline"
                               onClick={() => coverLetterInputRef.current?.click()}
                             >
@@ -277,41 +394,42 @@ export default function ApplyPage({ params }: { params: { id: string } }) {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-end">
-                  <Button type="submit" disabled={isSubmitting || !resume}>
+                <CardFooter className="flex justify-between">
+                  <Button variant="outline" type="button" onClick={() => router.back()}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={isSubmitting || showSuccess}>
                     {isSubmitting ? "Submitting..." : "Submit Application"}
                   </Button>
                 </CardFooter>
               </form>
             </Card>
           </div>
-
+          
           <div>
             <Card>
               <CardHeader>
-                <CardTitle>Job Details</CardTitle>
+                <CardTitle>Opportunity Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h3 className="font-medium">{opportunity.title}</h3>
+                  <h3 className="font-medium">Company</h3>
                   <p className="text-sm text-muted-foreground">{opportunity.company_name}</p>
                 </div>
-
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <MapPin className="mr-1 h-4 w-4" />
-                  {opportunity.location}
-                </div>
-
+                
                 <div>
-                  <h4 className="text-sm font-medium mb-1">Description</h4>
-                  <div className="text-sm text-muted-foreground whitespace-pre-line">{opportunity.description}</div>
+                  <h3 className="font-medium">Location</h3>
+                  <p className="text-sm text-muted-foreground flex items-center">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    {opportunity.location}
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="font-medium">Description</h3>
+                  <p className="text-sm text-muted-foreground">{opportunity.description}</p>
                 </div>
               </CardContent>
-              <CardFooter>
-                <Link href={`/student/opportunities/${opportunityId}`} className="text-sm text-primary hover:underline">
-                  View Full Job Details
-                </Link>
-              </CardFooter>
             </Card>
           </div>
         </div>

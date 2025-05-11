@@ -8,7 +8,7 @@ export default function RedirectToLogin() {
   const pathname = usePathname();
 
   useEffect(() => {
-    router.push(`/user/auth/login?redirect=${encodeURIComponent(pathname)}`);
+    router.push(`/user/auth?redirect=${encodeURIComponent(pathname)}`);
   }, [pathname, router]);
 
   return (
