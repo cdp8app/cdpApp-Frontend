@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/app/Components/ui/card";
 import { Button } from "@/app/Components/ui/button";
 import { Badge } from "@/app/Components/ui/badge";
@@ -66,7 +66,11 @@ interface Application {
   cover_letter_url?: string
 }
 
-export default function CompanyApplicationDetailPage({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: { id: string };
+}
+
+export default function CompanyApplicationDetailPage({ params }: PageProps) {
   const router = useRouter();
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [application, setApplication] = useState<Application | null>(null);

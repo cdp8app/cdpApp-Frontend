@@ -25,7 +25,11 @@ interface Opportunity {
 const ALLOWED_RESUME_TYPES = [".pdf", ".doc", ".docx"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-export default function ApplyPage({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: { id: string };
+}
+
+export default function ApplyPage({ params }: PageProps) {
   const opportunityId = params.id;
   const router = useRouter();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);

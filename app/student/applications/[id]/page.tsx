@@ -8,15 +8,18 @@ import Footer1 from "@/app/Components/Footer1";
 import FormAlert from "@/app/Components/FormAlert";
 import { use } from "react";
 
-export default function ApplicationDetailPage({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: { id: string };
+}
+
+export default function ApplicationDetailPage({ params }: PageProps) {
   const router = useRouter();
   const { getApplicationsById, updateApplication, loading, error } = useApplicationContext();
   const [application, setApplication] = useState<any>(null);
   const [formError, setFormError] = useState("");
   
   // Use React.use to unwrap params
-  const unwrappedParams = use(params);
-  const applicationId = unwrappedParams.id;
+  const applicationId = params.id;
 
   // Fetch application data
   useEffect(() => {
