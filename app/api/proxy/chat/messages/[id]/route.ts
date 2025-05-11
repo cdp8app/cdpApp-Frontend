@@ -1,21 +1,26 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+
+export async function GET(request: NextRequest) {
   // Fix: We don't need to await params, but we should handle it safely
-  return proxyMessageRequest(request, params.id, "GET");
+  const pathSegments = request.nextUrl.pathname.split("/").slice(3);
+  return proxyMessageRequest(request, pathSegments.join("/"), "GET");
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  return proxyMessageRequest(request, params.id, "PUT");
+export async function PUT(request: NextRequest) {
+  const pathSegments = request.nextUrl.pathname.split("/").slice(3);
+  return proxyMessageRequest(request, pathSegments.join("/"), "PUT");
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
-  return proxyMessageRequest(request, params.id, "PATCH");
+export async function PATCH(request: NextRequest) {
+  const pathSegments = request.nextUrl.pathname.split("/").slice(3);
+  return proxyMessageRequest(request, pathSegments.join("/"), "PATCH");
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  return proxyMessageRequest(request, params.id, "DELETE");
+export async function DELETE(request: NextRequest) {
+  const pathSegments = request.nextUrl.pathname.split("/").slice(3);
+  return proxyMessageRequest(request, pathSegments.join("/"), "DELETE");
 }
 
 async function proxyMessageRequest(request: NextRequest, id: string, method: string) {
