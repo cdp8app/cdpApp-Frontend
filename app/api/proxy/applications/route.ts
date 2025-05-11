@@ -79,11 +79,21 @@ export async function GET(request: NextRequest) {
             const data = await response.json();
             console.log(`Successfully fetched applications from ${endpoint}`);
             
-            // Check if the data is an array or has a data property that's an array
-            if (Array.isArray(data)) {
+            // Handle paginated response format
+            if (data.results && Array.isArray(data.results)) {
+              console.log("Found paginated response format with results array");
+              responseData = data.results;
+              break;
+            }
+            // Handle direct array format
+            else if (Array.isArray(data)) {
+              console.log("Found direct array response format");
               responseData = data;
               break;
-            } else if (data.data && Array.isArray(data.data)) {
+            }
+            // Handle object with data property that's an array
+            else if (data.data && Array.isArray(data.data)) {
+              console.log("Found response with data property containing array");
               responseData = data.data;
               break;
             } else {
@@ -100,28 +110,18 @@ export async function GET(request: NextRequest) {
     
     // If we got data from the backend, transform it to match the expected format if needed
     if (responseData) {
-      // Check if the data needs transformation
-      const needsTransformation = responseData.length > 0 && 
-        (responseData[0].opportunity || !responseData[0].job_title);
+      // Transform the data to match the expected format
+      const transformedData = responseData.map((app: any) => ({
+        id: app.id || Math.floor(Math.random() * 10000),
+        job_title: app.job?.title || app.opportunity?.title || app.job_title || "Unknown Job",
+        applicant_name: app.user?.first_name ? `${app.user.first_name} ${app.user.last_name || ""}` : 
+          (app.applicant?.name || app.applicant_name || "Unknown Applicant"),
+        status: (app.status || "pending").toLowerCase(),
+        applied_date: app.applied_at || app.applied_date || app.created_at || new Date().toISOString(),
+        job_id: app.job?.id || app.opportunity?.id || app.job_id || 0
+      }));
       
-      if (needsTransformation) {
-        console.log("Transforming backend data to match frontend format");
-        
-        // Transform the data to match the expected format
-        const transformedData = responseData.map((app: any) => ({
-          id: app.id || Math.floor(Math.random() * 10000),
-          job_title: app.opportunity?.title || app.job_title || "Unknown Job",
-          applicant_name: app.applicant?.name || app.applicant_name || "Unknown Applicant",
-          status: (app.status || "pending").toLowerCase(),
-          applied_date: app.applied_date || app.created_at || new Date().toISOString(),
-          job_id: app.opportunity?.id || app.job_id || 0
-        }));
-        
-        return NextResponse.json(transformedData);
-      }
-      
-      // If no transformation needed, return as is
-      return NextResponse.json(responseData);
+      return NextResponse.json(transformedData);
     }
     
     // If we couldn't get data from the backend, return mock data
@@ -165,17 +165,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse the request body
-    const body = await request.json();
-    console.log("Request body:", body);
+    // Get the form data
+    let formData: FormData;
+    let body: any;
+    
+    try {
+      formData = await request.formData();
+      body = Object.fromEntries(formData.entries());
+      console.log("Received form data:", {
+        ...body,
+        resume: body.resume ? `[File: ${(body.resume as File).name}]` : undefined,
+        cover_letter_file: body.cover_letter_file ? `[File: ${(body.cover_letter_file as File).name}]` : undefined
+      });
+    } catch (e) {
+      // If not form data, try to parse as JSON
+      body = await request.json();
+      console.log("Received JSON data:", body);
+    }
 
     // Try multiple possible endpoints
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://careerxhub.onrender.com";
     const endpoints = [
       "/applications/",
       "/api/applications/",
-      "/company/applications/",
-      "/api/company/applications/"
+      "/student/applications/",
+      "/api/student/applications/"
     ];
     
     let responseData = null;
@@ -186,13 +200,25 @@ export async function POST(request: NextRequest) {
         const url = `${baseUrl}${endpoint}`;
         console.log(`Attempting to submit application to: ${url}`);
         
+        // Create a new FormData object for the API request
+        const apiFormData = new FormData();
+        
+        // Add all fields from the original request
+        for (const [key, value] of Object.entries(body)) {
+          if (value instanceof File) {
+            apiFormData.append(key, value);
+          } else {
+            apiFormData.append(key, String(value));
+          }
+        }
+        
         const response = await fetch(url, {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${authToken}`,
-            "Content-Type": "application/json"
+            "Authorization": `Bearer ${authToken}`
+            // Don't set Content-Type for FormData
           },
-          body: JSON.stringify(body)
+          body: apiFormData
         });
         
         if (response.ok) {
@@ -202,6 +228,14 @@ export async function POST(request: NextRequest) {
           break;
         } else {
           console.log(`Endpoint ${endpoint} returned status ${response.status}`);
+          
+          // Try to get error details
+          try {
+            const errorText = await response.text();
+            console.log(`Error response: ${errorText.substring(0, 200)}`);
+          } catch (e) {
+            console.log("Could not read error response");
+          }
         }
       } catch (endpointError) {
         console.warn(`Error trying endpoint ${endpoint}:`, endpointError);
@@ -224,11 +258,15 @@ export async function POST(request: NextRequest) {
       applicant_name: body.applicant_name || "Current User",
       status: "pending",
       applied_date: new Date().toISOString(),
-      job_id: body.job_id || 0
+      job_id: body.opportunity_id || body.job_id || 0
     };
 
     console.log("All endpoints failed, returning mock application response");
-    return NextResponse.json(mockResponse);
+    return NextResponse.json({
+      success: true,
+      message: "Application submitted successfully (mock)",
+      data: mockResponse
+    });
   } catch (error) {
     console.error("Error in applications create endpoint:", error);
     return NextResponse.json(
