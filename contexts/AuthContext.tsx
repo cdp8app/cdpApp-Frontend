@@ -3,7 +3,7 @@
 import { createContext, useState, useEffect, useContext, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
-type UserType = "student" | "company" | null
+export type UserType = "student" | "company" | null
 
 export interface User {
   id: string;
