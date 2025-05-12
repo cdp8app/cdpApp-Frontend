@@ -6,8 +6,9 @@ function extractIdFromUrl(request: NextRequest): string {
 }
 
 export async function POST(request: NextRequest) {
+  let id: string = "unknown";
   try {
-    const id = extractIdFromUrl(request);
+    id = extractIdFromUrl(request);
     console.log(`Proxying POST request to /chat/messages/${id}/mark-as-read/`);
 
     // Check if authorization header is present

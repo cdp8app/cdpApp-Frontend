@@ -7,7 +7,7 @@ export async function GET() {
     // Test endpoints to check
     const endpoints = ["/api/user/", "/api/chat/", "/api/internships/", "/api/applications/"];
 
-    const results = {};
+    const results: Record<string, { status?: number; ok?: boolean; statusText?: string; error?: string }> = {};
 
     // Test each endpoint
     for (const endpoint of endpoints) {
