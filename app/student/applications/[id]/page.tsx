@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useApplicationContext } from "@/contexts/applicationContext";
 import Header1 from "@/app/Components/Header1";
 import Footer1 from "@/app/Components/Footer1";
@@ -12,14 +12,15 @@ interface PageProps {
   params: { id: string };
 }
 
-export default function ApplicationDetailPage({ params }: PageProps) {
+export default function ApplicationDetailPage() {
   const router = useRouter();
+  const { id } = useParams();
   const { getApplicationsById, updateApplication, loading, error } = useApplicationContext();
   const [application, setApplication] = useState<any>(null);
   const [formError, setFormError] = useState("");
   
   // Use React.use to unwrap params
-  const applicationId = params.id;
+  const applicationId = id;
 
   // Fetch application data
   useEffect(() => {
@@ -27,9 +28,13 @@ export default function ApplicationDetailPage({ params }: PageProps) {
       if (!applicationId) return;
 
       try {
-        const data = await getApplicationsById(applicationId);
-        if (data) {
-          setApplication(data);
+        if (typeof applicationId === "string") {
+          const data = await getApplicationsById(applicationId);
+          if (data) {
+            setApplication(data);
+          }
+        } else {
+          setFormError("Invalid application ID");
         }
       } catch (err: any) {
         setFormError(`Failed to fetch application: ${err.message || err}`);
@@ -46,7 +51,11 @@ export default function ApplicationDetailPage({ params }: PageProps) {
     }
 
     try {
-      await updateApplication(applicationId, { ...application, status: "withdrawn" });
+      if (typeof applicationId === "string") {
+        await updateApplication(applicationId, { ...application, status: "withdrawn" });
+      } else {
+        setFormError("Invalid application ID");
+      }
       // Update local state
       setApplication((prev: any) => (prev ? { ...prev, status: "withdrawn" } : null));
     } catch (err: any) {
