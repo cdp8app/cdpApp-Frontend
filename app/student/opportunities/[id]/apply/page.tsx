@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/app/Components/ui/card";
 import { Button } from "@/app/Components/ui/button";
 import { Textarea } from "@/app/Components/ui/textarea";
@@ -29,8 +29,8 @@ interface PageProps {
   params: { id: string };
 }
 
-export default function ApplyPage({ params }: PageProps) {
-  const opportunityId = params.id;
+export default function ApplyPage() {
+  const { id } = useParams();
   const router = useRouter();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,6 +42,8 @@ export default function ApplyPage({ params }: PageProps) {
   const [showSuccess, setShowSuccess] = useState(false);
   const resumeInputRef = useRef<HTMLInputElement>(null);
   const coverLetterInputRef = useRef<HTMLInputElement>(null);
+
+  const opportunityId = id;
 
   useEffect(() => {
     async function fetchOpportunity() {
@@ -150,8 +152,12 @@ export default function ApplyPage({ params }: PageProps) {
     try {
       // Create a FormData object to handle file uploads
       const formData = new FormData();
-      formData.append("opportunity_id", opportunityId);
-      formData.append("job_id", opportunityId); // Add both formats for compatibility
+      if (opportunityId) {
+        formData.append("opportunity_id", Array.isArray(opportunityId) ? opportunityId[0] : opportunityId);
+      } else {
+        throw new Error("Opportunity ID is undefined");
+      }
+      formData.append("job_id", Array.isArray(opportunityId) ? opportunityId[0] : opportunityId); // Add both formats for compatibility
       formData.append("resume", resume);
       
       if (coverLetterFile) {
