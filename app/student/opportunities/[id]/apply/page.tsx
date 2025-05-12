@@ -158,7 +158,9 @@ export default function ApplyPage() {
         throw new Error("Opportunity ID is undefined");
       }
       formData.append("job_id", Array.isArray(opportunityId) ? opportunityId[0] : opportunityId); // Add both formats for compatibility
-      formData.append("resume", resume);
+      if (resume) {
+        formData.append("resume", resume);
+      }
       
       if (coverLetterFile) {
         formData.append("cover_letter_file", coverLetterFile);

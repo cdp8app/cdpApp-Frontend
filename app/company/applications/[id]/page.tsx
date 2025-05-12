@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/app/Components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/Components/ui/tabs";
-import { Separator } from "@/app/Components/ui/separator";
+// import { Separator } from "@/app/Components/ui/separator";
 import AuthRedirect from "@/app/Components/AuthRedirect";
 import Navbar1 from "@/app/Components/Navbar";
 

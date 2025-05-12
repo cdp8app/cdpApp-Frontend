@@ -135,7 +135,10 @@ export default function Settings() {
                   </h2>
                 </div>
                 <div>
-                  <ToggleSwitch />
+                  <ToggleSwitch 
+                    isOn={false} 
+                    onToggle={() => console.log("Toggle switched")} 
+                  />
                 </div>
               </div>
               <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
@@ -149,7 +152,9 @@ export default function Settings() {
                   </h2>
                 </div>
                 <div>
-                  <ToggleSwitch />
+                  <ToggleSwitch 
+                    isOn={false} 
+                    onToggle={() => console.log("Toggle switched")} />
                 </div>
               </div>
               <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
@@ -163,7 +168,9 @@ export default function Settings() {
                   </h2>
                 </div>
                 <div>
-                  <ToggleSwitch />
+                  <ToggleSwitch
+                    isOn={false} 
+                    onToggle={() => console.log("Toggle switched")}  />
                 </div>
               </div>
               <Button4
@@ -215,7 +222,9 @@ export default function Settings() {
                   </h2>
                 </div>
                 <div>
-                  <ToggleSwitch />
+                  <ToggleSwitch 
+                    isOn={false} 
+                    onToggle={() => console.log("Toggle switched")} />
                 </div>
               </div>
               <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
@@ -228,7 +237,9 @@ export default function Settings() {
                   </h2>
                 </div>
                 <div>
-                  <ToggleSwitch />
+                  <ToggleSwitch 
+                    isOn={false} 
+                    onToggle={() => console.log("Toggle switched")} />
                 </div>
               </div>
               <Button4
@@ -280,7 +291,9 @@ export default function Settings() {
                   </h2>
                 </div>
                 <div>
-                  <ToggleSwitch />
+                  <ToggleSwitch 
+                    isOn={false} 
+                    onToggle={() => console.log("Toggle switched")} />
                 </div>
               </div>
               <Button4
@@ -345,7 +358,9 @@ export default function Settings() {
                 </h2>
               </div>
               <div>
-                <ToggleSwitch />
+                <ToggleSwitch
+                  isOn={false} 
+                  onToggle={() => console.log("Toggle switched")}  />
               </div>
             </div>
             <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
@@ -358,7 +373,9 @@ export default function Settings() {
                 </h2>
               </div>
               <div>
-                <ToggleSwitch />
+                <ToggleSwitch 
+                  isOn={false} 
+                  onToggle={() => console.log("Toggle switched")} />
               </div>
             </div>
             <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
@@ -371,7 +388,9 @@ export default function Settings() {
                 </h2>
               </div>
               <div>
-                <ToggleSwitch />
+                <ToggleSwitch 
+                  isOn={false} 
+                  onToggle={() => console.log("Toggle switched")} />
               </div>
             </div>
             <div className="mb-6 border-b-[1px] border-Gold3 p-[10px]">
@@ -389,7 +408,9 @@ export default function Settings() {
                 </h2>
               </div>
               <div>
-                <ToggleSwitch />
+                <ToggleSwitch
+                  isOn={false} 
+                  onToggle={() => console.log("Toggle switched")}  />
               </div>
             </div>
             <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
@@ -402,7 +423,9 @@ export default function Settings() {
                 </h2>
               </div>
               <div>
-                <ToggleSwitch />
+                <ToggleSwitch 
+                  isOn={false} 
+                  onToggle={() => console.log("Toggle switched")} />
               </div>
             </div>
             <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
@@ -415,7 +438,9 @@ export default function Settings() {
                 </h2>
               </div>
               <div>
-                <ToggleSwitch />
+                <ToggleSwitch 
+                  isOn={false} 
+                  onToggle={() => console.log("Toggle switched")} />
               </div>
             </div>
             <div className="mb-[6px] flex flex-row items-center justify-between rounded-[18px] border-[1px] border-Gold3 bg-GoldenWhite p-[17px]">
@@ -429,7 +454,9 @@ export default function Settings() {
                 </h2>
               </div>
               <div>
-                <ToggleSwitch />
+                <ToggleSwitch 
+                  isOn={false} 
+                  onToggle={() => console.log("Toggle switched")} />
               </div>
             </div>
             <Button4
