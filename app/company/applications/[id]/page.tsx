@@ -70,8 +70,9 @@ interface PageProps {
   params: { id: string };
 }
 
-export default function CompanyApplicationDetailPage({ params }: PageProps) {
+export default function CompanyApplicationDetailPage() {
   const router = useRouter();
+  const { id } = useParams();
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [application, setApplication] = useState<Application | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -83,10 +84,10 @@ export default function CompanyApplicationDetailPage({ params }: PageProps) {
 
   // Set the application ID from params after component mounts
   useEffect(() => {
-    if (params && params.id) {
-      setApplicationId(params.id);
+    if (id && typeof id === "string") {
+      setApplicationId(id);
     }
-  }, [params]);
+  }, [id]);
 
   // Fetch application data once we have the ID
   useEffect(() => {
