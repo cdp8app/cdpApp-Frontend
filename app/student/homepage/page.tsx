@@ -154,7 +154,7 @@ export default function StudentHomePage() {
                 </svg>
                 <h3 className="text-lg font-medium text-gray-900">No opportunities found</h3>
                 <p className="mt-2 text-sm text-gray-500 max-w-md mx-auto">
-                  We couldn't find any opportunities matching your criteria. Try adjusting your filters or check back later.
+                  We couldn&apos;t find any opportunities matching your criteria. Try adjusting your filters or check back later.
                 </p>
               </div>
             ) : (
@@ -264,7 +264,7 @@ export default function StudentHomePage() {
               </svg>
               <h3 className="font-sans text-[18px] font-medium mb-[10px]">Resume Building</h3>
               <p className="font-sans text-[14px] text-gray-600 mb-[15px]">
-                Learn how to create a standout resume that will catch employers' attention.
+                Learn how to create a standout resume that will catch employers&apos; attention.
               </p>
               <Link 
                 href="/student/resources/resume" 

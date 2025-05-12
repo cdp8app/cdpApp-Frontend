@@ -42,7 +42,7 @@ const StatusActions: React.FC<StatusActionsProps> = ({
       await updateApplicationStatus(applicationId, "accepted");
       
       // Then update any associated offers
-      const fetchedOffers = await getOffers();
+      const fetchedOffers = (await getOffers()) ?? {};
       if (fetchedOffers && typeof fetchedOffers === "object" && Array.isArray((fetchedOffers as any)?.results)) {
         const offers = (fetchedOffers as any).results;
         const offer = offers.find((o: any) => o.application === applicationId);

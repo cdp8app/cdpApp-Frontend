@@ -46,7 +46,7 @@ export default function CompanyProfile() {
         <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-md mb-6">
           <h2 className="text-xl font-semibold text-yellow-700 mb-2">Profile Not Found</h2>
           <p className="text-yellow-600 mb-4">
-            You haven't set up your company profile yet. Complete your profile to get started.
+            You haven&apos;t set up your company profile yet. Complete your profile to get started.
           </p>
           <Link 
             href="/company/profile/setup" 

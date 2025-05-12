@@ -8,6 +8,7 @@ import Button4 from "../../user/Components/Button4";
 interface NotificationSettingsModalProps {
   isNotificationSettingsModalOpen: boolean;
   onNotificationSettingsModalClose: () => void;
+  children?: React.ReactNode;
 }
 
 const NotificationSettingsModal: React.FC<NotificationSettingsModalProps> = ({ 

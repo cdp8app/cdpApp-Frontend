@@ -11,6 +11,7 @@ import { useParams } from "next/navigation";
 type Props = {
   activeContent: 1 | 2;
   onToggle: (content: 1 | 2) => void;
+  redirectPath?: string | null;
 };
 
 const StudentAuthTogglePage = ({ activeContent, onToggle }: Props) => {

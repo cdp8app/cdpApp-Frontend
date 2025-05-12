@@ -41,7 +41,6 @@ export default function LoginForm({ userType, redirectPath }: LoginFormProps) {
     
     fetchCsrfToken();
   }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
@@ -110,7 +109,7 @@ export default function LoginForm({ userType, redirectPath }: LoginFormProps) {
     <form onSubmit={handleSubmit} className="mt-[12.96px] flex flex-col justify-start">
       {redirectPath && (
         <div className="bg-blue-50 text-blue-600 p-2 rounded mb-4 text-sm">
-          You'll be redirected after login
+          You&apos;ll be redirected after login
         </div>
       )}
       

@@ -3,7 +3,7 @@
 import { createContext, useState, useEffect, useContext, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
-type UserType = "student" | "company" | null
+export type UserType = "student" | "company" | null
 
 export interface User {
   id: string;
@@ -78,6 +78,12 @@ interface StudentProfile {
   userId?: string
   firstName?: string
   lastName?: string
+  first_name?: string
+  last_name?: string
+  bio?: string
+  linkedin_url?: string | null
+  github_url?: string | null
+  portfolio_url?: string | null
 }
 
 interface CompanyProfile {
@@ -90,6 +96,11 @@ interface CompanyProfile {
   linkedin_url?: string | null
   userId?: string
   companyName?: string
+  company_industry?: string
+  company_description?: string
+  company_website?: string
+  company_location?: string
+  company_founded_year?: string
 }
 
 interface TokenPayload {

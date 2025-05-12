@@ -67,9 +67,9 @@ const MOCK_MESSAGES = {
   ],
 };
 
-export async function GET(request: Request, { params }: { params: { conversationId: string } }) {
+export async function GET(request: Request) {
   try {
-    const conversationId = params.conversationId;
+    const conversationId = new URL(request.url).pathname.split("/").pop();
     console.log(`Handling GET request to /api/proxy/messaging/conversations/${conversationId}/messages`);
 
     // First try to get data from the real backend
@@ -112,9 +112,9 @@ export async function GET(request: Request, { params }: { params: { conversation
   }
 }
 
-export async function POST(request: Request, { params }: { params: { conversationId: string } }) {
+export async function POST(request: Request) {
   try {
-    const conversationId = params.conversationId;
+    const conversationId = new URL(request.url).pathname.split("/").pop();
     console.log(`Handling POST request to /api/proxy/messaging/conversations/${conversationId}/messages`);
 
     // Parse the request body

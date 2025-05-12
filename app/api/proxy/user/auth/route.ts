@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
       console.error("Failed to parse response:", error);
       // If not valid JSON, return an error message
       return NextResponse.json({
-        message: `Failed to parse response: ${error.message}`,
+        message: `Failed to parse response: ${error instanceof Error ? error.message : "Unknown error"}`,
         rawHtml: responseText.substring(0, 500) // Include part of the HTML for debugging
       }, {
         status: response.status

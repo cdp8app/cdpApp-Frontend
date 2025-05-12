@@ -170,7 +170,7 @@ export default function CompanyJobApplicantInfo() {
                   {/* Status Actions Component */}
                   <StatusActions 
                     application={application}
-                    applicationId={applicationId}
+                    applicationId={applicationId || ""}
                     onStatusUpdated={fetchApplicationDetails}
                     openScheduleInterviewModal={() => setIsScheduleInterviewModalOpen(true)}
                     openRateStudentModal={() => setIsRateStudentsModalOpen(true)}

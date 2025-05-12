@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/app/Components/ui/card";
 import { Button } from "@/app/Components/ui/button";
 import { Badge } from "@/app/Components/ui/badge";
@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/app/Components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/Components/ui/tabs";
-import { Separator } from "@/app/Components/ui/separator";
+// import { Separator } from "@/app/Components/ui/separator";
 import AuthRedirect from "@/app/Components/AuthRedirect";
 import Navbar1 from "@/app/Components/Navbar";
 
@@ -66,8 +66,13 @@ interface Application {
   cover_letter_url?: string
 }
 
-export default function CompanyApplicationDetailPage({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: { id: string };
+}
+
+export default function CompanyApplicationDetailPage() {
   const router = useRouter();
+  const { id } = useParams();
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [application, setApplication] = useState<Application | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -79,10 +84,10 @@ export default function CompanyApplicationDetailPage({ params }: { params: { id:
 
   // Set the application ID from params after component mounts
   useEffect(() => {
-    if (params && params.id) {
-      setApplicationId(params.id);
+    if (id && typeof id === "string") {
+      setApplicationId(id);
     }
-  }, [params]);
+  }, [id]);
 
   // Fetch application data once we have the ID
   useEffect(() => {

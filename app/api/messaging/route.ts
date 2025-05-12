@@ -264,8 +264,8 @@ export async function GET(request: NextRequest) {
       // Extract conversation ID
       const conversationId = path.split("/").pop();
       
-      if (conversationId && MOCK_MESSAGES[conversationId]) {
-        return NextResponse.json(MOCK_MESSAGES[conversationId], { status: 200 });
+      if (conversationId && MOCK_MESSAGES[conversationId as keyof typeof MOCK_MESSAGES]) {
+        return NextResponse.json(MOCK_MESSAGES[conversationId as keyof typeof MOCK_MESSAGES], { status: 200 });
       } else {
         return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
       }

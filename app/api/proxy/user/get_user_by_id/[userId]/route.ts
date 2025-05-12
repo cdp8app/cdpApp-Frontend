@@ -25,11 +25,10 @@ const MOCK_USERS = {
 };
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { userId: string } }
+  request: NextRequest
 ) {
   try {
-    const userId = params.userId;
+    const userId = request.nextUrl.pathname.split("/").pop();
     console.log(`Handling GET request to /api/proxy/user/get_user_by_id/${userId}`);
     
     // Get JWT token from cookies
@@ -77,7 +76,7 @@ export async function GET(
     }
     
     // Return mock data as fallback
-    const mockUser = MOCK_USERS[userId] || {
+    const mockUser = userId && userId in MOCK_USERS ? MOCK_USERS[userId as keyof typeof MOCK_USERS] : {
       id: userId,
       email: "user@example.com",
       userType: "student",
@@ -93,11 +92,11 @@ export async function GET(
     
     // Return generic mock data on error
     return NextResponse.json({
-      id: params.userId,
+      id: "id",
       email: "user@example.com",
       userType: "student",
       first_name: "User",
-      last_name: params.userId,
+      last_name: "id",
       profile_picture: "https://via.placeholder.com/150"
     }, { status: 200 });
   }

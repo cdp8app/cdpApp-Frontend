@@ -23,7 +23,11 @@ async function proxyRequest(request: NextRequest, path: string, method: string) 
 
     // Get request body for non-GET requests
     let body = null;
-    let requestData = {};
+    interface RequestData {
+      content?: string;
+      recipient_id?: string;
+    }
+    let requestData: RequestData = {};
     if (method !== "GET" && request.body) {
       body = await request.text();
       try {

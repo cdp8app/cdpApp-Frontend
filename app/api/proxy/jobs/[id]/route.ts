@@ -15,18 +15,27 @@ const MOCK_JOB = {
   application_deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
 };
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/jobs/${params.id}/`, MOCK_JOB);
+function extractIdFromRequest(request: NextRequest) {
+  const segments = request.nextUrl.pathname.split("/");
+  return segments[segments.length - 1];
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/jobs/${params.id}/`, { ...MOCK_JOB, ...(await request.json()) });
+export async function GET(request: NextRequest) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/jobs/${id}/`, MOCK_JOB);
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/jobs/${params.id}/`, { ...MOCK_JOB, ...(await request.json()) });
+export async function PUT(request: NextRequest) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/jobs/${id}/`, { ...MOCK_JOB, ...(await request.json()) });
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  return handleApiRequest(request, `/api/jobs/${params.id}/`, { success: true, message: "Job deleted successfully" });
+export async function PATCH(request: NextRequest) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/jobs/${id}/`, { ...MOCK_JOB, ...(await request.json()) });
+}
+
+export async function DELETE(request: NextRequest) {
+  const id = extractIdFromRequest(request);
+  return handleApiRequest(request, `/api/jobs/${id}/`, { success: true, message: "Job deleted successfully" });
 }
