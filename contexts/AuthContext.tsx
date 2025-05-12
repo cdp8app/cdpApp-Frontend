@@ -90,6 +90,11 @@ interface CompanyProfile {
   linkedin_url?: string | null
   userId?: string
   companyName?: string
+  company_industry?: string
+  company_description?: string
+  company_website?: string
+  company_location?: string
+  company_founded_year?: string
 }
 
 interface TokenPayload {
